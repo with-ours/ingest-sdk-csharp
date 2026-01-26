@@ -8,9 +8,10 @@ The REST API documentation can be found on [docs.oursprivacy.com](https://docs.o
 
 ## Installation
 
+Install the package from [NuGet](https://www.nuget.org/packages/OursPrivacy):
+
 ```bash
-git clone git@github.com:with-ours/ingest-sdk-csharp.git
-dotnet add reference ingest-sdk-csharp/src/OursPrivacy
+dotnet add package OursPrivacy
 ```
 
 ## Requirements
