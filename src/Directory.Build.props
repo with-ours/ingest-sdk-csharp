@@ -6,7 +6,7 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Copyright>Copyright 2026 Ours Privacy</Copyright>
     <PackageProjectUrl>https://docs.oursprivacy.com</PackageProjectUrl>
-    <RepositoryUrl>https://www.github.com/stainless-sdks/ours-privacy-csharp</RepositoryUrl>
+    <RepositoryUrl>https://www.github.com/with-ours/ingest-sdk-csharp</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
 
     <!-- Documentation-->

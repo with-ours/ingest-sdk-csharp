@@ -9,8 +9,8 @@ The REST API documentation can be found on [docs.oursprivacy.com](https://docs.o
 ## Installation
 
 ```bash
-git clone git@github.com:stainless-sdks/ours-privacy-csharp.git
-dotnet add reference ours-privacy-csharp/src/OursPrivacy
+git clone git@github.com:with-ours/ingest-sdk-csharp.git
+dotnet add reference ingest-sdk-csharp/src/OursPrivacy
 ```
 
 ## Requirements
@@ -261,4 +261,4 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/stainless-sdks/ours-privacy-csharp/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/with-ours/ingest-sdk-csharp/issues) with questions, bugs, or suggestions.
