@@ -3,7 +3,7 @@
     <!-- Metadata -->
     <AssemblyTitle>Ours Privacy C#</AssemblyTitle>
     <AssemblyName>OursPrivacy</AssemblyName>
-    <VersionPrefix>0.0.1</VersionPrefix>
+    <VersionPrefix>0.0.2</VersionPrefix>
     <Description>The official .NET library for the Ours Privacy API.</Description>
     <OutputType>Library</OutputType>
     <PackageReadmeFile>README.md</PackageReadmeFile>
