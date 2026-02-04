@@ -28,7 +28,7 @@ public record class VisitorUpsertParams : ParamsBase
     }
 
     /// <summary>
-    /// The token for your Ours Privacy Source. You can find this in the Ours dashboard.
+    /// The token for your Source. You can find this in the dashboard.
     /// </summary>
     public required string Token
     {
