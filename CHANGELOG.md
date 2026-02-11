@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.1 (2026-02-11)
+
+Full Changelog: [v0.2.0...v0.2.1](https://github.com/with-ours/ingest-sdk-csharp/compare/v0.2.0...v0.2.1)
+
+### Bug Fixes
+
+* **client:** improve behaviour for comma-delimited binary content in multipart requests ([0a8b696](https://github.com/with-ours/ingest-sdk-csharp/commit/0a8b69634fe39026ce7a291d4aed16fb1c885cc2))
+
 ## 0.2.0 (2026-02-04)
 
 Full Changelog: [v0.1.1...v0.2.0](https://github.com/with-ours/ingest-sdk-csharp/compare/v0.1.1...v0.2.0)
