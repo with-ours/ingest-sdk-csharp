@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.0 (2026-02-14)
+
+Full Changelog: [v0.2.1...v0.3.0](https://github.com/with-ours/ingest-sdk-csharp/compare/v0.2.1...v0.3.0)
+
+### Features
+
+* **client:** add equality and tostring for multipart data ([7844020](https://github.com/with-ours/ingest-sdk-csharp/commit/7844020e3d6fe5bcf78bf1f0f900ace3583f2086))
+
 ## 0.2.1 (2026-02-11)
 
 Full Changelog: [v0.2.0...v0.2.1](https://github.com/with-ours/ingest-sdk-csharp/compare/v0.2.0...v0.2.1)
