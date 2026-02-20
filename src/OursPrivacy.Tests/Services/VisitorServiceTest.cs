@@ -5,7 +5,7 @@ namespace OursPrivacy.Tests.Services;
 
 public class VisitorServiceTest : TestBase
 {
-    [Fact(Skip = "Prism tests are disabled")]
+    [Fact(Skip = "Mock server tests are disabled")]
     public async Task Upsert_Works()
     {
         var response = await this.client.Visitor.Upsert(
