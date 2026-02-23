@@ -11,9 +11,8 @@ using OursPrivacy.Core;
 namespace OursPrivacy.Models.Visitor;
 
 /// <summary>
-/// Define visitor properties on an existing visitor or create a new visitor. Note:
-/// This does not fire an event. If you want to fire an event, use the track method
-/// and include properties for the visitor.
+/// Define visitor properties on an existing visitor or create a new visitor. This
+/// fires a $identify event, making the call visible in the event stream.
 ///
 /// <para>NOTE: Do not inherit from this type outside the SDK unless you're okay with
 /// breaking changes in non-major versions. We may add new methods in the future that
