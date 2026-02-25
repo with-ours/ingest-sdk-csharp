@@ -1,5 +1,26 @@
 # Changelog
 
+## 1.0.0 (2026-02-25)
+
+Full Changelog: [v0.3.0...v1.0.0](https://github.com/with-ours/ingest-sdk-csharp/compare/v0.3.0...v1.0.0)
+
+### Features
+
+* **api:** api update ([dec16bc](https://github.com/with-ours/ingest-sdk-csharp/commit/dec16bcc6945e11f415f7df4ea478c9116b86a1f))
+
+
+### Chores
+
+* **docs:** add proxy documentation to readme ([c3ada78](https://github.com/with-ours/ingest-sdk-csharp/commit/c3ada78cdc520b6b4d3fcf16c13ea5915d77f67c))
+* **docs:** add undocumented parameters to readme ([935d26a](https://github.com/with-ours/ingest-sdk-csharp/commit/935d26ab71b91b4690613f69c3acc29f76b85a6c))
+* **internal:** remove mock server code ([b3162fd](https://github.com/with-ours/ingest-sdk-csharp/commit/b3162fd3913c8cd1a4161918ddae6ea59b3ba458))
+* update mock server docs ([9927830](https://github.com/with-ours/ingest-sdk-csharp/commit/99278300642046881efec2c469354a547b3a72e1))
+
+
+### Refactors
+
+* **internal:** default headers ([c55c2ae](https://github.com/with-ours/ingest-sdk-csharp/commit/c55c2ae17d5853d7fc9c15591eaedf3dca4228f5))
+
 ## 0.3.0 (2026-02-14)
 
 Full Changelog: [v0.2.1...v0.3.0](https://github.com/with-ours/ingest-sdk-csharp/compare/v0.2.1...v0.3.0)
