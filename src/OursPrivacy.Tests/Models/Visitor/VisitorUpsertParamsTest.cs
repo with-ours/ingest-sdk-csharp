@@ -148,6 +148,7 @@ public class VisitorUpsertParamsTest : TestBase
             },
             Email = "x",
             ExternalID = "x",
+            IdentityContext = new() { IP = "ip", UserAgent = "userAgent" },
             UserID = "x",
         };
 
@@ -286,6 +287,7 @@ public class VisitorUpsertParamsTest : TestBase
         };
         string expectedEmail = "x";
         string expectedExternalID = "x";
+        IdentityContext expectedIdentityContext = new() { IP = "ip", UserAgent = "userAgent" };
         string expectedUserID = "x";
 
         Assert.Equal(expectedToken, parameters.Token);
@@ -293,6 +295,7 @@ public class VisitorUpsertParamsTest : TestBase
         Assert.Equal(expectedDefaultProperties, parameters.DefaultProperties);
         Assert.Equal(expectedEmail, parameters.Email);
         Assert.Equal(expectedExternalID, parameters.ExternalID);
+        Assert.Equal(expectedIdentityContext, parameters.IdentityContext);
         Assert.Equal(expectedUserID, parameters.UserID);
     }
 
@@ -369,6 +372,8 @@ public class VisitorUpsertParamsTest : TestBase
         Assert.False(parameters.RawBodyData.ContainsKey("email"));
         Assert.Null(parameters.ExternalID);
         Assert.False(parameters.RawBodyData.ContainsKey("externalId"));
+        Assert.Null(parameters.IdentityContext);
+        Assert.False(parameters.RawBodyData.ContainsKey("identityContext"));
         Assert.Null(parameters.UserID);
         Assert.False(parameters.RawBodyData.ContainsKey("userId"));
     }
@@ -442,6 +447,7 @@ public class VisitorUpsertParamsTest : TestBase
             DefaultProperties = null,
             Email = null,
             ExternalID = null,
+            IdentityContext = null,
             UserID = null,
         };
 
@@ -451,6 +457,8 @@ public class VisitorUpsertParamsTest : TestBase
         Assert.True(parameters.RawBodyData.ContainsKey("email"));
         Assert.Null(parameters.ExternalID);
         Assert.True(parameters.RawBodyData.ContainsKey("externalId"));
+        Assert.Null(parameters.IdentityContext);
+        Assert.True(parameters.RawBodyData.ContainsKey("identityContext"));
         Assert.Null(parameters.UserID);
         Assert.True(parameters.RawBodyData.ContainsKey("userId"));
     }
@@ -667,6 +675,7 @@ public class VisitorUpsertParamsTest : TestBase
             },
             Email = "x",
             ExternalID = "x",
+            IdentityContext = new() { IP = "ip", UserAgent = "userAgent" },
             UserID = "x",
         };
 
@@ -2793,6 +2802,72 @@ public class DefaultPropertiesTest : TestBase
         };
 
         DefaultProperties copied = new(model);
+
+        Assert.Equal(model, copied);
+    }
+}
+
+public class IdentityContextTest : TestBase
+{
+    [Fact]
+    public void FieldRoundtrip_Works()
+    {
+        var model = new IdentityContext { IP = "ip", UserAgent = "userAgent" };
+
+        string expectedIP = "ip";
+        string expectedUserAgent = "userAgent";
+
+        Assert.Equal(expectedIP, model.IP);
+        Assert.Equal(expectedUserAgent, model.UserAgent);
+    }
+
+    [Fact]
+    public void SerializationRoundtrip_Works()
+    {
+        var model = new IdentityContext { IP = "ip", UserAgent = "userAgent" };
+
+        string json = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<IdentityContext>(
+            json,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(model, deserialized);
+    }
+
+    [Fact]
+    public void FieldRoundtripThroughSerialization_Works()
+    {
+        var model = new IdentityContext { IP = "ip", UserAgent = "userAgent" };
+
+        string element = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<IdentityContext>(
+            element,
+            ModelBase.SerializerOptions
+        );
+        Assert.NotNull(deserialized);
+
+        string expectedIP = "ip";
+        string expectedUserAgent = "userAgent";
+
+        Assert.Equal(expectedIP, deserialized.IP);
+        Assert.Equal(expectedUserAgent, deserialized.UserAgent);
+    }
+
+    [Fact]
+    public void Validation_Works()
+    {
+        var model = new IdentityContext { IP = "ip", UserAgent = "userAgent" };
+
+        model.Validate();
+    }
+
+    [Fact]
+    public void CopyConstructor_Works()
+    {
+        var model = new IdentityContext { IP = "ip", UserAgent = "userAgent" };
+
+        IdentityContext copied = new(model);
 
         Assert.Equal(model, copied);
     }

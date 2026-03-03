@@ -131,6 +131,20 @@ public record class TrackEventParams : ParamsBase
     }
 
     /// <summary>
+    /// End-user network context for server-side calls. Required for probabilistic
+    /// identity resolution when the caller is a backend server rather than an end-user browser.
+    /// </summary>
+    public IdentityContext? IdentityContext
+    {
+        get
+        {
+            this._rawBodyData.Freeze();
+            return this._rawBodyData.GetNullableClass<IdentityContext>("identityContext");
+        }
+        init { this._rawBodyData.Set("identityContext", value); }
+    }
+
+    /// <summary>
     /// The time at which the event occurred in milliseconds since UTC epoch. The
     /// time must be in the past and within the last 7 days.
     /// </summary>
@@ -1308,6 +1322,81 @@ class DefaultPropertiesFromRaw : IFromRawJson<DefaultProperties>
     /// <inheritdoc/>
     public DefaultProperties FromRawUnchecked(IReadOnlyDictionary<string, JsonElement> rawData) =>
         DefaultProperties.FromRawUnchecked(rawData);
+}
+
+/// <summary>
+/// End-user network context for server-side calls. Required for probabilistic identity
+/// resolution when the caller is a backend server rather than an end-user browser.
+/// </summary>
+[JsonConverter(typeof(JsonModelConverter<IdentityContext, IdentityContextFromRaw>))]
+public sealed record class IdentityContext : JsonModel
+{
+    /// <summary>
+    /// The end-user IP address (not the server IP).
+    /// </summary>
+    public required string IP
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNotNullClass<string>("ip");
+        }
+        init { this._rawData.Set("ip", value); }
+    }
+
+    /// <summary>
+    /// The end-user User-Agent string (not the server UA).
+    /// </summary>
+    public required string UserAgent
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNotNullClass<string>("userAgent");
+        }
+        init { this._rawData.Set("userAgent", value); }
+    }
+
+    /// <inheritdoc/>
+    public override void Validate()
+    {
+        _ = this.IP;
+        _ = this.UserAgent;
+    }
+
+    public IdentityContext() { }
+
+#pragma warning disable CS8618
+    [SetsRequiredMembers]
+    public IdentityContext(IdentityContext identityContext)
+        : base(identityContext) { }
+#pragma warning restore CS8618
+
+    public IdentityContext(IReadOnlyDictionary<string, JsonElement> rawData)
+    {
+        this._rawData = new(rawData);
+    }
+
+#pragma warning disable CS8618
+    [SetsRequiredMembers]
+    IdentityContext(FrozenDictionary<string, JsonElement> rawData)
+    {
+        this._rawData = new(rawData);
+    }
+#pragma warning restore CS8618
+
+    /// <inheritdoc cref="IdentityContextFromRaw.FromRawUnchecked"/>
+    public static IdentityContext FromRawUnchecked(IReadOnlyDictionary<string, JsonElement> rawData)
+    {
+        return new(FrozenDictionary.ToFrozenDictionary(rawData));
+    }
+}
+
+class IdentityContextFromRaw : IFromRawJson<IdentityContext>
+{
+    /// <inheritdoc/>
+    public IdentityContext FromRawUnchecked(IReadOnlyDictionary<string, JsonElement> rawData) =>
+        IdentityContext.FromRawUnchecked(rawData);
 }
 
 /// <summary>
