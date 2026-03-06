@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.1.0 (2026-03-05)
+
+Full Changelog: [v1.0.0...v1.1.0](https://github.com/with-ours/ingest-sdk-csharp/compare/v1.0.0...v1.1.0)
+
+### Features
+
+* **api:** api update ([76f552b](https://github.com/with-ours/ingest-sdk-csharp/commit/76f552b7d35c4f2624145cd6e4ca4b9572e157eb))
+
+
+### Chores
+
+* **tests:** add tests for retry logic ([df3166a](https://github.com/with-ours/ingest-sdk-csharp/commit/df3166a274c73f325a18a625a2e85bb7923743df))
+
+
+### Documentation
+
+* remove typo in README.md ([0cc7f16](https://github.com/with-ours/ingest-sdk-csharp/commit/0cc7f16de92da121ef946d798595af22fc0a7b2e))
+
 ## 1.0.0 (2026-02-25)
 
 Full Changelog: [v0.3.0...v1.0.0](https://github.com/with-ours/ingest-sdk-csharp/compare/v0.3.0...v1.0.0)
