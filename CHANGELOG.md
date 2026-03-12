@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.1 (2026-03-12)
+
+Full Changelog: [v1.1.0...v1.1.1](https://github.com/with-ours/ingest-sdk-csharp/compare/v1.1.0...v1.1.1)
+
+### Chores
+
+* **client:** update formatting ([f448036](https://github.com/with-ours/ingest-sdk-csharp/commit/f4480362efde21e2232eac3bfce1e6af1144fea9))
+
 ## 1.1.0 (2026-03-05)
 
 Full Changelog: [v1.0.0...v1.1.0](https://github.com/with-ours/ingest-sdk-csharp/compare/v1.0.0...v1.1.0)
