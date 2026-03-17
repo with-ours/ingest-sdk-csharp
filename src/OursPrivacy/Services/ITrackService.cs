@@ -27,10 +27,10 @@ public interface ITrackService
     ITrackService WithOptions(Func<ClientOptions, ClientOptions> modifier);
 
     /// <summary>
-    /// Track events from your server. Please include at least one of: userId, externalId,
-    /// or email. These properties help us associate events with existing users.
-    /// For all fields, null values unset the property and undefined values do not
-    /// unset existing properties.
+    /// Track events from your server. Please include at least one of: userId,
+    /// externalId, or email. These properties help us associate events with existing
+    /// users. For all fields, null values unset the property and undefined values do
+    /// not unset existing properties.
     /// </summary>
     Task<TrackEventResponse> Event(
         TrackEventParams parameters,
@@ -52,7 +52,7 @@ public interface ITrackServiceWithRawResponse
     ITrackServiceWithRawResponse WithOptions(Func<ClientOptions, ClientOptions> modifier);
 
     /// <summary>
-    /// Returns a raw HTTP response for `post /track`, but is otherwise the
+    /// Returns a raw HTTP response for <c>post /track</c>, but is otherwise the
     /// same as <see cref="ITrackService.Event(TrackEventParams, CancellationToken)"/>.
     /// </summary>
     Task<HttpResponse<TrackEventResponse>> Event(
