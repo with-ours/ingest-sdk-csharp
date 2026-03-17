@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.1.2 (2026-03-17)
+
+Full Changelog: [v1.1.1...v1.1.2](https://github.com/with-ours/ingest-sdk-csharp/compare/v1.1.1...v1.1.2)
+
+### Bug Fixes
+
+* **docs:** make xml syntactically correct ([6885c35](https://github.com/with-ours/ingest-sdk-csharp/commit/6885c358c847e7e5810b5937d3d011eed1e57726))
+
+
+### Chores
+
+* **internal:** tweak CI branches ([b8999bf](https://github.com/with-ours/ingest-sdk-csharp/commit/b8999bfc1a010cd0742536f7cbaf3a8281877399))
+
 ## 1.1.1 (2026-03-12)
 
 Full Changelog: [v1.1.0...v1.1.1](https://github.com/with-ours/ingest-sdk-csharp/compare/v1.1.0...v1.1.1)
