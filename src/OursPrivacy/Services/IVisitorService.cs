@@ -27,8 +27,8 @@ public interface IVisitorService
     IVisitorService WithOptions(Func<ClientOptions, ClientOptions> modifier);
 
     /// <summary>
-    /// Define visitor properties on an existing visitor or create a new visitor.
-    /// This fires a $identify event, making the call visible in the event stream.
+    /// Define visitor properties on an existing visitor or create a new visitor. This
+    /// fires a $identify event, making the call visible in the event stream.
     /// </summary>
     Task<VisitorUpsertResponse> Upsert(
         VisitorUpsertParams parameters,
@@ -50,7 +50,7 @@ public interface IVisitorServiceWithRawResponse
     IVisitorServiceWithRawResponse WithOptions(Func<ClientOptions, ClientOptions> modifier);
 
     /// <summary>
-    /// Returns a raw HTTP response for `post /identify`, but is otherwise the
+    /// Returns a raw HTTP response for <c>post /identify</c>, but is otherwise the
     /// same as <see cref="IVisitorService.Upsert(VisitorUpsertParams, CancellationToken)"/>.
     /// </summary>
     Task<HttpResponse<VisitorUpsertResponse>> Upsert(
