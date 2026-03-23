@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.3 (2026-03-21)
+
+Full Changelog: [v1.1.2...v1.1.3](https://github.com/with-ours/ingest-sdk-csharp/compare/v1.1.2...v1.1.3)
+
+### Bug Fixes
+
+* **client:** handle root bodies in requests properly ([bcde586](https://github.com/with-ours/ingest-sdk-csharp/commit/bcde586830a9d29c99acab4dcdefa179953c5a2e))
+
 ## 1.1.2 (2026-03-17)
 
 Full Changelog: [v1.1.1...v1.1.2](https://github.com/with-ours/ingest-sdk-csharp/compare/v1.1.1...v1.1.2)
