@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.1.4 (2026-03-25)
+
+Full Changelog: [v1.1.3...v1.1.4](https://github.com/with-ours/ingest-sdk-csharp/compare/v1.1.3...v1.1.4)
+
+### Chores
+
+* **ci:** skip lint on metadata-only changes ([0dbb4ab](https://github.com/with-ours/ingest-sdk-csharp/commit/0dbb4ab7776c900b4b170d156f9675ff84bbdd53))
+* **internal:** update gitignore ([10615c6](https://github.com/with-ours/ingest-sdk-csharp/commit/10615c61b5a42c4476f9a82c1220669b6ef35661))
+
 ## 1.1.3 (2026-03-21)
 
 Full Changelog: [v1.1.2...v1.1.3](https://github.com/with-ours/ingest-sdk-csharp/compare/v1.1.2...v1.1.3)
