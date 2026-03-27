@@ -18,6 +18,7 @@ public class VisitorServiceTest : TestBase
                     AdsetID = "adset_id",
                     Alart = "alart",
                     Aleid = "aleid",
+                    Axwrt = "axwrt",
                     BasisCid = "basis_cid",
                     CampaignID = "campaign_id",
                     City = "city",

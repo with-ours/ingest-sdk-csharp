@@ -20,6 +20,7 @@ public class VisitorUpsertParamsTest : TestBase
                 AdsetID = "adset_id",
                 Alart = "alart",
                 Aleid = "aleid",
+                Axwrt = "axwrt",
                 BasisCid = "basis_cid",
                 CampaignID = "campaign_id",
                 City = "city",
@@ -80,6 +81,7 @@ public class VisitorUpsertParamsTest : TestBase
                 AdsetID = "adset_id",
                 Alart = "alart",
                 Aleid = "aleid",
+                Axwrt = "axwrt",
                 BasisCid = "basis_cid",
                 BrowserLanguage = "browser_language",
                 BrowserName = "browser_name",
@@ -159,6 +161,7 @@ public class VisitorUpsertParamsTest : TestBase
             AdsetID = "adset_id",
             Alart = "alart",
             Aleid = "aleid",
+            Axwrt = "axwrt",
             BasisCid = "basis_cid",
             CampaignID = "campaign_id",
             City = "city",
@@ -219,6 +222,7 @@ public class VisitorUpsertParamsTest : TestBase
             AdsetID = "adset_id",
             Alart = "alart",
             Aleid = "aleid",
+            Axwrt = "axwrt",
             BasisCid = "basis_cid",
             BrowserLanguage = "browser_language",
             BrowserName = "browser_name",
@@ -311,6 +315,7 @@ public class VisitorUpsertParamsTest : TestBase
                 AdsetID = "adset_id",
                 Alart = "alart",
                 Aleid = "aleid",
+                Axwrt = "axwrt",
                 BasisCid = "basis_cid",
                 CampaignID = "campaign_id",
                 City = "city",
@@ -390,6 +395,7 @@ public class VisitorUpsertParamsTest : TestBase
                 AdsetID = "adset_id",
                 Alart = "alart",
                 Aleid = "aleid",
+                Axwrt = "axwrt",
                 BasisCid = "basis_cid",
                 CampaignID = "campaign_id",
                 City = "city",
@@ -475,6 +481,7 @@ public class VisitorUpsertParamsTest : TestBase
                 AdsetID = "adset_id",
                 Alart = "alart",
                 Aleid = "aleid",
+                Axwrt = "axwrt",
                 BasisCid = "basis_cid",
                 CampaignID = "campaign_id",
                 City = "city",
@@ -547,6 +554,7 @@ public class VisitorUpsertParamsTest : TestBase
                 AdsetID = "adset_id",
                 Alart = "alart",
                 Aleid = "aleid",
+                Axwrt = "axwrt",
                 BasisCid = "basis_cid",
                 CampaignID = "campaign_id",
                 City = "city",
@@ -607,6 +615,7 @@ public class VisitorUpsertParamsTest : TestBase
                 AdsetID = "adset_id",
                 Alart = "alart",
                 Aleid = "aleid",
+                Axwrt = "axwrt",
                 BasisCid = "basis_cid",
                 BrowserLanguage = "browser_language",
                 BrowserName = "browser_name",
@@ -696,6 +705,7 @@ public class UserPropertiesTest : TestBase
             AdsetID = "adset_id",
             Alart = "alart",
             Aleid = "aleid",
+            Axwrt = "axwrt",
             BasisCid = "basis_cid",
             CampaignID = "campaign_id",
             City = "city",
@@ -754,6 +764,7 @@ public class UserPropertiesTest : TestBase
         string expectedAdsetID = "adset_id";
         string expectedAlart = "alart";
         string expectedAleid = "aleid";
+        string expectedAxwrt = "axwrt";
         string expectedBasisCid = "basis_cid";
         string expectedCampaignID = "campaign_id";
         string expectedCity = "city";
@@ -811,6 +822,7 @@ public class UserPropertiesTest : TestBase
         Assert.Equal(expectedAdsetID, model.AdsetID);
         Assert.Equal(expectedAlart, model.Alart);
         Assert.Equal(expectedAleid, model.Aleid);
+        Assert.Equal(expectedAxwrt, model.Axwrt);
         Assert.Equal(expectedBasisCid, model.BasisCid);
         Assert.Equal(expectedCampaignID, model.CampaignID);
         Assert.Equal(expectedCity, model.City);
@@ -888,6 +900,7 @@ public class UserPropertiesTest : TestBase
             AdsetID = "adset_id",
             Alart = "alart",
             Aleid = "aleid",
+            Axwrt = "axwrt",
             BasisCid = "basis_cid",
             CampaignID = "campaign_id",
             City = "city",
@@ -960,6 +973,7 @@ public class UserPropertiesTest : TestBase
             AdsetID = "adset_id",
             Alart = "alart",
             Aleid = "aleid",
+            Axwrt = "axwrt",
             BasisCid = "basis_cid",
             CampaignID = "campaign_id",
             City = "city",
@@ -1025,6 +1039,7 @@ public class UserPropertiesTest : TestBase
         string expectedAdsetID = "adset_id";
         string expectedAlart = "alart";
         string expectedAleid = "aleid";
+        string expectedAxwrt = "axwrt";
         string expectedBasisCid = "basis_cid";
         string expectedCampaignID = "campaign_id";
         string expectedCity = "city";
@@ -1082,6 +1097,7 @@ public class UserPropertiesTest : TestBase
         Assert.Equal(expectedAdsetID, deserialized.AdsetID);
         Assert.Equal(expectedAlart, deserialized.Alart);
         Assert.Equal(expectedAleid, deserialized.Aleid);
+        Assert.Equal(expectedAxwrt, deserialized.Axwrt);
         Assert.Equal(expectedBasisCid, deserialized.BasisCid);
         Assert.Equal(expectedCampaignID, deserialized.CampaignID);
         Assert.Equal(expectedCity, deserialized.City);
@@ -1159,6 +1175,7 @@ public class UserPropertiesTest : TestBase
             AdsetID = "adset_id",
             Alart = "alart",
             Aleid = "aleid",
+            Axwrt = "axwrt",
             BasisCid = "basis_cid",
             CampaignID = "campaign_id",
             City = "city",
@@ -1229,6 +1246,8 @@ public class UserPropertiesTest : TestBase
         Assert.False(model.RawData.ContainsKey("alart"));
         Assert.Null(model.Aleid);
         Assert.False(model.RawData.ContainsKey("aleid"));
+        Assert.Null(model.Axwrt);
+        Assert.False(model.RawData.ContainsKey("axwrt"));
         Assert.Null(model.BasisCid);
         Assert.False(model.RawData.ContainsKey("basis_cid"));
         Assert.Null(model.CampaignID);
@@ -1352,6 +1371,7 @@ public class UserPropertiesTest : TestBase
             AdsetID = null,
             Alart = null,
             Aleid = null,
+            Axwrt = null,
             BasisCid = null,
             CampaignID = null,
             City = null,
@@ -1414,6 +1434,8 @@ public class UserPropertiesTest : TestBase
         Assert.True(model.RawData.ContainsKey("alart"));
         Assert.Null(model.Aleid);
         Assert.True(model.RawData.ContainsKey("aleid"));
+        Assert.Null(model.Axwrt);
+        Assert.True(model.RawData.ContainsKey("axwrt"));
         Assert.Null(model.BasisCid);
         Assert.True(model.RawData.ContainsKey("basis_cid"));
         Assert.Null(model.CampaignID);
@@ -1529,6 +1551,7 @@ public class UserPropertiesTest : TestBase
             AdsetID = null,
             Alart = null,
             Aleid = null,
+            Axwrt = null,
             BasisCid = null,
             CampaignID = null,
             City = null,
@@ -1595,6 +1618,7 @@ public class UserPropertiesTest : TestBase
             AdsetID = "adset_id",
             Alart = "alart",
             Aleid = "aleid",
+            Axwrt = "axwrt",
             BasisCid = "basis_cid",
             CampaignID = "campaign_id",
             City = "city",
@@ -1667,6 +1691,7 @@ public class DefaultPropertiesTest : TestBase
             AdsetID = "adset_id",
             Alart = "alart",
             Aleid = "aleid",
+            Axwrt = "axwrt",
             BasisCid = "basis_cid",
             BrowserLanguage = "browser_language",
             BrowserName = "browser_name",
@@ -1739,6 +1764,7 @@ public class DefaultPropertiesTest : TestBase
         string expectedAdsetID = "adset_id";
         string expectedAlart = "alart";
         string expectedAleid = "aleid";
+        string expectedAxwrt = "axwrt";
         string expectedBasisCid = "basis_cid";
         string expectedBrowserLanguage = "browser_language";
         string expectedBrowserName = "browser_name";
@@ -1810,6 +1836,7 @@ public class DefaultPropertiesTest : TestBase
         Assert.Equal(expectedAdsetID, model.AdsetID);
         Assert.Equal(expectedAlart, model.Alart);
         Assert.Equal(expectedAleid, model.Aleid);
+        Assert.Equal(expectedAxwrt, model.Axwrt);
         Assert.Equal(expectedBasisCid, model.BasisCid);
         Assert.Equal(expectedBrowserLanguage, model.BrowserLanguage);
         Assert.Equal(expectedBrowserName, model.BrowserName);
@@ -1887,6 +1914,7 @@ public class DefaultPropertiesTest : TestBase
             AdsetID = "adset_id",
             Alart = "alart",
             Aleid = "aleid",
+            Axwrt = "axwrt",
             BasisCid = "basis_cid",
             BrowserLanguage = "browser_language",
             BrowserName = "browser_name",
@@ -1973,6 +2001,7 @@ public class DefaultPropertiesTest : TestBase
             AdsetID = "adset_id",
             Alart = "alart",
             Aleid = "aleid",
+            Axwrt = "axwrt",
             BasisCid = "basis_cid",
             BrowserLanguage = "browser_language",
             BrowserName = "browser_name",
@@ -2052,6 +2081,7 @@ public class DefaultPropertiesTest : TestBase
         string expectedAdsetID = "adset_id";
         string expectedAlart = "alart";
         string expectedAleid = "aleid";
+        string expectedAxwrt = "axwrt";
         string expectedBasisCid = "basis_cid";
         string expectedBrowserLanguage = "browser_language";
         string expectedBrowserName = "browser_name";
@@ -2123,6 +2153,7 @@ public class DefaultPropertiesTest : TestBase
         Assert.Equal(expectedAdsetID, deserialized.AdsetID);
         Assert.Equal(expectedAlart, deserialized.Alart);
         Assert.Equal(expectedAleid, deserialized.Aleid);
+        Assert.Equal(expectedAxwrt, deserialized.Axwrt);
         Assert.Equal(expectedBasisCid, deserialized.BasisCid);
         Assert.Equal(expectedBrowserLanguage, deserialized.BrowserLanguage);
         Assert.Equal(expectedBrowserName, deserialized.BrowserName);
@@ -2200,6 +2231,7 @@ public class DefaultPropertiesTest : TestBase
             AdsetID = "adset_id",
             Alart = "alart",
             Aleid = "aleid",
+            Axwrt = "axwrt",
             BasisCid = "basis_cid",
             BrowserLanguage = "browser_language",
             BrowserName = "browser_name",
@@ -2285,6 +2317,8 @@ public class DefaultPropertiesTest : TestBase
         Assert.False(model.RawData.ContainsKey("alart"));
         Assert.Null(model.Aleid);
         Assert.False(model.RawData.ContainsKey("aleid"));
+        Assert.Null(model.Axwrt);
+        Assert.False(model.RawData.ContainsKey("axwrt"));
         Assert.Null(model.BasisCid);
         Assert.False(model.RawData.ContainsKey("basis_cid"));
         Assert.Null(model.BrowserLanguage);
@@ -2435,6 +2469,7 @@ public class DefaultPropertiesTest : TestBase
             AdsetID = null,
             Alart = null,
             Aleid = null,
+            Axwrt = null,
             BasisCid = null,
             BrowserLanguage = null,
             BrowserName = null,
@@ -2512,6 +2547,8 @@ public class DefaultPropertiesTest : TestBase
         Assert.True(model.RawData.ContainsKey("alart"));
         Assert.Null(model.Aleid);
         Assert.True(model.RawData.ContainsKey("aleid"));
+        Assert.Null(model.Axwrt);
+        Assert.True(model.RawData.ContainsKey("axwrt"));
         Assert.Null(model.BasisCid);
         Assert.True(model.RawData.ContainsKey("basis_cid"));
         Assert.Null(model.BrowserLanguage);
@@ -2654,6 +2691,7 @@ public class DefaultPropertiesTest : TestBase
             AdsetID = null,
             Alart = null,
             Aleid = null,
+            Axwrt = null,
             BasisCid = null,
             BrowserLanguage = null,
             BrowserName = null,
@@ -2734,6 +2772,7 @@ public class DefaultPropertiesTest : TestBase
             AdsetID = "adset_id",
             Alart = "alart",
             Aleid = "aleid",
+            Axwrt = "axwrt",
             BasisCid = "basis_cid",
             BrowserLanguage = "browser_language",
             BrowserName = "browser_name",
