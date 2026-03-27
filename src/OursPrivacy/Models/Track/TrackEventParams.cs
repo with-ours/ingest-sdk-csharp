@@ -368,6 +368,19 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
+    /// The AppLovin Axon pixel cookie value (_axwrt). Web-only.
+    /// </summary>
+    public string? Axwrt
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("axwrt");
+        }
+        init { this._rawData.Set("axwrt", value); }
+    }
+
+    /// <summary>
     /// The Basis DSP Click ID. Ex: basis_cid123
     /// </summary>
     public string? BasisCid
@@ -1220,6 +1233,7 @@ public sealed record class DefaultProperties : JsonModel
         _ = this.AdsetID;
         _ = this.Alart;
         _ = this.Aleid;
+        _ = this.Axwrt;
         _ = this.BasisCid;
         _ = this.BrowserLanguage;
         _ = this.BrowserName;
@@ -1444,6 +1458,16 @@ public sealed record class UserProperties : JsonModel
             return this._rawData.GetNullableClass<string>("aleid");
         }
         init { this._rawData.Set("aleid", value); }
+    }
+
+    public string? Axwrt
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("axwrt");
+        }
+        init { this._rawData.Set("axwrt", value); }
     }
 
     public string? BasisCid
@@ -1990,6 +2014,7 @@ public sealed record class UserProperties : JsonModel
         _ = this.AdsetID;
         _ = this.Alart;
         _ = this.Aleid;
+        _ = this.Axwrt;
         _ = this.BasisCid;
         _ = this.CampaignID;
         _ = this.City;
