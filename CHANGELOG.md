@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.0 (2026-03-27)
+
+Full Changelog: [v1.1.4...v1.2.0](https://github.com/with-ours/ingest-sdk-csharp/compare/v1.1.4...v1.2.0)
+
+### Features
+
+* **api:** api update ([0e8e052](https://github.com/with-ours/ingest-sdk-csharp/commit/0e8e052b122d15b81904d27cb310f50888eaa40a))
+
 ## 1.1.4 (2026-03-25)
 
 Full Changelog: [v1.1.3...v1.1.4](https://github.com/with-ours/ingest-sdk-csharp/compare/v1.1.3...v1.1.4)
