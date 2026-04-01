@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.3.0 (2026-04-01)
+
+Full Changelog: [v1.2.0...v1.3.0](https://github.com/with-ours/ingest-sdk-csharp/compare/v1.2.0...v1.3.0)
+
+### Features
+
+* **client:** enable gzip decompression ([627de87](https://github.com/with-ours/ingest-sdk-csharp/commit/627de878815a1e510221822fc64fc188d4655bd9))
+
+
+### Bug Fixes
+
+* **client:** allow cancelling when enumerating over an http response ([9457a97](https://github.com/with-ours/ingest-sdk-csharp/commit/9457a975006adcdd3c069db3b5f21b486949895c))
+
 ## 1.2.0 (2026-03-27)
 
 Full Changelog: [v1.1.4...v1.2.0](https://github.com/with-ours/ingest-sdk-csharp/compare/v1.1.4...v1.2.0)
