@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.3.1 (2026-04-16)
+
+Full Changelog: [v1.3.0...v1.3.1](https://github.com/with-ours/ingest-sdk-csharp/compare/v1.3.0...v1.3.1)
+
+### Bug Fixes
+
+* **tests:** round-trip urls correctly ([4408770](https://github.com/with-ours/ingest-sdk-csharp/commit/4408770e2360da620d88d1c1a9aa5a948720df7a))
+
 ## 1.3.0 (2026-04-01)
 
 Full Changelog: [v1.2.0...v1.3.0](https://github.com/with-ours/ingest-sdk-csharp/compare/v1.2.0...v1.3.0)
