@@ -539,7 +539,9 @@ public class VisitorUpsertParamsTest : TestBase
 
         var url = parameters.Url(new() { });
 
-        Assert.Equal(new Uri("https://api.oursprivacy.com/api/v1/identify"), url);
+        Assert.True(
+            TestBase.UrisEqual(new Uri("https://api.oursprivacy.com/api/v1/identify"), url)
+        );
     }
 
     [Fact]
