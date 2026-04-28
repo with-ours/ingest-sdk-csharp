@@ -332,6 +332,19 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
+    /// The Admitad (Mitgo) affiliate Click ID. Ex: admitad_uid_abc123
+    /// </summary>
+    public string? AdmitadUid
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("admitad_uid");
+        }
+        init { this._rawData.Set("admitad_uid", value); }
+    }
+
+    /// <summary>
     /// The adset id for detected in the session. This is set by the web sdk automatically.
     /// </summary>
     public string? AdsetID
@@ -1233,6 +1246,7 @@ public sealed record class DefaultProperties : JsonModel
     {
         _ = this.ActiveDuration;
         _ = this.AdID;
+        _ = this.AdmitadUid;
         _ = this.AdsetID;
         _ = this.Alart;
         _ = this.Aleid;
@@ -1431,6 +1445,16 @@ public sealed record class UserProperties : JsonModel
             return this._rawData.GetNullableClass<string>("ad_id");
         }
         init { this._rawData.Set("ad_id", value); }
+    }
+
+    public string? AdmitadUid
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("admitad_uid");
+        }
+        init { this._rawData.Set("admitad_uid", value); }
     }
 
     public string? AdsetID
@@ -2014,6 +2038,7 @@ public sealed record class UserProperties : JsonModel
     public override void Validate()
     {
         _ = this.AdID;
+        _ = this.AdmitadUid;
         _ = this.AdsetID;
         _ = this.Alart;
         _ = this.Aleid;

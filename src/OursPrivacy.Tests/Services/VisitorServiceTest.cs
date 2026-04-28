@@ -15,6 +15,7 @@ public class VisitorServiceTest : TestBase
                 UserProperties = new()
                 {
                     AdID = "ad_id",
+                    AdmitadUid = "admitad_uid",
                     AdsetID = "adset_id",
                     Alart = "alart",
                     Aleid = "aleid",
