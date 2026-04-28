@@ -19,6 +19,7 @@ public class TrackEventParamsTest : TestBase
             {
                 ActiveDuration = 0,
                 AdID = "ad_id",
+                AdmitadUid = "admitad_uid",
                 AdsetID = "adset_id",
                 Alart = "alart",
                 Aleid = "aleid",
@@ -99,6 +100,7 @@ public class TrackEventParamsTest : TestBase
             UserProperties = new()
             {
                 AdID = "ad_id",
+                AdmitadUid = "admitad_uid",
                 AdsetID = "adset_id",
                 Alart = "alart",
                 Aleid = "aleid",
@@ -164,6 +166,7 @@ public class TrackEventParamsTest : TestBase
         {
             ActiveDuration = 0,
             AdID = "ad_id",
+            AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
             Alart = "alart",
             Aleid = "aleid",
@@ -244,6 +247,7 @@ public class TrackEventParamsTest : TestBase
         UserProperties expectedUserProperties = new()
         {
             AdID = "ad_id",
+            AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
             Alart = "alart",
             Aleid = "aleid",
@@ -407,6 +411,7 @@ public class TrackEventParamsTest : TestBase
             {
                 ActiveDuration = 0,
                 AdID = "ad_id",
+                AdmitadUid = "admitad_uid",
                 AdsetID = "adset_id",
                 Alart = "alart",
                 Aleid = "aleid",
@@ -487,6 +492,7 @@ public class TrackEventParamsTest : TestBase
             UserProperties = new()
             {
                 AdID = "ad_id",
+                AdmitadUid = "admitad_uid",
                 AdsetID = "adset_id",
                 Alart = "alart",
                 Aleid = "aleid",
@@ -561,6 +567,7 @@ public class DefaultPropertiesTest : TestBase
         {
             ActiveDuration = 0,
             AdID = "ad_id",
+            AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
             Alart = "alart",
             Aleid = "aleid",
@@ -634,6 +641,7 @@ public class DefaultPropertiesTest : TestBase
 
         double expectedActiveDuration = 0;
         string expectedAdID = "ad_id";
+        string expectedAdmitadUid = "admitad_uid";
         string expectedAdsetID = "adset_id";
         string expectedAlart = "alart";
         string expectedAleid = "aleid";
@@ -706,6 +714,7 @@ public class DefaultPropertiesTest : TestBase
 
         Assert.Equal(expectedActiveDuration, model.ActiveDuration);
         Assert.Equal(expectedAdID, model.AdID);
+        Assert.Equal(expectedAdmitadUid, model.AdmitadUid);
         Assert.Equal(expectedAdsetID, model.AdsetID);
         Assert.Equal(expectedAlart, model.Alart);
         Assert.Equal(expectedAleid, model.Aleid);
@@ -784,6 +793,7 @@ public class DefaultPropertiesTest : TestBase
         {
             ActiveDuration = 0,
             AdID = "ad_id",
+            AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
             Alart = "alart",
             Aleid = "aleid",
@@ -871,6 +881,7 @@ public class DefaultPropertiesTest : TestBase
         {
             ActiveDuration = 0,
             AdID = "ad_id",
+            AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
             Alart = "alart",
             Aleid = "aleid",
@@ -951,6 +962,7 @@ public class DefaultPropertiesTest : TestBase
 
         double expectedActiveDuration = 0;
         string expectedAdID = "ad_id";
+        string expectedAdmitadUid = "admitad_uid";
         string expectedAdsetID = "adset_id";
         string expectedAlart = "alart";
         string expectedAleid = "aleid";
@@ -1023,6 +1035,7 @@ public class DefaultPropertiesTest : TestBase
 
         Assert.Equal(expectedActiveDuration, deserialized.ActiveDuration);
         Assert.Equal(expectedAdID, deserialized.AdID);
+        Assert.Equal(expectedAdmitadUid, deserialized.AdmitadUid);
         Assert.Equal(expectedAdsetID, deserialized.AdsetID);
         Assert.Equal(expectedAlart, deserialized.Alart);
         Assert.Equal(expectedAleid, deserialized.Aleid);
@@ -1101,6 +1114,7 @@ public class DefaultPropertiesTest : TestBase
         {
             ActiveDuration = 0,
             AdID = "ad_id",
+            AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
             Alart = "alart",
             Aleid = "aleid",
@@ -1184,6 +1198,8 @@ public class DefaultPropertiesTest : TestBase
         Assert.False(model.RawData.ContainsKey("activeDuration"));
         Assert.Null(model.AdID);
         Assert.False(model.RawData.ContainsKey("ad_id"));
+        Assert.Null(model.AdmitadUid);
+        Assert.False(model.RawData.ContainsKey("admitad_uid"));
         Assert.Null(model.AdsetID);
         Assert.False(model.RawData.ContainsKey("adset_id"));
         Assert.Null(model.Alart);
@@ -1339,6 +1355,7 @@ public class DefaultPropertiesTest : TestBase
         {
             ActiveDuration = null,
             AdID = null,
+            AdmitadUid = null,
             AdsetID = null,
             Alart = null,
             Aleid = null,
@@ -1414,6 +1431,8 @@ public class DefaultPropertiesTest : TestBase
         Assert.True(model.RawData.ContainsKey("activeDuration"));
         Assert.Null(model.AdID);
         Assert.True(model.RawData.ContainsKey("ad_id"));
+        Assert.Null(model.AdmitadUid);
+        Assert.True(model.RawData.ContainsKey("admitad_uid"));
         Assert.Null(model.AdsetID);
         Assert.True(model.RawData.ContainsKey("adset_id"));
         Assert.Null(model.Alart);
@@ -1561,6 +1580,7 @@ public class DefaultPropertiesTest : TestBase
         {
             ActiveDuration = null,
             AdID = null,
+            AdmitadUid = null,
             AdsetID = null,
             Alart = null,
             Aleid = null,
@@ -1642,6 +1662,7 @@ public class DefaultPropertiesTest : TestBase
         {
             ActiveDuration = 0,
             AdID = "ad_id",
+            AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
             Alart = "alart",
             Aleid = "aleid",
@@ -1793,6 +1814,7 @@ public class UserPropertiesTest : TestBase
         var model = new UserProperties
         {
             AdID = "ad_id",
+            AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
             Alart = "alart",
             Aleid = "aleid",
@@ -1852,6 +1874,7 @@ public class UserPropertiesTest : TestBase
         };
 
         string expectedAdID = "ad_id";
+        string expectedAdmitadUid = "admitad_uid";
         string expectedAdsetID = "adset_id";
         string expectedAlart = "alart";
         string expectedAleid = "aleid";
@@ -1910,6 +1933,7 @@ public class UserPropertiesTest : TestBase
         string expectedZip = "zip";
 
         Assert.Equal(expectedAdID, model.AdID);
+        Assert.Equal(expectedAdmitadUid, model.AdmitadUid);
         Assert.Equal(expectedAdsetID, model.AdsetID);
         Assert.Equal(expectedAlart, model.Alart);
         Assert.Equal(expectedAleid, model.Aleid);
@@ -1988,6 +2012,7 @@ public class UserPropertiesTest : TestBase
         var model = new UserProperties
         {
             AdID = "ad_id",
+            AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
             Alart = "alart",
             Aleid = "aleid",
@@ -2061,6 +2086,7 @@ public class UserPropertiesTest : TestBase
         var model = new UserProperties
         {
             AdID = "ad_id",
+            AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
             Alart = "alart",
             Aleid = "aleid",
@@ -2127,6 +2153,7 @@ public class UserPropertiesTest : TestBase
         Assert.NotNull(deserialized);
 
         string expectedAdID = "ad_id";
+        string expectedAdmitadUid = "admitad_uid";
         string expectedAdsetID = "adset_id";
         string expectedAlart = "alart";
         string expectedAleid = "aleid";
@@ -2185,6 +2212,7 @@ public class UserPropertiesTest : TestBase
         string expectedZip = "zip";
 
         Assert.Equal(expectedAdID, deserialized.AdID);
+        Assert.Equal(expectedAdmitadUid, deserialized.AdmitadUid);
         Assert.Equal(expectedAdsetID, deserialized.AdsetID);
         Assert.Equal(expectedAlart, deserialized.Alart);
         Assert.Equal(expectedAleid, deserialized.Aleid);
@@ -2263,6 +2291,7 @@ public class UserPropertiesTest : TestBase
         var model = new UserProperties
         {
             AdID = "ad_id",
+            AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
             Alart = "alart",
             Aleid = "aleid",
@@ -2331,6 +2360,8 @@ public class UserPropertiesTest : TestBase
 
         Assert.Null(model.AdID);
         Assert.False(model.RawData.ContainsKey("ad_id"));
+        Assert.Null(model.AdmitadUid);
+        Assert.False(model.RawData.ContainsKey("admitad_uid"));
         Assert.Null(model.AdsetID);
         Assert.False(model.RawData.ContainsKey("adset_id"));
         Assert.Null(model.Alart);
@@ -2459,6 +2490,7 @@ public class UserPropertiesTest : TestBase
         var model = new UserProperties
         {
             AdID = null,
+            AdmitadUid = null,
             AdsetID = null,
             Alart = null,
             Aleid = null,
@@ -2519,6 +2551,8 @@ public class UserPropertiesTest : TestBase
 
         Assert.Null(model.AdID);
         Assert.True(model.RawData.ContainsKey("ad_id"));
+        Assert.Null(model.AdmitadUid);
+        Assert.True(model.RawData.ContainsKey("admitad_uid"));
         Assert.Null(model.AdsetID);
         Assert.True(model.RawData.ContainsKey("adset_id"));
         Assert.Null(model.Alart);
@@ -2639,6 +2673,7 @@ public class UserPropertiesTest : TestBase
         var model = new UserProperties
         {
             AdID = null,
+            AdmitadUid = null,
             AdsetID = null,
             Alart = null,
             Aleid = null,
@@ -2706,6 +2741,7 @@ public class UserPropertiesTest : TestBase
         var model = new UserProperties
         {
             AdID = "ad_id",
+            AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
             Alart = "alart",
             Aleid = "aleid",
