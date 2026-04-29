@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.4.0 (2026-04-29)
+
+Full Changelog: [v1.3.1...v1.4.0](https://github.com/with-ours/ingest-sdk-csharp/compare/v1.3.1...v1.4.0)
+
+### Features
+
+* **api:** api update ([3b3cfb7](https://github.com/with-ours/ingest-sdk-csharp/commit/3b3cfb7bdc73b66c3d80fb6920a3b25d740eb166))
+* **api:** api update ([b6fb993](https://github.com/with-ours/ingest-sdk-csharp/commit/b6fb99389c748de1a020e54dde74ad1db6b23a0b))
+* support setting headers via env ([3d20c4a](https://github.com/with-ours/ingest-sdk-csharp/commit/3d20c4a15146027edb2aa41a0a01c06a5743ae32))
+
 ## 1.3.1 (2026-04-16)
 
 Full Changelog: [v1.3.0...v1.3.1](https://github.com/with-ours/ingest-sdk-csharp/compare/v1.3.0...v1.3.1)

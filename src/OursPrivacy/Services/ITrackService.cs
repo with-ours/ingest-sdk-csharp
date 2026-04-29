@@ -29,8 +29,11 @@ public interface ITrackService
     /// <summary>
     /// Track events from your server. Please include at least one of: userId,
     /// externalId, or email. These properties help us associate events with existing
-    /// users. For all fields, null values unset the property and undefined values do
-    /// not unset existing properties.
+    /// users. For top-level visitor properties: null clears the existing value, while
+    /// undefined, omitted fields, and empty strings are ignored. For entries inside
+    /// custom_properties: null, undefined, and empty strings are all ignored
+    /// (custom_properties use merge semantics). See
+    /// https://docs.oursprivacy.com/docs/data-types for details and common pitfalls.
     /// </summary>
     Task<TrackEventResponse> Event(
         TrackEventParams parameters,
