@@ -60,7 +60,9 @@
     }
   ],
   "reviewers": [
-    "tylerzey"
+    "tylerzey",
+    "victorcastilloharrington",
+    "robertlaprise"
   ],
   "release-type": "simple",
   "extra-files": [

@@ -49,11 +49,11 @@ public interface IOursPrivacyClient : IDisposable
     /// </summary>
     IOursPrivacyClient WithOptions(Func<ClientOptions, ClientOptions> modifier);
 
+    IBatchService Batch { get; }
+
     ITrackService Track { get; }
 
     IVisitorService Visitor { get; }
-
-    IBatchService Batch { get; }
 }
 
 /// <summary>
@@ -83,11 +83,11 @@ public interface IOursPrivacyClientWithRawResponse : IDisposable
     /// </summary>
     IOursPrivacyClientWithRawResponse WithOptions(Func<ClientOptions, ClientOptions> modifier);
 
+    IBatchServiceWithRawResponse Batch { get; }
+
     ITrackServiceWithRawResponse Track { get; }
 
     IVisitorServiceWithRawResponse Visitor { get; }
-
-    IBatchServiceWithRawResponse Batch { get; }
 
     /// <summary>
     /// Sends a request to the Ours Privacy REST API.
