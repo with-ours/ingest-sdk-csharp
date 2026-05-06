@@ -65,6 +65,12 @@ public sealed class OursPrivacyClient : IOursPrivacyClient
         return new OursPrivacyClient(modifier(this._options));
     }
 
+    readonly Lazy<IBatchService> _batch;
+    public IBatchService Batch
+    {
+        get { return _batch.Value; }
+    }
+
     readonly Lazy<ITrackService> _track;
     public ITrackService Track
     {
@@ -77,12 +83,6 @@ public sealed class OursPrivacyClient : IOursPrivacyClient
         get { return _visitor.Value; }
     }
 
-    readonly Lazy<IBatchService> _batch;
-    public IBatchService Batch
-    {
-        get { return _batch.Value; }
-    }
-
     public void Dispose() => this.HttpClient.Dispose();
 
     public OursPrivacyClient()
@@ -90,9 +90,9 @@ public sealed class OursPrivacyClient : IOursPrivacyClient
         _options = new();
 
         _withRawResponse = new(() => new OursPrivacyClientWithRawResponse(this._options));
+        _batch = new(() => new BatchService(this));
         _track = new(() => new TrackService(this));
         _visitor = new(() => new VisitorService(this));
-        _batch = new(() => new BatchService(this));
     }
 
     public OursPrivacyClient(ClientOptions options)
@@ -161,6 +161,12 @@ public sealed class OursPrivacyClientWithRawResponse : IOursPrivacyClientWithRaw
         return new OursPrivacyClientWithRawResponse(modifier(this._options));
     }
 
+    readonly Lazy<IBatchServiceWithRawResponse> _batch;
+    public IBatchServiceWithRawResponse Batch
+    {
+        get { return _batch.Value; }
+    }
+
     readonly Lazy<ITrackServiceWithRawResponse> _track;
     public ITrackServiceWithRawResponse Track
     {
@@ -171,12 +177,6 @@ public sealed class OursPrivacyClientWithRawResponse : IOursPrivacyClientWithRaw
     public IVisitorServiceWithRawResponse Visitor
     {
         get { return _visitor.Value; }
-    }
-
-    readonly Lazy<IBatchServiceWithRawResponse> _batch;
-    public IBatchServiceWithRawResponse Batch
-    {
-        get { return _batch.Value; }
     }
 
     /// <inheritdoc/>
@@ -377,9 +377,9 @@ public sealed class OursPrivacyClientWithRawResponse : IOursPrivacyClientWithRaw
     {
         _options = new();
 
+        _batch = new(() => new BatchServiceWithRawResponse(this));
         _track = new(() => new TrackServiceWithRawResponse(this));
         _visitor = new(() => new VisitorServiceWithRawResponse(this));
-        _batch = new(() => new BatchServiceWithRawResponse(this));
     }
 
     public OursPrivacyClientWithRawResponse(ClientOptions options)
