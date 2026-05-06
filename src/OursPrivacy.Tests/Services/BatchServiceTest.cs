@@ -16,8 +16,8 @@ public class BatchServiceTest : TestBase
                 [
                     new()
                     {
+                        DistinctID = "x",
                         EventValue = "x",
-                        Token = "x",
                         DefaultProperties = new()
                         {
                             ActiveDuration = 0,
@@ -93,7 +93,6 @@ public class BatchServiceTest : TestBase
                             Wbraid = "wbraid",
                             Webview = true,
                         },
-                        DistinctID = "x",
                         Email = "x",
                         EventProperties = new Dictionary<string, string?>() { { "foo", "string" } },
                         ExternalID = "x",
