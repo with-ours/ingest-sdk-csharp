@@ -1,6 +1,7 @@
 using System.Text.Json;
 using OursPrivacy.Exceptions;
 using OursPrivacy.Models.Track;
+using Batch = OursPrivacy.Models.Batch;
 using Visitor = OursPrivacy.Models.Visitor;
 
 namespace OursPrivacy.Core;
@@ -24,6 +25,9 @@ public abstract record class ModelBase
             new FrozenDictionaryConverterFactory(),
             new ApiEnumConverter<bool, Success>(),
             new ApiEnumConverter<bool, Visitor::Success>(),
+            new ApiEnumConverter<double, Batch::Failed>(),
+            new ApiEnumConverter<bool, Batch::Success>(),
+            new ApiEnumConverter<bool, Batch::BatchCreateResponseSuccess>(),
         },
     };
 
