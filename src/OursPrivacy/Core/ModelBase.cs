@@ -23,9 +23,9 @@ public abstract record class ModelBase
         Converters =
         {
             new FrozenDictionaryConverterFactory(),
-            new ApiEnumConverter<double, Failed>(),
             new ApiEnumConverter<bool, Success>(),
-            new ApiEnumConverter<bool, BatchCreateResponseSuccess>(),
+            new ApiEnumConverter<string, Code>(),
+            new ApiEnumConverter<bool, UnionMember1Success>(),
             new ApiEnumConverter<bool, Track::Success>(),
             new ApiEnumConverter<bool, Visitor::Success>(),
         },

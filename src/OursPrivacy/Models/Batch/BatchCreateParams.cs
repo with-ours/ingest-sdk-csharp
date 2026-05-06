@@ -174,6 +174,19 @@ public record class BatchCreateParams : ParamsBase
 public sealed record class Event : JsonModel
 {
     /// <summary>
+    /// A unique identifier for the event. This helps prevent duplicate events.
+    /// </summary>
+    public required string DistinctID
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNotNullClass<string>("distinctId");
+        }
+        init { this._rawData.Set("distinctId", value); }
+    }
+
+    /// <summary>
     /// The name of the event you're tracking. This must be whitelisted in the Ours dashboard.
     /// </summary>
     public required string EventValue
@@ -187,27 +200,6 @@ public sealed record class Event : JsonModel
     }
 
     /// <summary>
-    /// The token for your Source. You can find this in the dashboard.
-    /// </summary>
-    public string? Token
-    {
-        get
-        {
-            this._rawData.Freeze();
-            return this._rawData.GetNullableClass<string>("token");
-        }
-        init
-        {
-            if (value == null)
-            {
-                return;
-            }
-
-            this._rawData.Set("token", value);
-        }
-    }
-
-    /// <summary>
     /// These properties are used throughout the Ours app to pass known values onto destinations
     /// </summary>
     public DefaultProperties? DefaultProperties
@@ -218,19 +210,6 @@ public sealed record class Event : JsonModel
             return this._rawData.GetNullableClass<DefaultProperties>("defaultProperties");
         }
         init { this._rawData.Set("defaultProperties", value); }
-    }
-
-    /// <summary>
-    /// A unique identifier for the event. This helps prevent duplicate events.
-    /// </summary>
-    public string? DistinctID
-    {
-        get
-        {
-            this._rawData.Freeze();
-            return this._rawData.GetNullableClass<string>("distinctId");
-        }
-        init { this._rawData.Set("distinctId", value); }
     }
 
     /// <summary>
@@ -343,10 +322,9 @@ public sealed record class Event : JsonModel
     /// <inheritdoc/>
     public override void Validate()
     {
-        _ = this.EventValue;
-        _ = this.Token;
-        this.DefaultProperties?.Validate();
         _ = this.DistinctID;
+        _ = this.EventValue;
+        this.DefaultProperties?.Validate();
         _ = this.Email;
         _ = this.EventProperties;
         _ = this.ExternalID;
@@ -381,13 +359,6 @@ public sealed record class Event : JsonModel
     public static Event FromRawUnchecked(IReadOnlyDictionary<string, JsonElement> rawData)
     {
         return new(FrozenDictionary.ToFrozenDictionary(rawData));
-    }
-
-    [SetsRequiredMembers]
-    public Event(string eventValue)
-        : this()
-    {
-        this.EventValue = eventValue;
     }
 }
 
