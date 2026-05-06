@@ -49,6 +49,8 @@ public interface IOursPrivacyClient : IDisposable
     /// </summary>
     IOursPrivacyClient WithOptions(Func<ClientOptions, ClientOptions> modifier);
 
+    IBatchService Batch { get; }
+
     ITrackService Track { get; }
 
     IVisitorService Visitor { get; }
@@ -80,6 +82,8 @@ public interface IOursPrivacyClientWithRawResponse : IDisposable
     /// <para>The original service is not modified.</para>
     /// </summary>
     IOursPrivacyClientWithRawResponse WithOptions(Func<ClientOptions, ClientOptions> modifier);
+
+    IBatchServiceWithRawResponse Batch { get; }
 
     ITrackServiceWithRawResponse Track { get; }
 
