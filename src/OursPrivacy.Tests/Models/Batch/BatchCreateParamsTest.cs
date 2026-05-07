@@ -18,8 +18,8 @@ public class BatchCreateParamsTest : TestBase
             [
                 new()
                 {
+                    DistinctID = "x",
                     EventValue = "x",
-                    Token = "x",
                     DefaultProperties = new()
                     {
                         ActiveDuration = 0,
@@ -95,7 +95,6 @@ public class BatchCreateParamsTest : TestBase
                         Wbraid = "wbraid",
                         Webview = true,
                     },
-                    DistinctID = "x",
                     Email = "x",
                     EventProperties = new Dictionary<string, string?>() { { "foo", "string" } },
                     ExternalID = "x",
@@ -175,8 +174,8 @@ public class BatchCreateParamsTest : TestBase
         [
             new()
             {
+                DistinctID = "x",
                 EventValue = "x",
-                Token = "x",
                 DefaultProperties = new()
                 {
                     ActiveDuration = 0,
@@ -252,7 +251,6 @@ public class BatchCreateParamsTest : TestBase
                     Wbraid = "wbraid",
                     Webview = true,
                 },
-                DistinctID = "x",
                 Email = "x",
                 EventProperties = new Dictionary<string, string?>() { { "foo", "string" } },
                 ExternalID = "x",
@@ -341,8 +339,8 @@ public class BatchCreateParamsTest : TestBase
             [
                 new()
                 {
+                    DistinctID = "x",
                     EventValue = "x",
-                    Token = "x",
                     DefaultProperties = new()
                     {
                         ActiveDuration = 0,
@@ -418,7 +416,6 @@ public class BatchCreateParamsTest : TestBase
                         Wbraid = "wbraid",
                         Webview = true,
                     },
-                    DistinctID = "x",
                     Email = "x",
                     EventProperties = new Dictionary<string, string?>() { { "foo", "string" } },
                     ExternalID = "x",
@@ -508,8 +505,8 @@ public class BatchCreateParamsTest : TestBase
             [
                 new()
                 {
+                    DistinctID = "x",
                     EventValue = "x",
-                    Token = "x",
                     DefaultProperties = new()
                     {
                         ActiveDuration = 0,
@@ -585,7 +582,6 @@ public class BatchCreateParamsTest : TestBase
                         Wbraid = "wbraid",
                         Webview = true,
                     },
-                    DistinctID = "x",
                     Email = "x",
                     EventProperties = new Dictionary<string, string?>() { { "foo", "string" } },
                     ExternalID = "x",
@@ -673,8 +669,8 @@ public class EventTest : TestBase
     {
         var model = new Event
         {
+            DistinctID = "x",
             EventValue = "x",
-            Token = "x",
             DefaultProperties = new()
             {
                 ActiveDuration = 0,
@@ -750,7 +746,6 @@ public class EventTest : TestBase
                 Wbraid = "wbraid",
                 Webview = true,
             },
-            DistinctID = "x",
             Email = "x",
             EventProperties = new Dictionary<string, string?>() { { "foo", "string" } },
             ExternalID = "x",
@@ -820,8 +815,8 @@ public class EventTest : TestBase
             },
         };
 
+        string expectedDistinctID = "x";
         string expectedEventValue = "x";
-        string expectedToken = "x";
         DefaultProperties expectedDefaultProperties = new()
         {
             ActiveDuration = 0,
@@ -897,7 +892,6 @@ public class EventTest : TestBase
             Wbraid = "wbraid",
             Webview = true,
         };
-        string expectedDistinctID = "x";
         string expectedEmail = "x";
         Dictionary<string, string?> expectedEventProperties = new() { { "foo", "string" } };
         string expectedExternalID = "x";
@@ -966,10 +960,9 @@ public class EventTest : TestBase
             Zip = "zip",
         };
 
-        Assert.Equal(expectedEventValue, model.EventValue);
-        Assert.Equal(expectedToken, model.Token);
-        Assert.Equal(expectedDefaultProperties, model.DefaultProperties);
         Assert.Equal(expectedDistinctID, model.DistinctID);
+        Assert.Equal(expectedEventValue, model.EventValue);
+        Assert.Equal(expectedDefaultProperties, model.DefaultProperties);
         Assert.Equal(expectedEmail, model.Email);
         Assert.NotNull(model.EventProperties);
         Assert.Equal(expectedEventProperties.Count, model.EventProperties.Count);
@@ -991,8 +984,8 @@ public class EventTest : TestBase
     {
         var model = new Event
         {
+            DistinctID = "x",
             EventValue = "x",
-            Token = "x",
             DefaultProperties = new()
             {
                 ActiveDuration = 0,
@@ -1068,7 +1061,6 @@ public class EventTest : TestBase
                 Wbraid = "wbraid",
                 Webview = true,
             },
-            DistinctID = "x",
             Email = "x",
             EventProperties = new Dictionary<string, string?>() { { "foo", "string" } },
             ExternalID = "x",
@@ -1149,8 +1141,8 @@ public class EventTest : TestBase
     {
         var model = new Event
         {
+            DistinctID = "x",
             EventValue = "x",
-            Token = "x",
             DefaultProperties = new()
             {
                 ActiveDuration = 0,
@@ -1226,7 +1218,6 @@ public class EventTest : TestBase
                 Wbraid = "wbraid",
                 Webview = true,
             },
-            DistinctID = "x",
             Email = "x",
             EventProperties = new Dictionary<string, string?>() { { "foo", "string" } },
             ExternalID = "x",
@@ -1300,8 +1291,8 @@ public class EventTest : TestBase
         var deserialized = JsonSerializer.Deserialize<Event>(element, ModelBase.SerializerOptions);
         Assert.NotNull(deserialized);
 
+        string expectedDistinctID = "x";
         string expectedEventValue = "x";
-        string expectedToken = "x";
         DefaultProperties expectedDefaultProperties = new()
         {
             ActiveDuration = 0,
@@ -1377,7 +1368,6 @@ public class EventTest : TestBase
             Wbraid = "wbraid",
             Webview = true,
         };
-        string expectedDistinctID = "x";
         string expectedEmail = "x";
         Dictionary<string, string?> expectedEventProperties = new() { { "foo", "string" } };
         string expectedExternalID = "x";
@@ -1446,10 +1436,9 @@ public class EventTest : TestBase
             Zip = "zip",
         };
 
-        Assert.Equal(expectedEventValue, deserialized.EventValue);
-        Assert.Equal(expectedToken, deserialized.Token);
-        Assert.Equal(expectedDefaultProperties, deserialized.DefaultProperties);
         Assert.Equal(expectedDistinctID, deserialized.DistinctID);
+        Assert.Equal(expectedEventValue, deserialized.EventValue);
+        Assert.Equal(expectedDefaultProperties, deserialized.DefaultProperties);
         Assert.Equal(expectedEmail, deserialized.Email);
         Assert.NotNull(deserialized.EventProperties);
         Assert.Equal(expectedEventProperties.Count, deserialized.EventProperties.Count);
@@ -1471,161 +1460,7 @@ public class EventTest : TestBase
     {
         var model = new Event
         {
-            EventValue = "x",
-            Token = "x",
-            DefaultProperties = new()
-            {
-                ActiveDuration = 0,
-                AdID = "ad_id",
-                AdmitadUid = "admitad_uid",
-                AdsetID = "adset_id",
-                Alart = "alart",
-                Aleid = "aleid",
-                Axwrt = "axwrt",
-                BasisCid = "basis_cid",
-                BrowserLanguage = "browser_language",
-                BrowserName = "browser_name",
-                BrowserVersion = "browser_version",
-                CampaignID = "campaign_id",
-                Clickid = "clickid",
-                Clid = "clid",
-                CpuArchitecture = "cpu_architecture",
-                CurrentUrl = "current_url",
-                Dclid = "dclid",
-                DeviceModel = "device_model",
-                DeviceType = "device_type",
-                DeviceVendor = "device_vendor",
-                Duration = 0,
-                Encoding = "encoding",
-                EngineName = "engine_name",
-                EngineVersion = "engine_version",
-                Epik = "epik",
-                Fbc = "fbc",
-                Fbclid = "fbclid",
-                Fbp = "fbp",
-                Fv = true,
-                GadSource = "gad_source",
-                Gbraid = "gbraid",
-                Gclid = "gclid",
-                Host = "host",
-                Iframe = true,
-                ImRef = "im_ref",
-                IP = "ip",
-                Irclickid = "irclickid",
-                IsBot = "is_bot",
-                LiFatID = "li_fat_id",
-                Msclkid = "msclkid",
-                Ndclid = "ndclid",
-                NewS = true,
-                OsName = "os_name",
-                OsVersion = "os_version",
-                PageHash = 0,
-                Pathname = "pathname",
-                Qclid = "qclid",
-                RdtCid = "rdt_cid",
-                ReceivedAt = "received_at",
-                Referrer = "referrer",
-                ReferringDomain = "referring_domain",
-                Sacid = "sacid",
-                Sccid = "sccid",
-                ScreenHeight = 0,
-                ScreenWidth = 0,
-                SessionCount = 0,
-                Sid = "sid",
-                Sr = "sr",
-                Title = "title",
-                Ttclid = "ttclid",
-                Twclid = "twclid",
-                Uafvl = "uafvl",
-                UserAgent = "user_agent",
-                UtmCampaign = "utm_campaign",
-                UtmContent = "utm_content",
-                UtmMedium = "utm_medium",
-                UtmName = "utm_name",
-                UtmSource = "utm_source",
-                UtmTerm = "utm_term",
-                Version = "version",
-                Wbraid = "wbraid",
-                Webview = true,
-            },
             DistinctID = "x",
-            Email = "x",
-            EventProperties = new Dictionary<string, string?>() { { "foo", "string" } },
-            ExternalID = "x",
-            IdentityContext = new() { IP = "ip", UserAgent = "userAgent" },
-            Time = 0,
-            UserID = "x",
-            UserProperties = new()
-            {
-                AdID = "ad_id",
-                AdmitadUid = "admitad_uid",
-                AdsetID = "adset_id",
-                Alart = "alart",
-                Aleid = "aleid",
-                Axwrt = "axwrt",
-                BasisCid = "basis_cid",
-                CampaignID = "campaign_id",
-                City = "city",
-                Clickid = "clickid",
-                Clid = "clid",
-                CompanyName = "company_name",
-                Consent = new Dictionary<string, string?>() { { "foo", "string" } },
-                Country = "country",
-                CustomProperties = new Dictionary<string, string?>() { { "foo", "string" } },
-                DateOfBirth = "date_of_birth",
-                Dclid = "dclid",
-                Email = "email",
-                Epik = "epik",
-                ExternalID = "external_id",
-                Fbc = "fbc",
-                Fbclid = "fbclid",
-                Fbp = "fbp",
-                FirstName = "first_name",
-                GadSource = "gad_source",
-                Gbraid = "gbraid",
-                Gclid = "gclid",
-                Gender = "gender",
-                ImRef = "im_ref",
-                IP = "ip",
-                Irclickid = "irclickid",
-                IsBot = "is_bot",
-                JobTitle = "job_title",
-                LastName = "last_name",
-                LiFatID = "li_fat_id",
-                Msclkid = "msclkid",
-                Ndclid = "ndclid",
-                PhoneNumber = "phone_number",
-                Qclid = "qclid",
-                RdtCid = "rdt_cid",
-                Referrer = "referrer",
-                ReferringDomain = "referring_domain",
-                Sacid = "sacid",
-                Sccid = "sccid",
-                Sid = "sid",
-                State = "state",
-                Ttclid = "ttclid",
-                Twclid = "twclid",
-                UserAgent = "user_agent",
-                UserAgentFullList = "user_agent_full_list",
-                UtmCampaign = "utm_campaign",
-                UtmContent = "utm_content",
-                UtmMedium = "utm_medium",
-                UtmName = "utm_name",
-                UtmSource = "utm_source",
-                UtmTerm = "utm_term",
-                Wbraid = "wbraid",
-                Zip = "zip",
-            },
-        };
-
-        model.Validate();
-    }
-
-    [Fact]
-    public void OptionalNonNullablePropertiesUnsetAreNotSet_Works()
-    {
-        var model = new Event
-        {
             EventValue = "x",
             DefaultProperties = new()
             {
@@ -1702,7 +1537,6 @@ public class EventTest : TestBase
                 Wbraid = "wbraid",
                 Webview = true,
             },
-            DistinctID = "x",
             Email = "x",
             EventProperties = new Dictionary<string, string?>() { { "foo", "string" } },
             ExternalID = "x",
@@ -1770,476 +1604,6 @@ public class EventTest : TestBase
                 Wbraid = "wbraid",
                 Zip = "zip",
             },
-        };
-
-        Assert.Null(model.Token);
-        Assert.False(model.RawData.ContainsKey("token"));
-    }
-
-    [Fact]
-    public void OptionalNonNullablePropertiesUnsetValidation_Works()
-    {
-        var model = new Event
-        {
-            EventValue = "x",
-            DefaultProperties = new()
-            {
-                ActiveDuration = 0,
-                AdID = "ad_id",
-                AdmitadUid = "admitad_uid",
-                AdsetID = "adset_id",
-                Alart = "alart",
-                Aleid = "aleid",
-                Axwrt = "axwrt",
-                BasisCid = "basis_cid",
-                BrowserLanguage = "browser_language",
-                BrowserName = "browser_name",
-                BrowserVersion = "browser_version",
-                CampaignID = "campaign_id",
-                Clickid = "clickid",
-                Clid = "clid",
-                CpuArchitecture = "cpu_architecture",
-                CurrentUrl = "current_url",
-                Dclid = "dclid",
-                DeviceModel = "device_model",
-                DeviceType = "device_type",
-                DeviceVendor = "device_vendor",
-                Duration = 0,
-                Encoding = "encoding",
-                EngineName = "engine_name",
-                EngineVersion = "engine_version",
-                Epik = "epik",
-                Fbc = "fbc",
-                Fbclid = "fbclid",
-                Fbp = "fbp",
-                Fv = true,
-                GadSource = "gad_source",
-                Gbraid = "gbraid",
-                Gclid = "gclid",
-                Host = "host",
-                Iframe = true,
-                ImRef = "im_ref",
-                IP = "ip",
-                Irclickid = "irclickid",
-                IsBot = "is_bot",
-                LiFatID = "li_fat_id",
-                Msclkid = "msclkid",
-                Ndclid = "ndclid",
-                NewS = true,
-                OsName = "os_name",
-                OsVersion = "os_version",
-                PageHash = 0,
-                Pathname = "pathname",
-                Qclid = "qclid",
-                RdtCid = "rdt_cid",
-                ReceivedAt = "received_at",
-                Referrer = "referrer",
-                ReferringDomain = "referring_domain",
-                Sacid = "sacid",
-                Sccid = "sccid",
-                ScreenHeight = 0,
-                ScreenWidth = 0,
-                SessionCount = 0,
-                Sid = "sid",
-                Sr = "sr",
-                Title = "title",
-                Ttclid = "ttclid",
-                Twclid = "twclid",
-                Uafvl = "uafvl",
-                UserAgent = "user_agent",
-                UtmCampaign = "utm_campaign",
-                UtmContent = "utm_content",
-                UtmMedium = "utm_medium",
-                UtmName = "utm_name",
-                UtmSource = "utm_source",
-                UtmTerm = "utm_term",
-                Version = "version",
-                Wbraid = "wbraid",
-                Webview = true,
-            },
-            DistinctID = "x",
-            Email = "x",
-            EventProperties = new Dictionary<string, string?>() { { "foo", "string" } },
-            ExternalID = "x",
-            IdentityContext = new() { IP = "ip", UserAgent = "userAgent" },
-            Time = 0,
-            UserID = "x",
-            UserProperties = new()
-            {
-                AdID = "ad_id",
-                AdmitadUid = "admitad_uid",
-                AdsetID = "adset_id",
-                Alart = "alart",
-                Aleid = "aleid",
-                Axwrt = "axwrt",
-                BasisCid = "basis_cid",
-                CampaignID = "campaign_id",
-                City = "city",
-                Clickid = "clickid",
-                Clid = "clid",
-                CompanyName = "company_name",
-                Consent = new Dictionary<string, string?>() { { "foo", "string" } },
-                Country = "country",
-                CustomProperties = new Dictionary<string, string?>() { { "foo", "string" } },
-                DateOfBirth = "date_of_birth",
-                Dclid = "dclid",
-                Email = "email",
-                Epik = "epik",
-                ExternalID = "external_id",
-                Fbc = "fbc",
-                Fbclid = "fbclid",
-                Fbp = "fbp",
-                FirstName = "first_name",
-                GadSource = "gad_source",
-                Gbraid = "gbraid",
-                Gclid = "gclid",
-                Gender = "gender",
-                ImRef = "im_ref",
-                IP = "ip",
-                Irclickid = "irclickid",
-                IsBot = "is_bot",
-                JobTitle = "job_title",
-                LastName = "last_name",
-                LiFatID = "li_fat_id",
-                Msclkid = "msclkid",
-                Ndclid = "ndclid",
-                PhoneNumber = "phone_number",
-                Qclid = "qclid",
-                RdtCid = "rdt_cid",
-                Referrer = "referrer",
-                ReferringDomain = "referring_domain",
-                Sacid = "sacid",
-                Sccid = "sccid",
-                Sid = "sid",
-                State = "state",
-                Ttclid = "ttclid",
-                Twclid = "twclid",
-                UserAgent = "user_agent",
-                UserAgentFullList = "user_agent_full_list",
-                UtmCampaign = "utm_campaign",
-                UtmContent = "utm_content",
-                UtmMedium = "utm_medium",
-                UtmName = "utm_name",
-                UtmSource = "utm_source",
-                UtmTerm = "utm_term",
-                Wbraid = "wbraid",
-                Zip = "zip",
-            },
-        };
-
-        model.Validate();
-    }
-
-    [Fact]
-    public void OptionalNonNullablePropertiesSetToNullAreNotSet_Works()
-    {
-        var model = new Event
-        {
-            EventValue = "x",
-            DefaultProperties = new()
-            {
-                ActiveDuration = 0,
-                AdID = "ad_id",
-                AdmitadUid = "admitad_uid",
-                AdsetID = "adset_id",
-                Alart = "alart",
-                Aleid = "aleid",
-                Axwrt = "axwrt",
-                BasisCid = "basis_cid",
-                BrowserLanguage = "browser_language",
-                BrowserName = "browser_name",
-                BrowserVersion = "browser_version",
-                CampaignID = "campaign_id",
-                Clickid = "clickid",
-                Clid = "clid",
-                CpuArchitecture = "cpu_architecture",
-                CurrentUrl = "current_url",
-                Dclid = "dclid",
-                DeviceModel = "device_model",
-                DeviceType = "device_type",
-                DeviceVendor = "device_vendor",
-                Duration = 0,
-                Encoding = "encoding",
-                EngineName = "engine_name",
-                EngineVersion = "engine_version",
-                Epik = "epik",
-                Fbc = "fbc",
-                Fbclid = "fbclid",
-                Fbp = "fbp",
-                Fv = true,
-                GadSource = "gad_source",
-                Gbraid = "gbraid",
-                Gclid = "gclid",
-                Host = "host",
-                Iframe = true,
-                ImRef = "im_ref",
-                IP = "ip",
-                Irclickid = "irclickid",
-                IsBot = "is_bot",
-                LiFatID = "li_fat_id",
-                Msclkid = "msclkid",
-                Ndclid = "ndclid",
-                NewS = true,
-                OsName = "os_name",
-                OsVersion = "os_version",
-                PageHash = 0,
-                Pathname = "pathname",
-                Qclid = "qclid",
-                RdtCid = "rdt_cid",
-                ReceivedAt = "received_at",
-                Referrer = "referrer",
-                ReferringDomain = "referring_domain",
-                Sacid = "sacid",
-                Sccid = "sccid",
-                ScreenHeight = 0,
-                ScreenWidth = 0,
-                SessionCount = 0,
-                Sid = "sid",
-                Sr = "sr",
-                Title = "title",
-                Ttclid = "ttclid",
-                Twclid = "twclid",
-                Uafvl = "uafvl",
-                UserAgent = "user_agent",
-                UtmCampaign = "utm_campaign",
-                UtmContent = "utm_content",
-                UtmMedium = "utm_medium",
-                UtmName = "utm_name",
-                UtmSource = "utm_source",
-                UtmTerm = "utm_term",
-                Version = "version",
-                Wbraid = "wbraid",
-                Webview = true,
-            },
-            DistinctID = "x",
-            Email = "x",
-            EventProperties = new Dictionary<string, string?>() { { "foo", "string" } },
-            ExternalID = "x",
-            IdentityContext = new() { IP = "ip", UserAgent = "userAgent" },
-            Time = 0,
-            UserID = "x",
-            UserProperties = new()
-            {
-                AdID = "ad_id",
-                AdmitadUid = "admitad_uid",
-                AdsetID = "adset_id",
-                Alart = "alart",
-                Aleid = "aleid",
-                Axwrt = "axwrt",
-                BasisCid = "basis_cid",
-                CampaignID = "campaign_id",
-                City = "city",
-                Clickid = "clickid",
-                Clid = "clid",
-                CompanyName = "company_name",
-                Consent = new Dictionary<string, string?>() { { "foo", "string" } },
-                Country = "country",
-                CustomProperties = new Dictionary<string, string?>() { { "foo", "string" } },
-                DateOfBirth = "date_of_birth",
-                Dclid = "dclid",
-                Email = "email",
-                Epik = "epik",
-                ExternalID = "external_id",
-                Fbc = "fbc",
-                Fbclid = "fbclid",
-                Fbp = "fbp",
-                FirstName = "first_name",
-                GadSource = "gad_source",
-                Gbraid = "gbraid",
-                Gclid = "gclid",
-                Gender = "gender",
-                ImRef = "im_ref",
-                IP = "ip",
-                Irclickid = "irclickid",
-                IsBot = "is_bot",
-                JobTitle = "job_title",
-                LastName = "last_name",
-                LiFatID = "li_fat_id",
-                Msclkid = "msclkid",
-                Ndclid = "ndclid",
-                PhoneNumber = "phone_number",
-                Qclid = "qclid",
-                RdtCid = "rdt_cid",
-                Referrer = "referrer",
-                ReferringDomain = "referring_domain",
-                Sacid = "sacid",
-                Sccid = "sccid",
-                Sid = "sid",
-                State = "state",
-                Ttclid = "ttclid",
-                Twclid = "twclid",
-                UserAgent = "user_agent",
-                UserAgentFullList = "user_agent_full_list",
-                UtmCampaign = "utm_campaign",
-                UtmContent = "utm_content",
-                UtmMedium = "utm_medium",
-                UtmName = "utm_name",
-                UtmSource = "utm_source",
-                UtmTerm = "utm_term",
-                Wbraid = "wbraid",
-                Zip = "zip",
-            },
-
-            // Null should be interpreted as omitted for these properties
-            Token = null,
-        };
-
-        Assert.Null(model.Token);
-        Assert.False(model.RawData.ContainsKey("token"));
-    }
-
-    [Fact]
-    public void OptionalNonNullablePropertiesSetToNullValidation_Works()
-    {
-        var model = new Event
-        {
-            EventValue = "x",
-            DefaultProperties = new()
-            {
-                ActiveDuration = 0,
-                AdID = "ad_id",
-                AdmitadUid = "admitad_uid",
-                AdsetID = "adset_id",
-                Alart = "alart",
-                Aleid = "aleid",
-                Axwrt = "axwrt",
-                BasisCid = "basis_cid",
-                BrowserLanguage = "browser_language",
-                BrowserName = "browser_name",
-                BrowserVersion = "browser_version",
-                CampaignID = "campaign_id",
-                Clickid = "clickid",
-                Clid = "clid",
-                CpuArchitecture = "cpu_architecture",
-                CurrentUrl = "current_url",
-                Dclid = "dclid",
-                DeviceModel = "device_model",
-                DeviceType = "device_type",
-                DeviceVendor = "device_vendor",
-                Duration = 0,
-                Encoding = "encoding",
-                EngineName = "engine_name",
-                EngineVersion = "engine_version",
-                Epik = "epik",
-                Fbc = "fbc",
-                Fbclid = "fbclid",
-                Fbp = "fbp",
-                Fv = true,
-                GadSource = "gad_source",
-                Gbraid = "gbraid",
-                Gclid = "gclid",
-                Host = "host",
-                Iframe = true,
-                ImRef = "im_ref",
-                IP = "ip",
-                Irclickid = "irclickid",
-                IsBot = "is_bot",
-                LiFatID = "li_fat_id",
-                Msclkid = "msclkid",
-                Ndclid = "ndclid",
-                NewS = true,
-                OsName = "os_name",
-                OsVersion = "os_version",
-                PageHash = 0,
-                Pathname = "pathname",
-                Qclid = "qclid",
-                RdtCid = "rdt_cid",
-                ReceivedAt = "received_at",
-                Referrer = "referrer",
-                ReferringDomain = "referring_domain",
-                Sacid = "sacid",
-                Sccid = "sccid",
-                ScreenHeight = 0,
-                ScreenWidth = 0,
-                SessionCount = 0,
-                Sid = "sid",
-                Sr = "sr",
-                Title = "title",
-                Ttclid = "ttclid",
-                Twclid = "twclid",
-                Uafvl = "uafvl",
-                UserAgent = "user_agent",
-                UtmCampaign = "utm_campaign",
-                UtmContent = "utm_content",
-                UtmMedium = "utm_medium",
-                UtmName = "utm_name",
-                UtmSource = "utm_source",
-                UtmTerm = "utm_term",
-                Version = "version",
-                Wbraid = "wbraid",
-                Webview = true,
-            },
-            DistinctID = "x",
-            Email = "x",
-            EventProperties = new Dictionary<string, string?>() { { "foo", "string" } },
-            ExternalID = "x",
-            IdentityContext = new() { IP = "ip", UserAgent = "userAgent" },
-            Time = 0,
-            UserID = "x",
-            UserProperties = new()
-            {
-                AdID = "ad_id",
-                AdmitadUid = "admitad_uid",
-                AdsetID = "adset_id",
-                Alart = "alart",
-                Aleid = "aleid",
-                Axwrt = "axwrt",
-                BasisCid = "basis_cid",
-                CampaignID = "campaign_id",
-                City = "city",
-                Clickid = "clickid",
-                Clid = "clid",
-                CompanyName = "company_name",
-                Consent = new Dictionary<string, string?>() { { "foo", "string" } },
-                Country = "country",
-                CustomProperties = new Dictionary<string, string?>() { { "foo", "string" } },
-                DateOfBirth = "date_of_birth",
-                Dclid = "dclid",
-                Email = "email",
-                Epik = "epik",
-                ExternalID = "external_id",
-                Fbc = "fbc",
-                Fbclid = "fbclid",
-                Fbp = "fbp",
-                FirstName = "first_name",
-                GadSource = "gad_source",
-                Gbraid = "gbraid",
-                Gclid = "gclid",
-                Gender = "gender",
-                ImRef = "im_ref",
-                IP = "ip",
-                Irclickid = "irclickid",
-                IsBot = "is_bot",
-                JobTitle = "job_title",
-                LastName = "last_name",
-                LiFatID = "li_fat_id",
-                Msclkid = "msclkid",
-                Ndclid = "ndclid",
-                PhoneNumber = "phone_number",
-                Qclid = "qclid",
-                RdtCid = "rdt_cid",
-                Referrer = "referrer",
-                ReferringDomain = "referring_domain",
-                Sacid = "sacid",
-                Sccid = "sccid",
-                Sid = "sid",
-                State = "state",
-                Ttclid = "ttclid",
-                Twclid = "twclid",
-                UserAgent = "user_agent",
-                UserAgentFullList = "user_agent_full_list",
-                UtmCampaign = "utm_campaign",
-                UtmContent = "utm_content",
-                UtmMedium = "utm_medium",
-                UtmName = "utm_name",
-                UtmSource = "utm_source",
-                UtmTerm = "utm_term",
-                Wbraid = "wbraid",
-                Zip = "zip",
-            },
-
-            // Null should be interpreted as omitted for these properties
-            Token = null,
         };
 
         model.Validate();
@@ -2248,12 +1612,10 @@ public class EventTest : TestBase
     [Fact]
     public void OptionalNullablePropertiesUnsetAreNotSet_Works()
     {
-        var model = new Event { EventValue = "x", Token = "x" };
+        var model = new Event { DistinctID = "x", EventValue = "x" };
 
         Assert.Null(model.DefaultProperties);
         Assert.False(model.RawData.ContainsKey("defaultProperties"));
-        Assert.Null(model.DistinctID);
-        Assert.False(model.RawData.ContainsKey("distinctId"));
         Assert.Null(model.Email);
         Assert.False(model.RawData.ContainsKey("email"));
         Assert.Null(model.EventProperties);
@@ -2273,7 +1635,7 @@ public class EventTest : TestBase
     [Fact]
     public void OptionalNullablePropertiesUnsetValidation_Works()
     {
-        var model = new Event { EventValue = "x", Token = "x" };
+        var model = new Event { DistinctID = "x", EventValue = "x" };
 
         model.Validate();
     }
@@ -2283,11 +1645,10 @@ public class EventTest : TestBase
     {
         var model = new Event
         {
+            DistinctID = "x",
             EventValue = "x",
-            Token = "x",
 
             DefaultProperties = null,
-            DistinctID = null,
             Email = null,
             EventProperties = null,
             ExternalID = null,
@@ -2299,8 +1660,6 @@ public class EventTest : TestBase
 
         Assert.Null(model.DefaultProperties);
         Assert.True(model.RawData.ContainsKey("defaultProperties"));
-        Assert.Null(model.DistinctID);
-        Assert.True(model.RawData.ContainsKey("distinctId"));
         Assert.Null(model.Email);
         Assert.True(model.RawData.ContainsKey("email"));
         Assert.Null(model.EventProperties);
@@ -2322,11 +1681,10 @@ public class EventTest : TestBase
     {
         var model = new Event
         {
+            DistinctID = "x",
             EventValue = "x",
-            Token = "x",
 
             DefaultProperties = null,
-            DistinctID = null,
             Email = null,
             EventProperties = null,
             ExternalID = null,
@@ -2344,8 +1702,8 @@ public class EventTest : TestBase
     {
         var model = new Event
         {
+            DistinctID = "x",
             EventValue = "x",
-            Token = "x",
             DefaultProperties = new()
             {
                 ActiveDuration = 0,
@@ -2421,7 +1779,6 @@ public class EventTest : TestBase
                 Wbraid = "wbraid",
                 Webview = true,
             },
-            DistinctID = "x",
             Email = "x",
             EventProperties = new Dictionary<string, string?>() { { "foo", "string" } },
             ExternalID = "x",
