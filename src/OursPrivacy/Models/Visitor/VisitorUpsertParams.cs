@@ -11,12 +11,16 @@ using OursPrivacy.Core;
 namespace OursPrivacy.Models.Visitor;
 
 /// <summary>
-/// Define visitor properties on an existing visitor or create a new visitor. This
-/// fires a $identify event, making the call visible in the event stream. For top-level
-/// visitor properties: null clears the existing value, while undefined, omitted fields,
-/// and empty strings are ignored. For entries inside custom_properties: null, undefined,
-/// and empty strings are all ignored (custom_properties use merge semantics). See
-/// https://docs.oursprivacy.com/docs/data-types for details and common pitfalls.
+/// Set or update properties on an existing visitor, or create a new visitor if no
+/// match is found. This fires a $identify event, making the call visible in the event
+/// stream. Identity resolution runs in priority order: userId (direct, no lookup)
+/// → externalId (lookup by your ID) → email (fallback lookup). When a visitor is
+/// found, their Ours Visitor ID is used going forward so all future events are attached
+/// to the same profile. For top-level visitor properties: null clears the existing
+/// value, while undefined, omitted fields, and empty strings are ignored. For entries
+/// inside custom_properties: null, undefined, and empty strings are all ignored
+/// (custom_properties use merge semantics). See https://docs.oursprivacy.com/docs/data-types
+/// for details and common pitfalls.
 ///
 /// <para>NOTE: Do not inherit from this type outside the SDK unless you're okay with
 /// breaking changes in non-major versions. We may add new methods in the future that
@@ -72,9 +76,9 @@ public record class VisitorUpsertParams : ParamsBase
     }
 
     /// <summary>
-    /// The email address of a user. We will associate this event with the user or
-    /// create a user. Used for lookup if externalId and userId are not included
-    /// in the request.
+    /// The email address of a user. Used as a fallback lookup when neither userId
+    /// nor externalId is provided. We search your account for a visitor with this
+    /// email and attach the event to them. If no match is found, a new visitor is created.
     /// </summary>
     public string? Email
     {
@@ -87,9 +91,11 @@ public record class VisitorUpsertParams : ParamsBase
     }
 
     /// <summary>
-    /// The externalId (the ID in your system) of a user. We will associate this
-    /// event with the user or create a user. If included in the request, email lookup
-    /// is ignored.
+    /// Your system's unique identifier for this user. We search your account for
+    /// an existing visitor with this externalId and attach the event to them (resolving
+    /// to their Ours Visitor ID). If no match is found, a new visitor is created.
+    /// When present, email lookup is skipped. If you also have the userId from cookies
+    /// or local storage, send both — it removes the lookup round-trip.
     /// </summary>
     public string? ExternalID
     {
@@ -116,8 +122,10 @@ public record class VisitorUpsertParams : ParamsBase
     }
 
     /// <summary>
-    /// The Ours user id stored in local storage and cookies on your web properties.
-    /// If userId is included in the request, we do not lookup the user by email or externalId.
+    /// The Ours Visitor ID stored in local storage and cookies on your web properties.
+    /// When present, this is used directly — no lookup by externalId or email is
+    /// performed. If you have both a userId and an externalId, send both so the
+    /// event is attached to the right visitor without any lookup overhead.
     /// </summary>
     public string? UserID
     {

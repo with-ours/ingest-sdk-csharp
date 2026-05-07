@@ -27,12 +27,15 @@ public interface IVisitorService
     IVisitorService WithOptions(Func<ClientOptions, ClientOptions> modifier);
 
     /// <summary>
-    /// Define visitor properties on an existing visitor or create a new visitor. This
-    /// fires a $identify event, making the call visible in the event stream. For
-    /// top-level visitor properties: null clears the existing value, while undefined,
-    /// omitted fields, and empty strings are ignored. For entries inside
-    /// custom_properties: null, undefined, and empty strings are all ignored
-    /// (custom_properties use merge semantics). See
+    /// Set or update properties on an existing visitor, or create a new visitor if no
+    /// match is found. This fires a $identify event, making the call visible in the
+    /// event stream. Identity resolution runs in priority order: userId (direct, no
+    /// lookup) → externalId (lookup by your ID) → email (fallback lookup). When a
+    /// visitor is found, their Ours Visitor ID is used going forward so all future
+    /// events are attached to the same profile. For top-level visitor properties: null
+    /// clears the existing value, while undefined, omitted fields, and empty strings
+    /// are ignored. For entries inside custom_properties: null, undefined, and empty
+    /// strings are all ignored (custom_properties use merge semantics). See
     /// https://docs.oursprivacy.com/docs/data-types for details and common pitfalls.
     /// </summary>
     Task<VisitorUpsertResponse> Upsert(
