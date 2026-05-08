@@ -315,6 +315,20 @@ public record class TrackEventParams : ParamsBase
 public sealed record class DefaultProperties : JsonModel
 {
     /// <summary>
+    /// The Everflow affiliate Click (Transaction) ID, captured from the `_ef_transaction_id`
+    /// URL parameter. Ex: ef_click_abc123
+    /// </summary>
+    public string? _EfTransactionID
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("_ef_transaction_id");
+        }
+        init { this._rawData.Set("_ef_transaction_id", value); }
+    }
+
+    /// <summary>
     /// The active time in milliseconds that the user had this tab active
     /// </summary>
     public double? ActiveDuration
@@ -1253,6 +1267,7 @@ public sealed record class DefaultProperties : JsonModel
     /// <inheritdoc/>
     public override void Validate()
     {
+        _ = this._EfTransactionID;
         _ = this.ActiveDuration;
         _ = this.AdID;
         _ = this.AdmitadUid;
@@ -1446,6 +1461,16 @@ class IdentityContextFromRaw : IFromRawJson<IdentityContext>
 [JsonConverter(typeof(JsonModelConverter<UserProperties, UserPropertiesFromRaw>))]
 public sealed record class UserProperties : JsonModel
 {
+    public string? _EfTransactionID
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("_ef_transaction_id");
+        }
+        init { this._rawData.Set("_ef_transaction_id", value); }
+    }
+
     public string? AdID
     {
         get
@@ -2046,6 +2071,7 @@ public sealed record class UserProperties : JsonModel
     /// <inheritdoc/>
     public override void Validate()
     {
+        _ = this._EfTransactionID;
         _ = this.AdID;
         _ = this.AdmitadUid;
         _ = this.AdsetID;
