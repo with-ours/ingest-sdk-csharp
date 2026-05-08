@@ -20,6 +20,7 @@ public class BatchServiceTest : TestBase
                         EventValue = "x",
                         DefaultProperties = new()
                         {
+                            _EfTransactionID = "_ef_transaction_id",
                             ActiveDuration = 0,
                             AdID = "ad_id",
                             AdmitadUid = "admitad_uid",
@@ -101,6 +102,7 @@ public class BatchServiceTest : TestBase
                         UserID = "x",
                         UserProperties = new()
                         {
+                            _EfTransactionID = "_ef_transaction_id",
                             AdID = "ad_id",
                             AdmitadUid = "admitad_uid",
                             AdsetID = "adset_id",

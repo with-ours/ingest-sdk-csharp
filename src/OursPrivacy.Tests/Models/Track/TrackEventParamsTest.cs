@@ -17,6 +17,7 @@ public class TrackEventParamsTest : TestBase
             Event = "x",
             DefaultProperties = new()
             {
+                _EfTransactionID = "_ef_transaction_id",
                 ActiveDuration = 0,
                 AdID = "ad_id",
                 AdmitadUid = "admitad_uid",
@@ -99,6 +100,7 @@ public class TrackEventParamsTest : TestBase
             UserID = "x",
             UserProperties = new()
             {
+                _EfTransactionID = "_ef_transaction_id",
                 AdID = "ad_id",
                 AdmitadUid = "admitad_uid",
                 AdsetID = "adset_id",
@@ -164,6 +166,7 @@ public class TrackEventParamsTest : TestBase
         string expectedEvent = "x";
         DefaultProperties expectedDefaultProperties = new()
         {
+            _EfTransactionID = "_ef_transaction_id",
             ActiveDuration = 0,
             AdID = "ad_id",
             AdmitadUid = "admitad_uid",
@@ -246,6 +249,7 @@ public class TrackEventParamsTest : TestBase
         string expectedUserID = "x";
         UserProperties expectedUserProperties = new()
         {
+            _EfTransactionID = "_ef_transaction_id",
             AdID = "ad_id",
             AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
@@ -409,6 +413,7 @@ public class TrackEventParamsTest : TestBase
             Event = "x",
             DefaultProperties = new()
             {
+                _EfTransactionID = "_ef_transaction_id",
                 ActiveDuration = 0,
                 AdID = "ad_id",
                 AdmitadUid = "admitad_uid",
@@ -491,6 +496,7 @@ public class TrackEventParamsTest : TestBase
             UserID = "x",
             UserProperties = new()
             {
+                _EfTransactionID = "_ef_transaction_id",
                 AdID = "ad_id",
                 AdmitadUid = "admitad_uid",
                 AdsetID = "adset_id",
@@ -565,6 +571,7 @@ public class DefaultPropertiesTest : TestBase
     {
         var model = new DefaultProperties
         {
+            _EfTransactionID = "_ef_transaction_id",
             ActiveDuration = 0,
             AdID = "ad_id",
             AdmitadUid = "admitad_uid",
@@ -639,6 +646,7 @@ public class DefaultPropertiesTest : TestBase
             Webview = true,
         };
 
+        string expected_EfTransactionID = "_ef_transaction_id";
         double expectedActiveDuration = 0;
         string expectedAdID = "ad_id";
         string expectedAdmitadUid = "admitad_uid";
@@ -712,6 +720,7 @@ public class DefaultPropertiesTest : TestBase
         string expectedWbraid = "wbraid";
         bool expectedWebview = true;
 
+        Assert.Equal(expected_EfTransactionID, model._EfTransactionID);
         Assert.Equal(expectedActiveDuration, model.ActiveDuration);
         Assert.Equal(expectedAdID, model.AdID);
         Assert.Equal(expectedAdmitadUid, model.AdmitadUid);
@@ -791,6 +800,7 @@ public class DefaultPropertiesTest : TestBase
     {
         var model = new DefaultProperties
         {
+            _EfTransactionID = "_ef_transaction_id",
             ActiveDuration = 0,
             AdID = "ad_id",
             AdmitadUid = "admitad_uid",
@@ -879,6 +889,7 @@ public class DefaultPropertiesTest : TestBase
     {
         var model = new DefaultProperties
         {
+            _EfTransactionID = "_ef_transaction_id",
             ActiveDuration = 0,
             AdID = "ad_id",
             AdmitadUid = "admitad_uid",
@@ -960,6 +971,7 @@ public class DefaultPropertiesTest : TestBase
         );
         Assert.NotNull(deserialized);
 
+        string expected_EfTransactionID = "_ef_transaction_id";
         double expectedActiveDuration = 0;
         string expectedAdID = "ad_id";
         string expectedAdmitadUid = "admitad_uid";
@@ -1033,6 +1045,7 @@ public class DefaultPropertiesTest : TestBase
         string expectedWbraid = "wbraid";
         bool expectedWebview = true;
 
+        Assert.Equal(expected_EfTransactionID, deserialized._EfTransactionID);
         Assert.Equal(expectedActiveDuration, deserialized.ActiveDuration);
         Assert.Equal(expectedAdID, deserialized.AdID);
         Assert.Equal(expectedAdmitadUid, deserialized.AdmitadUid);
@@ -1112,6 +1125,7 @@ public class DefaultPropertiesTest : TestBase
     {
         var model = new DefaultProperties
         {
+            _EfTransactionID = "_ef_transaction_id",
             ActiveDuration = 0,
             AdID = "ad_id",
             AdmitadUid = "admitad_uid",
@@ -1194,6 +1208,8 @@ public class DefaultPropertiesTest : TestBase
     {
         var model = new DefaultProperties { };
 
+        Assert.Null(model._EfTransactionID);
+        Assert.False(model.RawData.ContainsKey("_ef_transaction_id"));
         Assert.Null(model.ActiveDuration);
         Assert.False(model.RawData.ContainsKey("activeDuration"));
         Assert.Null(model.AdID);
@@ -1353,6 +1369,7 @@ public class DefaultPropertiesTest : TestBase
     {
         var model = new DefaultProperties
         {
+            _EfTransactionID = null,
             ActiveDuration = null,
             AdID = null,
             AdmitadUid = null,
@@ -1427,6 +1444,8 @@ public class DefaultPropertiesTest : TestBase
             Webview = null,
         };
 
+        Assert.Null(model._EfTransactionID);
+        Assert.True(model.RawData.ContainsKey("_ef_transaction_id"));
         Assert.Null(model.ActiveDuration);
         Assert.True(model.RawData.ContainsKey("activeDuration"));
         Assert.Null(model.AdID);
@@ -1578,6 +1597,7 @@ public class DefaultPropertiesTest : TestBase
     {
         var model = new DefaultProperties
         {
+            _EfTransactionID = null,
             ActiveDuration = null,
             AdID = null,
             AdmitadUid = null,
@@ -1660,6 +1680,7 @@ public class DefaultPropertiesTest : TestBase
     {
         var model = new DefaultProperties
         {
+            _EfTransactionID = "_ef_transaction_id",
             ActiveDuration = 0,
             AdID = "ad_id",
             AdmitadUid = "admitad_uid",
@@ -1813,6 +1834,7 @@ public class UserPropertiesTest : TestBase
     {
         var model = new UserProperties
         {
+            _EfTransactionID = "_ef_transaction_id",
             AdID = "ad_id",
             AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
@@ -1873,6 +1895,7 @@ public class UserPropertiesTest : TestBase
             Zip = "zip",
         };
 
+        string expected_EfTransactionID = "_ef_transaction_id";
         string expectedAdID = "ad_id";
         string expectedAdmitadUid = "admitad_uid";
         string expectedAdsetID = "adset_id";
@@ -1932,6 +1955,7 @@ public class UserPropertiesTest : TestBase
         string expectedWbraid = "wbraid";
         string expectedZip = "zip";
 
+        Assert.Equal(expected_EfTransactionID, model._EfTransactionID);
         Assert.Equal(expectedAdID, model.AdID);
         Assert.Equal(expectedAdmitadUid, model.AdmitadUid);
         Assert.Equal(expectedAdsetID, model.AdsetID);
@@ -2011,6 +2035,7 @@ public class UserPropertiesTest : TestBase
     {
         var model = new UserProperties
         {
+            _EfTransactionID = "_ef_transaction_id",
             AdID = "ad_id",
             AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
@@ -2085,6 +2110,7 @@ public class UserPropertiesTest : TestBase
     {
         var model = new UserProperties
         {
+            _EfTransactionID = "_ef_transaction_id",
             AdID = "ad_id",
             AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
@@ -2152,6 +2178,7 @@ public class UserPropertiesTest : TestBase
         );
         Assert.NotNull(deserialized);
 
+        string expected_EfTransactionID = "_ef_transaction_id";
         string expectedAdID = "ad_id";
         string expectedAdmitadUid = "admitad_uid";
         string expectedAdsetID = "adset_id";
@@ -2211,6 +2238,7 @@ public class UserPropertiesTest : TestBase
         string expectedWbraid = "wbraid";
         string expectedZip = "zip";
 
+        Assert.Equal(expected_EfTransactionID, deserialized._EfTransactionID);
         Assert.Equal(expectedAdID, deserialized.AdID);
         Assert.Equal(expectedAdmitadUid, deserialized.AdmitadUid);
         Assert.Equal(expectedAdsetID, deserialized.AdsetID);
@@ -2290,6 +2318,7 @@ public class UserPropertiesTest : TestBase
     {
         var model = new UserProperties
         {
+            _EfTransactionID = "_ef_transaction_id",
             AdID = "ad_id",
             AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
@@ -2358,6 +2387,8 @@ public class UserPropertiesTest : TestBase
     {
         var model = new UserProperties { };
 
+        Assert.Null(model._EfTransactionID);
+        Assert.False(model.RawData.ContainsKey("_ef_transaction_id"));
         Assert.Null(model.AdID);
         Assert.False(model.RawData.ContainsKey("ad_id"));
         Assert.Null(model.AdmitadUid);
@@ -2489,6 +2520,7 @@ public class UserPropertiesTest : TestBase
     {
         var model = new UserProperties
         {
+            _EfTransactionID = null,
             AdID = null,
             AdmitadUid = null,
             AdsetID = null,
@@ -2549,6 +2581,8 @@ public class UserPropertiesTest : TestBase
             Zip = null,
         };
 
+        Assert.Null(model._EfTransactionID);
+        Assert.True(model.RawData.ContainsKey("_ef_transaction_id"));
         Assert.Null(model.AdID);
         Assert.True(model.RawData.ContainsKey("ad_id"));
         Assert.Null(model.AdmitadUid);
@@ -2672,6 +2706,7 @@ public class UserPropertiesTest : TestBase
     {
         var model = new UserProperties
         {
+            _EfTransactionID = null,
             AdID = null,
             AdmitadUid = null,
             AdsetID = null,
@@ -2740,6 +2775,7 @@ public class UserPropertiesTest : TestBase
     {
         var model = new UserProperties
         {
+            _EfTransactionID = "_ef_transaction_id",
             AdID = "ad_id",
             AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",

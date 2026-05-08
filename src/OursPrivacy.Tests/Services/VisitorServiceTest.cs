@@ -14,6 +14,7 @@ public class VisitorServiceTest : TestBase
                 Token = "x",
                 UserProperties = new()
                 {
+                    _EfTransactionID = "_ef_transaction_id",
                     AdID = "ad_id",
                     AdmitadUid = "admitad_uid",
                     AdsetID = "adset_id",
