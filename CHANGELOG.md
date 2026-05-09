@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.8.1 (2026-05-09)
+
+Full Changelog: [v1.8.0...v1.8.1](https://github.com/with-ours/ingest-sdk-csharp/compare/v1.8.0...v1.8.1)
+
+### Bug Fixes
+
+* **internal:** disable default HttpClient timeout as we have our own ([9f089d9](https://github.com/with-ours/ingest-sdk-csharp/commit/9f089d9a0f3726cd5dbeabd02d3c89efae2b0906))
+
 ## 1.8.0 (2026-05-08)
 
 Full Changelog: [v1.7.0...v1.8.0](https://github.com/with-ours/ingest-sdk-csharp/compare/v1.7.0...v1.8.0)
