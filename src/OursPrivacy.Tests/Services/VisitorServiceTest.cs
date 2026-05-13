@@ -22,6 +22,7 @@ public class VisitorServiceTest : TestBase
                     Aleid = "aleid",
                     Axwrt = "axwrt",
                     BasisCid = "basis_cid",
+                    BeeswaxAuctionID = "beeswax_auction_id",
                     CampaignID = "campaign_id",
                     City = "city",
                     Clickid = "clickid",

@@ -501,6 +501,20 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
+    /// The Beeswax (FreeWheel Buyer Cloud) auction ID, captured from the `{{AUCTION_ID}}`
+    /// macro on creative click URLs. Ex: bx-auc-abc123
+    /// </summary>
+    public string? BeeswaxAuctionID
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("beeswax_auction_id");
+        }
+        init { this._rawData.Set("beeswax_auction_id", value); }
+    }
+
+    /// <summary>
     /// The language of the browser. Ex: en-US
     /// </summary>
     public string? BrowserLanguage
@@ -1344,6 +1358,7 @@ public sealed record class DefaultProperties : JsonModel
         _ = this.Aleid;
         _ = this.Axwrt;
         _ = this.BasisCid;
+        _ = this.BeeswaxAuctionID;
         _ = this.BrowserLanguage;
         _ = this.BrowserName;
         _ = this.BrowserVersion;
@@ -1607,6 +1622,16 @@ public sealed record class UserProperties : JsonModel
             return this._rawData.GetNullableClass<string>("basis_cid");
         }
         init { this._rawData.Set("basis_cid", value); }
+    }
+
+    public string? BeeswaxAuctionID
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("beeswax_auction_id");
+        }
+        init { this._rawData.Set("beeswax_auction_id", value); }
     }
 
     public string? CampaignID
@@ -2147,6 +2172,7 @@ public sealed record class UserProperties : JsonModel
         _ = this.Aleid;
         _ = this.Axwrt;
         _ = this.BasisCid;
+        _ = this.BeeswaxAuctionID;
         _ = this.CampaignID;
         _ = this.City;
         _ = this.Clickid;
