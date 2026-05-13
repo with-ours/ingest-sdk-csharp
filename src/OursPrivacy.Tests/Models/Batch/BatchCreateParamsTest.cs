@@ -31,6 +31,7 @@ public class BatchCreateParamsTest : TestBase
                         Aleid = "aleid",
                         Axwrt = "axwrt",
                         BasisCid = "basis_cid",
+                        BeeswaxAuctionID = "beeswax_auction_id",
                         BrowserLanguage = "browser_language",
                         BrowserName = "browser_name",
                         BrowserVersion = "browser_version",
@@ -112,6 +113,7 @@ public class BatchCreateParamsTest : TestBase
                         Aleid = "aleid",
                         Axwrt = "axwrt",
                         BasisCid = "basis_cid",
+                        BeeswaxAuctionID = "beeswax_auction_id",
                         CampaignID = "campaign_id",
                         City = "city",
                         Clickid = "clickid",
@@ -189,6 +191,7 @@ public class BatchCreateParamsTest : TestBase
                     Aleid = "aleid",
                     Axwrt = "axwrt",
                     BasisCid = "basis_cid",
+                    BeeswaxAuctionID = "beeswax_auction_id",
                     BrowserLanguage = "browser_language",
                     BrowserName = "browser_name",
                     BrowserVersion = "browser_version",
@@ -270,6 +273,7 @@ public class BatchCreateParamsTest : TestBase
                     Aleid = "aleid",
                     Axwrt = "axwrt",
                     BasisCid = "basis_cid",
+                    BeeswaxAuctionID = "beeswax_auction_id",
                     CampaignID = "campaign_id",
                     City = "city",
                     Clickid = "clickid",
@@ -356,6 +360,7 @@ public class BatchCreateParamsTest : TestBase
                         Aleid = "aleid",
                         Axwrt = "axwrt",
                         BasisCid = "basis_cid",
+                        BeeswaxAuctionID = "beeswax_auction_id",
                         BrowserLanguage = "browser_language",
                         BrowserName = "browser_name",
                         BrowserVersion = "browser_version",
@@ -437,6 +442,7 @@ public class BatchCreateParamsTest : TestBase
                         Aleid = "aleid",
                         Axwrt = "axwrt",
                         BasisCid = "basis_cid",
+                        BeeswaxAuctionID = "beeswax_auction_id",
                         CampaignID = "campaign_id",
                         City = "city",
                         Clickid = "clickid",
@@ -524,6 +530,7 @@ public class BatchCreateParamsTest : TestBase
                         Aleid = "aleid",
                         Axwrt = "axwrt",
                         BasisCid = "basis_cid",
+                        BeeswaxAuctionID = "beeswax_auction_id",
                         BrowserLanguage = "browser_language",
                         BrowserName = "browser_name",
                         BrowserVersion = "browser_version",
@@ -605,6 +612,7 @@ public class BatchCreateParamsTest : TestBase
                         Aleid = "aleid",
                         Axwrt = "axwrt",
                         BasisCid = "basis_cid",
+                        BeeswaxAuctionID = "beeswax_auction_id",
                         CampaignID = "campaign_id",
                         City = "city",
                         Clickid = "clickid",
@@ -690,6 +698,7 @@ public class EventTest : TestBase
                 Aleid = "aleid",
                 Axwrt = "axwrt",
                 BasisCid = "basis_cid",
+                BeeswaxAuctionID = "beeswax_auction_id",
                 BrowserLanguage = "browser_language",
                 BrowserName = "browser_name",
                 BrowserVersion = "browser_version",
@@ -771,6 +780,7 @@ public class EventTest : TestBase
                 Aleid = "aleid",
                 Axwrt = "axwrt",
                 BasisCid = "basis_cid",
+                BeeswaxAuctionID = "beeswax_auction_id",
                 CampaignID = "campaign_id",
                 City = "city",
                 Clickid = "clickid",
@@ -838,6 +848,7 @@ public class EventTest : TestBase
             Aleid = "aleid",
             Axwrt = "axwrt",
             BasisCid = "basis_cid",
+            BeeswaxAuctionID = "beeswax_auction_id",
             BrowserLanguage = "browser_language",
             BrowserName = "browser_name",
             BrowserVersion = "browser_version",
@@ -919,6 +930,7 @@ public class EventTest : TestBase
             Aleid = "aleid",
             Axwrt = "axwrt",
             BasisCid = "basis_cid",
+            BeeswaxAuctionID = "beeswax_auction_id",
             CampaignID = "campaign_id",
             City = "city",
             Clickid = "clickid",
@@ -1009,6 +1021,7 @@ public class EventTest : TestBase
                 Aleid = "aleid",
                 Axwrt = "axwrt",
                 BasisCid = "basis_cid",
+                BeeswaxAuctionID = "beeswax_auction_id",
                 BrowserLanguage = "browser_language",
                 BrowserName = "browser_name",
                 BrowserVersion = "browser_version",
@@ -1090,6 +1103,7 @@ public class EventTest : TestBase
                 Aleid = "aleid",
                 Axwrt = "axwrt",
                 BasisCid = "basis_cid",
+                BeeswaxAuctionID = "beeswax_auction_id",
                 CampaignID = "campaign_id",
                 City = "city",
                 Clickid = "clickid",
@@ -1168,6 +1182,7 @@ public class EventTest : TestBase
                 Aleid = "aleid",
                 Axwrt = "axwrt",
                 BasisCid = "basis_cid",
+                BeeswaxAuctionID = "beeswax_auction_id",
                 BrowserLanguage = "browser_language",
                 BrowserName = "browser_name",
                 BrowserVersion = "browser_version",
@@ -1249,6 +1264,7 @@ public class EventTest : TestBase
                 Aleid = "aleid",
                 Axwrt = "axwrt",
                 BasisCid = "basis_cid",
+                BeeswaxAuctionID = "beeswax_auction_id",
                 CampaignID = "campaign_id",
                 City = "city",
                 Clickid = "clickid",
@@ -1320,6 +1336,7 @@ public class EventTest : TestBase
             Aleid = "aleid",
             Axwrt = "axwrt",
             BasisCid = "basis_cid",
+            BeeswaxAuctionID = "beeswax_auction_id",
             BrowserLanguage = "browser_language",
             BrowserName = "browser_name",
             BrowserVersion = "browser_version",
@@ -1401,6 +1418,7 @@ public class EventTest : TestBase
             Aleid = "aleid",
             Axwrt = "axwrt",
             BasisCid = "basis_cid",
+            BeeswaxAuctionID = "beeswax_auction_id",
             CampaignID = "campaign_id",
             City = "city",
             Clickid = "clickid",
@@ -1491,6 +1509,7 @@ public class EventTest : TestBase
                 Aleid = "aleid",
                 Axwrt = "axwrt",
                 BasisCid = "basis_cid",
+                BeeswaxAuctionID = "beeswax_auction_id",
                 BrowserLanguage = "browser_language",
                 BrowserName = "browser_name",
                 BrowserVersion = "browser_version",
@@ -1572,6 +1591,7 @@ public class EventTest : TestBase
                 Aleid = "aleid",
                 Axwrt = "axwrt",
                 BasisCid = "basis_cid",
+                BeeswaxAuctionID = "beeswax_auction_id",
                 CampaignID = "campaign_id",
                 City = "city",
                 Clickid = "clickid",
@@ -1735,6 +1755,7 @@ public class EventTest : TestBase
                 Aleid = "aleid",
                 Axwrt = "axwrt",
                 BasisCid = "basis_cid",
+                BeeswaxAuctionID = "beeswax_auction_id",
                 BrowserLanguage = "browser_language",
                 BrowserName = "browser_name",
                 BrowserVersion = "browser_version",
@@ -1816,6 +1837,7 @@ public class EventTest : TestBase
                 Aleid = "aleid",
                 Axwrt = "axwrt",
                 BasisCid = "basis_cid",
+                BeeswaxAuctionID = "beeswax_auction_id",
                 CampaignID = "campaign_id",
                 City = "city",
                 Clickid = "clickid",
@@ -1892,6 +1914,7 @@ public class DefaultPropertiesTest : TestBase
             Aleid = "aleid",
             Axwrt = "axwrt",
             BasisCid = "basis_cid",
+            BeeswaxAuctionID = "beeswax_auction_id",
             BrowserLanguage = "browser_language",
             BrowserName = "browser_name",
             BrowserVersion = "browser_version",
@@ -1967,6 +1990,7 @@ public class DefaultPropertiesTest : TestBase
         string expectedAleid = "aleid";
         string expectedAxwrt = "axwrt";
         string expectedBasisCid = "basis_cid";
+        string expectedBeeswaxAuctionID = "beeswax_auction_id";
         string expectedBrowserLanguage = "browser_language";
         string expectedBrowserName = "browser_name";
         string expectedBrowserVersion = "browser_version";
@@ -2041,6 +2065,7 @@ public class DefaultPropertiesTest : TestBase
         Assert.Equal(expectedAleid, model.Aleid);
         Assert.Equal(expectedAxwrt, model.Axwrt);
         Assert.Equal(expectedBasisCid, model.BasisCid);
+        Assert.Equal(expectedBeeswaxAuctionID, model.BeeswaxAuctionID);
         Assert.Equal(expectedBrowserLanguage, model.BrowserLanguage);
         Assert.Equal(expectedBrowserName, model.BrowserName);
         Assert.Equal(expectedBrowserVersion, model.BrowserVersion);
@@ -2121,6 +2146,7 @@ public class DefaultPropertiesTest : TestBase
             Aleid = "aleid",
             Axwrt = "axwrt",
             BasisCid = "basis_cid",
+            BeeswaxAuctionID = "beeswax_auction_id",
             BrowserLanguage = "browser_language",
             BrowserName = "browser_name",
             BrowserVersion = "browser_version",
@@ -2210,6 +2236,7 @@ public class DefaultPropertiesTest : TestBase
             Aleid = "aleid",
             Axwrt = "axwrt",
             BasisCid = "basis_cid",
+            BeeswaxAuctionID = "beeswax_auction_id",
             BrowserLanguage = "browser_language",
             BrowserName = "browser_name",
             BrowserVersion = "browser_version",
@@ -2292,6 +2319,7 @@ public class DefaultPropertiesTest : TestBase
         string expectedAleid = "aleid";
         string expectedAxwrt = "axwrt";
         string expectedBasisCid = "basis_cid";
+        string expectedBeeswaxAuctionID = "beeswax_auction_id";
         string expectedBrowserLanguage = "browser_language";
         string expectedBrowserName = "browser_name";
         string expectedBrowserVersion = "browser_version";
@@ -2366,6 +2394,7 @@ public class DefaultPropertiesTest : TestBase
         Assert.Equal(expectedAleid, deserialized.Aleid);
         Assert.Equal(expectedAxwrt, deserialized.Axwrt);
         Assert.Equal(expectedBasisCid, deserialized.BasisCid);
+        Assert.Equal(expectedBeeswaxAuctionID, deserialized.BeeswaxAuctionID);
         Assert.Equal(expectedBrowserLanguage, deserialized.BrowserLanguage);
         Assert.Equal(expectedBrowserName, deserialized.BrowserName);
         Assert.Equal(expectedBrowserVersion, deserialized.BrowserVersion);
@@ -2446,6 +2475,7 @@ public class DefaultPropertiesTest : TestBase
             Aleid = "aleid",
             Axwrt = "axwrt",
             BasisCid = "basis_cid",
+            BeeswaxAuctionID = "beeswax_auction_id",
             BrowserLanguage = "browser_language",
             BrowserName = "browser_name",
             BrowserVersion = "browser_version",
@@ -2538,6 +2568,8 @@ public class DefaultPropertiesTest : TestBase
         Assert.False(model.RawData.ContainsKey("axwrt"));
         Assert.Null(model.BasisCid);
         Assert.False(model.RawData.ContainsKey("basis_cid"));
+        Assert.Null(model.BeeswaxAuctionID);
+        Assert.False(model.RawData.ContainsKey("beeswax_auction_id"));
         Assert.Null(model.BrowserLanguage);
         Assert.False(model.RawData.ContainsKey("browser_language"));
         Assert.Null(model.BrowserName);
@@ -2690,6 +2722,7 @@ public class DefaultPropertiesTest : TestBase
             Aleid = null,
             Axwrt = null,
             BasisCid = null,
+            BeeswaxAuctionID = null,
             BrowserLanguage = null,
             BrowserName = null,
             BrowserVersion = null,
@@ -2774,6 +2807,8 @@ public class DefaultPropertiesTest : TestBase
         Assert.True(model.RawData.ContainsKey("axwrt"));
         Assert.Null(model.BasisCid);
         Assert.True(model.RawData.ContainsKey("basis_cid"));
+        Assert.Null(model.BeeswaxAuctionID);
+        Assert.True(model.RawData.ContainsKey("beeswax_auction_id"));
         Assert.Null(model.BrowserLanguage);
         Assert.True(model.RawData.ContainsKey("browser_language"));
         Assert.Null(model.BrowserName);
@@ -2918,6 +2953,7 @@ public class DefaultPropertiesTest : TestBase
             Aleid = null,
             Axwrt = null,
             BasisCid = null,
+            BeeswaxAuctionID = null,
             BrowserLanguage = null,
             BrowserName = null,
             BrowserVersion = null,
@@ -3001,6 +3037,7 @@ public class DefaultPropertiesTest : TestBase
             Aleid = "aleid",
             Axwrt = "axwrt",
             BasisCid = "basis_cid",
+            BeeswaxAuctionID = "beeswax_auction_id",
             BrowserLanguage = "browser_language",
             BrowserName = "browser_name",
             BrowserVersion = "browser_version",
@@ -3154,6 +3191,7 @@ public class UserPropertiesTest : TestBase
             Aleid = "aleid",
             Axwrt = "axwrt",
             BasisCid = "basis_cid",
+            BeeswaxAuctionID = "beeswax_auction_id",
             CampaignID = "campaign_id",
             City = "city",
             Clickid = "clickid",
@@ -3215,6 +3253,7 @@ public class UserPropertiesTest : TestBase
         string expectedAleid = "aleid";
         string expectedAxwrt = "axwrt";
         string expectedBasisCid = "basis_cid";
+        string expectedBeeswaxAuctionID = "beeswax_auction_id";
         string expectedCampaignID = "campaign_id";
         string expectedCity = "city";
         string expectedClickid = "clickid";
@@ -3275,6 +3314,7 @@ public class UserPropertiesTest : TestBase
         Assert.Equal(expectedAleid, model.Aleid);
         Assert.Equal(expectedAxwrt, model.Axwrt);
         Assert.Equal(expectedBasisCid, model.BasisCid);
+        Assert.Equal(expectedBeeswaxAuctionID, model.BeeswaxAuctionID);
         Assert.Equal(expectedCampaignID, model.CampaignID);
         Assert.Equal(expectedCity, model.City);
         Assert.Equal(expectedClickid, model.Clickid);
@@ -3355,6 +3395,7 @@ public class UserPropertiesTest : TestBase
             Aleid = "aleid",
             Axwrt = "axwrt",
             BasisCid = "basis_cid",
+            BeeswaxAuctionID = "beeswax_auction_id",
             CampaignID = "campaign_id",
             City = "city",
             Clickid = "clickid",
@@ -3430,6 +3471,7 @@ public class UserPropertiesTest : TestBase
             Aleid = "aleid",
             Axwrt = "axwrt",
             BasisCid = "basis_cid",
+            BeeswaxAuctionID = "beeswax_auction_id",
             CampaignID = "campaign_id",
             City = "city",
             Clickid = "clickid",
@@ -3498,6 +3540,7 @@ public class UserPropertiesTest : TestBase
         string expectedAleid = "aleid";
         string expectedAxwrt = "axwrt";
         string expectedBasisCid = "basis_cid";
+        string expectedBeeswaxAuctionID = "beeswax_auction_id";
         string expectedCampaignID = "campaign_id";
         string expectedCity = "city";
         string expectedClickid = "clickid";
@@ -3558,6 +3601,7 @@ public class UserPropertiesTest : TestBase
         Assert.Equal(expectedAleid, deserialized.Aleid);
         Assert.Equal(expectedAxwrt, deserialized.Axwrt);
         Assert.Equal(expectedBasisCid, deserialized.BasisCid);
+        Assert.Equal(expectedBeeswaxAuctionID, deserialized.BeeswaxAuctionID);
         Assert.Equal(expectedCampaignID, deserialized.CampaignID);
         Assert.Equal(expectedCity, deserialized.City);
         Assert.Equal(expectedClickid, deserialized.Clickid);
@@ -3638,6 +3682,7 @@ public class UserPropertiesTest : TestBase
             Aleid = "aleid",
             Axwrt = "axwrt",
             BasisCid = "basis_cid",
+            BeeswaxAuctionID = "beeswax_auction_id",
             CampaignID = "campaign_id",
             City = "city",
             Clickid = "clickid",
@@ -3715,6 +3760,8 @@ public class UserPropertiesTest : TestBase
         Assert.False(model.RawData.ContainsKey("axwrt"));
         Assert.Null(model.BasisCid);
         Assert.False(model.RawData.ContainsKey("basis_cid"));
+        Assert.Null(model.BeeswaxAuctionID);
+        Assert.False(model.RawData.ContainsKey("beeswax_auction_id"));
         Assert.Null(model.CampaignID);
         Assert.False(model.RawData.ContainsKey("campaign_id"));
         Assert.Null(model.City);
@@ -3840,6 +3887,7 @@ public class UserPropertiesTest : TestBase
             Aleid = null,
             Axwrt = null,
             BasisCid = null,
+            BeeswaxAuctionID = null,
             CampaignID = null,
             City = null,
             Clickid = null,
@@ -3909,6 +3957,8 @@ public class UserPropertiesTest : TestBase
         Assert.True(model.RawData.ContainsKey("axwrt"));
         Assert.Null(model.BasisCid);
         Assert.True(model.RawData.ContainsKey("basis_cid"));
+        Assert.Null(model.BeeswaxAuctionID);
+        Assert.True(model.RawData.ContainsKey("beeswax_auction_id"));
         Assert.Null(model.CampaignID);
         Assert.True(model.RawData.ContainsKey("campaign_id"));
         Assert.Null(model.City);
@@ -4026,6 +4076,7 @@ public class UserPropertiesTest : TestBase
             Aleid = null,
             Axwrt = null,
             BasisCid = null,
+            BeeswaxAuctionID = null,
             CampaignID = null,
             City = null,
             Clickid = null,
@@ -4095,6 +4146,7 @@ public class UserPropertiesTest : TestBase
             Aleid = "aleid",
             Axwrt = "axwrt",
             BasisCid = "basis_cid",
+            BeeswaxAuctionID = "beeswax_auction_id",
             CampaignID = "campaign_id",
             City = "city",
             Clickid = "clickid",
