@@ -72,6 +72,8 @@ public class VisitorServiceTest : TestBase
                     UtmName = "utm_name",
                     UtmSource = "utm_source",
                     UtmTerm = "utm_term",
+                    ViantClickID = "viant_click_id",
+                    ViantImpressionID = "viant_impression_id",
                     Wbraid = "wbraid",
                     Zip = "zip",
                 },
