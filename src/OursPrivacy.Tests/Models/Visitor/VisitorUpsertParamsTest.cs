@@ -74,6 +74,8 @@ public class VisitorUpsertParamsTest : TestBase
                 UtmName = "utm_name",
                 UtmSource = "utm_source",
                 UtmTerm = "utm_term",
+                ViantClickID = "viant_click_id",
+                ViantImpressionID = "viant_impression_id",
                 Wbraid = "wbraid",
                 Zip = "zip",
             },
@@ -151,6 +153,8 @@ public class VisitorUpsertParamsTest : TestBase
                 UtmSource = "utm_source",
                 UtmTerm = "utm_term",
                 Version = "version",
+                ViantClickID = "viant_click_id",
+                ViantImpressionID = "viant_impression_id",
                 Wbraid = "wbraid",
                 Webview = true,
             },
@@ -221,6 +225,8 @@ public class VisitorUpsertParamsTest : TestBase
             UtmName = "utm_name",
             UtmSource = "utm_source",
             UtmTerm = "utm_term",
+            ViantClickID = "viant_click_id",
+            ViantImpressionID = "viant_impression_id",
             Wbraid = "wbraid",
             Zip = "zip",
         };
@@ -298,6 +304,8 @@ public class VisitorUpsertParamsTest : TestBase
             UtmSource = "utm_source",
             UtmTerm = "utm_term",
             Version = "version",
+            ViantClickID = "viant_click_id",
+            ViantImpressionID = "viant_impression_id",
             Wbraid = "wbraid",
             Webview = true,
         };
@@ -381,6 +389,8 @@ public class VisitorUpsertParamsTest : TestBase
                 UtmName = "utm_name",
                 UtmSource = "utm_source",
                 UtmTerm = "utm_term",
+                ViantClickID = "viant_click_id",
+                ViantImpressionID = "viant_impression_id",
                 Wbraid = "wbraid",
                 Zip = "zip",
             },
@@ -464,6 +474,8 @@ public class VisitorUpsertParamsTest : TestBase
                 UtmName = "utm_name",
                 UtmSource = "utm_source",
                 UtmTerm = "utm_term",
+                ViantClickID = "viant_click_id",
+                ViantImpressionID = "viant_impression_id",
                 Wbraid = "wbraid",
                 Zip = "zip",
             },
@@ -553,6 +565,8 @@ public class VisitorUpsertParamsTest : TestBase
                 UtmName = "utm_name",
                 UtmSource = "utm_source",
                 UtmTerm = "utm_term",
+                ViantClickID = "viant_click_id",
+                ViantImpressionID = "viant_impression_id",
                 Wbraid = "wbraid",
                 Zip = "zip",
             },
@@ -631,6 +645,8 @@ public class VisitorUpsertParamsTest : TestBase
                 UtmName = "utm_name",
                 UtmSource = "utm_source",
                 UtmTerm = "utm_term",
+                ViantClickID = "viant_click_id",
+                ViantImpressionID = "viant_impression_id",
                 Wbraid = "wbraid",
                 Zip = "zip",
             },
@@ -708,6 +724,8 @@ public class VisitorUpsertParamsTest : TestBase
                 UtmSource = "utm_source",
                 UtmTerm = "utm_term",
                 Version = "version",
+                ViantClickID = "viant_click_id",
+                ViantImpressionID = "viant_impression_id",
                 Wbraid = "wbraid",
                 Webview = true,
             },
@@ -788,6 +806,8 @@ public class UserPropertiesTest : TestBase
             UtmName = "utm_name",
             UtmSource = "utm_source",
             UtmTerm = "utm_term",
+            ViantClickID = "viant_click_id",
+            ViantImpressionID = "viant_impression_id",
             Wbraid = "wbraid",
             Zip = "zip",
         };
@@ -850,6 +870,8 @@ public class UserPropertiesTest : TestBase
         string expectedUtmName = "utm_name";
         string expectedUtmSource = "utm_source";
         string expectedUtmTerm = "utm_term";
+        string expectedViantClickID = "viant_click_id";
+        string expectedViantImpressionID = "viant_impression_id";
         string expectedWbraid = "wbraid";
         string expectedZip = "zip";
 
@@ -925,6 +947,8 @@ public class UserPropertiesTest : TestBase
         Assert.Equal(expectedUtmName, model.UtmName);
         Assert.Equal(expectedUtmSource, model.UtmSource);
         Assert.Equal(expectedUtmTerm, model.UtmTerm);
+        Assert.Equal(expectedViantClickID, model.ViantClickID);
+        Assert.Equal(expectedViantImpressionID, model.ViantImpressionID);
         Assert.Equal(expectedWbraid, model.Wbraid);
         Assert.Equal(expectedZip, model.Zip);
     }
@@ -992,6 +1016,8 @@ public class UserPropertiesTest : TestBase
             UtmName = "utm_name",
             UtmSource = "utm_source",
             UtmTerm = "utm_term",
+            ViantClickID = "viant_click_id",
+            ViantImpressionID = "viant_impression_id",
             Wbraid = "wbraid",
             Zip = "zip",
         };
@@ -1068,6 +1094,8 @@ public class UserPropertiesTest : TestBase
             UtmName = "utm_name",
             UtmSource = "utm_source",
             UtmTerm = "utm_term",
+            ViantClickID = "viant_click_id",
+            ViantImpressionID = "viant_impression_id",
             Wbraid = "wbraid",
             Zip = "zip",
         };
@@ -1137,6 +1165,8 @@ public class UserPropertiesTest : TestBase
         string expectedUtmName = "utm_name";
         string expectedUtmSource = "utm_source";
         string expectedUtmTerm = "utm_term";
+        string expectedViantClickID = "viant_click_id";
+        string expectedViantImpressionID = "viant_impression_id";
         string expectedWbraid = "wbraid";
         string expectedZip = "zip";
 
@@ -1212,6 +1242,8 @@ public class UserPropertiesTest : TestBase
         Assert.Equal(expectedUtmName, deserialized.UtmName);
         Assert.Equal(expectedUtmSource, deserialized.UtmSource);
         Assert.Equal(expectedUtmTerm, deserialized.UtmTerm);
+        Assert.Equal(expectedViantClickID, deserialized.ViantClickID);
+        Assert.Equal(expectedViantImpressionID, deserialized.ViantImpressionID);
         Assert.Equal(expectedWbraid, deserialized.Wbraid);
         Assert.Equal(expectedZip, deserialized.Zip);
     }
@@ -1279,6 +1311,8 @@ public class UserPropertiesTest : TestBase
             UtmName = "utm_name",
             UtmSource = "utm_source",
             UtmTerm = "utm_term",
+            ViantClickID = "viant_click_id",
+            ViantImpressionID = "viant_impression_id",
             Wbraid = "wbraid",
             Zip = "zip",
         };
@@ -1407,6 +1441,10 @@ public class UserPropertiesTest : TestBase
         Assert.False(model.RawData.ContainsKey("utm_source"));
         Assert.Null(model.UtmTerm);
         Assert.False(model.RawData.ContainsKey("utm_term"));
+        Assert.Null(model.ViantClickID);
+        Assert.False(model.RawData.ContainsKey("viant_click_id"));
+        Assert.Null(model.ViantImpressionID);
+        Assert.False(model.RawData.ContainsKey("viant_impression_id"));
         Assert.Null(model.Wbraid);
         Assert.False(model.RawData.ContainsKey("wbraid"));
         Assert.Null(model.Zip);
@@ -1484,6 +1522,8 @@ public class UserPropertiesTest : TestBase
             UtmName = null,
             UtmSource = null,
             UtmTerm = null,
+            ViantClickID = null,
+            ViantImpressionID = null,
             Wbraid = null,
             Zip = null,
         };
@@ -1604,6 +1644,10 @@ public class UserPropertiesTest : TestBase
         Assert.True(model.RawData.ContainsKey("utm_source"));
         Assert.Null(model.UtmTerm);
         Assert.True(model.RawData.ContainsKey("utm_term"));
+        Assert.Null(model.ViantClickID);
+        Assert.True(model.RawData.ContainsKey("viant_click_id"));
+        Assert.Null(model.ViantImpressionID);
+        Assert.True(model.RawData.ContainsKey("viant_impression_id"));
         Assert.Null(model.Wbraid);
         Assert.True(model.RawData.ContainsKey("wbraid"));
         Assert.Null(model.Zip);
@@ -1673,6 +1717,8 @@ public class UserPropertiesTest : TestBase
             UtmName = null,
             UtmSource = null,
             UtmTerm = null,
+            ViantClickID = null,
+            ViantImpressionID = null,
             Wbraid = null,
             Zip = null,
         };
@@ -1743,6 +1789,8 @@ public class UserPropertiesTest : TestBase
             UtmName = "utm_name",
             UtmSource = "utm_source",
             UtmTerm = "utm_term",
+            ViantClickID = "viant_click_id",
+            ViantImpressionID = "viant_impression_id",
             Wbraid = "wbraid",
             Zip = "zip",
         };
@@ -1832,6 +1880,8 @@ public class DefaultPropertiesTest : TestBase
             UtmSource = "utm_source",
             UtmTerm = "utm_term",
             Version = "version",
+            ViantClickID = "viant_click_id",
+            ViantImpressionID = "viant_impression_id",
             Wbraid = "wbraid",
             Webview = true,
         };
@@ -1908,6 +1958,8 @@ public class DefaultPropertiesTest : TestBase
         string expectedUtmSource = "utm_source";
         string expectedUtmTerm = "utm_term";
         string expectedVersion = "version";
+        string expectedViantClickID = "viant_click_id";
+        string expectedViantImpressionID = "viant_impression_id";
         string expectedWbraid = "wbraid";
         bool expectedWebview = true;
 
@@ -1983,6 +2035,8 @@ public class DefaultPropertiesTest : TestBase
         Assert.Equal(expectedUtmSource, model.UtmSource);
         Assert.Equal(expectedUtmTerm, model.UtmTerm);
         Assert.Equal(expectedVersion, model.Version);
+        Assert.Equal(expectedViantClickID, model.ViantClickID);
+        Assert.Equal(expectedViantImpressionID, model.ViantImpressionID);
         Assert.Equal(expectedWbraid, model.Wbraid);
         Assert.Equal(expectedWebview, model.Webview);
     }
@@ -2064,6 +2118,8 @@ public class DefaultPropertiesTest : TestBase
             UtmSource = "utm_source",
             UtmTerm = "utm_term",
             Version = "version",
+            ViantClickID = "viant_click_id",
+            ViantImpressionID = "viant_impression_id",
             Wbraid = "wbraid",
             Webview = true,
         };
@@ -2154,6 +2210,8 @@ public class DefaultPropertiesTest : TestBase
             UtmSource = "utm_source",
             UtmTerm = "utm_term",
             Version = "version",
+            ViantClickID = "viant_click_id",
+            ViantImpressionID = "viant_impression_id",
             Wbraid = "wbraid",
             Webview = true,
         };
@@ -2237,6 +2295,8 @@ public class DefaultPropertiesTest : TestBase
         string expectedUtmSource = "utm_source";
         string expectedUtmTerm = "utm_term";
         string expectedVersion = "version";
+        string expectedViantClickID = "viant_click_id";
+        string expectedViantImpressionID = "viant_impression_id";
         string expectedWbraid = "wbraid";
         bool expectedWebview = true;
 
@@ -2312,6 +2372,8 @@ public class DefaultPropertiesTest : TestBase
         Assert.Equal(expectedUtmSource, deserialized.UtmSource);
         Assert.Equal(expectedUtmTerm, deserialized.UtmTerm);
         Assert.Equal(expectedVersion, deserialized.Version);
+        Assert.Equal(expectedViantClickID, deserialized.ViantClickID);
+        Assert.Equal(expectedViantImpressionID, deserialized.ViantImpressionID);
         Assert.Equal(expectedWbraid, deserialized.Wbraid);
         Assert.Equal(expectedWebview, deserialized.Webview);
     }
@@ -2393,6 +2455,8 @@ public class DefaultPropertiesTest : TestBase
             UtmSource = "utm_source",
             UtmTerm = "utm_term",
             Version = "version",
+            ViantClickID = "viant_click_id",
+            ViantImpressionID = "viant_impression_id",
             Wbraid = "wbraid",
             Webview = true,
         };
@@ -2549,6 +2613,10 @@ public class DefaultPropertiesTest : TestBase
         Assert.False(model.RawData.ContainsKey("utm_term"));
         Assert.Null(model.Version);
         Assert.False(model.RawData.ContainsKey("version"));
+        Assert.Null(model.ViantClickID);
+        Assert.False(model.RawData.ContainsKey("viant_click_id"));
+        Assert.Null(model.ViantImpressionID);
+        Assert.False(model.RawData.ContainsKey("viant_impression_id"));
         Assert.Null(model.Wbraid);
         Assert.False(model.RawData.ContainsKey("wbraid"));
         Assert.Null(model.Webview);
@@ -2640,6 +2708,8 @@ public class DefaultPropertiesTest : TestBase
             UtmSource = null,
             UtmTerm = null,
             Version = null,
+            ViantClickID = null,
+            ViantImpressionID = null,
             Wbraid = null,
             Webview = null,
         };
@@ -2788,6 +2858,10 @@ public class DefaultPropertiesTest : TestBase
         Assert.True(model.RawData.ContainsKey("utm_term"));
         Assert.Null(model.Version);
         Assert.True(model.RawData.ContainsKey("version"));
+        Assert.Null(model.ViantClickID);
+        Assert.True(model.RawData.ContainsKey("viant_click_id"));
+        Assert.Null(model.ViantImpressionID);
+        Assert.True(model.RawData.ContainsKey("viant_impression_id"));
         Assert.Null(model.Wbraid);
         Assert.True(model.RawData.ContainsKey("wbraid"));
         Assert.Null(model.Webview);
@@ -2871,6 +2945,8 @@ public class DefaultPropertiesTest : TestBase
             UtmSource = null,
             UtmTerm = null,
             Version = null,
+            ViantClickID = null,
+            ViantImpressionID = null,
             Wbraid = null,
             Webview = null,
         };
@@ -2955,6 +3031,8 @@ public class DefaultPropertiesTest : TestBase
             UtmSource = "utm_source",
             UtmTerm = "utm_term",
             Version = "version",
+            ViantClickID = "viant_click_id",
+            ViantImpressionID = "viant_impression_id",
             Wbraid = "wbraid",
             Webview = true,
         };
