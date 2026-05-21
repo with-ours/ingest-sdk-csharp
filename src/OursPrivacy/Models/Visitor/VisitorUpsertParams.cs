@@ -851,6 +851,26 @@ public sealed record class UserProperties : JsonModel
         init { this._rawData.Set("utm_term", value); }
     }
 
+    public string? ViantClickID
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("viant_click_id");
+        }
+        init { this._rawData.Set("viant_click_id", value); }
+    }
+
+    public string? ViantImpressionID
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("viant_impression_id");
+        }
+        init { this._rawData.Set("viant_impression_id", value); }
+    }
+
     public string? Wbraid
     {
         get
@@ -932,6 +952,8 @@ public sealed record class UserProperties : JsonModel
         _ = this.UtmName;
         _ = this.UtmSource;
         _ = this.UtmTerm;
+        _ = this.ViantClickID;
+        _ = this.ViantImpressionID;
         _ = this.Wbraid;
         _ = this.Zip;
     }
@@ -1916,6 +1938,35 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
+    /// The Viant (Adelphic) Click ID, captured from the `viant_click_id` URL parameter
+    /// (Viant `${ADELPHIC_CLICKID}` macro). Sent as `xid` on Viant postbacks. Ex: viant_click_abc123
+    /// </summary>
+    public string? ViantClickID
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("viant_click_id");
+        }
+        init { this._rawData.Set("viant_click_id", value); }
+    }
+
+    /// <summary>
+    /// The Viant (Adelphic) Impression ID, captured from the `viant_impression_id`
+    /// URL parameter (Viant `${ADELPHIC_IMPRESSIONID}` macro). Sent as `imp_id` on
+    /// Viant postbacks for post-view attribution. Ex: viant_imp_abc123
+    /// </summary>
+    public string? ViantImpressionID
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("viant_impression_id");
+        }
+        init { this._rawData.Set("viant_impression_id", value); }
+    }
+
+    /// <summary>
     /// The WBRAID Identifier. The web SDK automatically captures this from the query params.
     /// </summary>
     public string? Wbraid
@@ -2016,6 +2067,8 @@ public sealed record class DefaultProperties : JsonModel
         _ = this.UtmSource;
         _ = this.UtmTerm;
         _ = this.Version;
+        _ = this.ViantClickID;
+        _ = this.ViantImpressionID;
         _ = this.Wbraid;
         _ = this.Webview;
     }
