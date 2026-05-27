@@ -61,6 +61,7 @@ public class TrackEventParamsTest : TestBase
                 Msclkid = "msclkid",
                 Ndclid = "ndclid",
                 NewS = true,
+                Oppref = "oppref",
                 OsName = "os_name",
                 OsVersion = "os_version",
                 PageHash = 0,
@@ -142,6 +143,7 @@ public class TrackEventParamsTest : TestBase
                 LiFatID = "li_fat_id",
                 Msclkid = "msclkid",
                 Ndclid = "ndclid",
+                Oppref = "oppref",
                 PhoneNumber = "phone_number",
                 Qclid = "qclid",
                 RdtCid = "rdt_cid",
@@ -216,6 +218,7 @@ public class TrackEventParamsTest : TestBase
             Msclkid = "msclkid",
             Ndclid = "ndclid",
             NewS = true,
+            Oppref = "oppref",
             OsName = "os_name",
             OsVersion = "os_version",
             PageHash = 0,
@@ -297,6 +300,7 @@ public class TrackEventParamsTest : TestBase
             LiFatID = "li_fat_id",
             Msclkid = "msclkid",
             Ndclid = "ndclid",
+            Oppref = "oppref",
             PhoneNumber = "phone_number",
             Qclid = "qclid",
             RdtCid = "rdt_cid",
@@ -469,6 +473,7 @@ public class TrackEventParamsTest : TestBase
                 Msclkid = "msclkid",
                 Ndclid = "ndclid",
                 NewS = true,
+                Oppref = "oppref",
                 OsName = "os_name",
                 OsVersion = "os_version",
                 PageHash = 0,
@@ -550,6 +555,7 @@ public class TrackEventParamsTest : TestBase
                 LiFatID = "li_fat_id",
                 Msclkid = "msclkid",
                 Ndclid = "ndclid",
+                Oppref = "oppref",
                 PhoneNumber = "phone_number",
                 Qclid = "qclid",
                 RdtCid = "rdt_cid",
@@ -633,6 +639,7 @@ public class DefaultPropertiesTest : TestBase
             Msclkid = "msclkid",
             Ndclid = "ndclid",
             NewS = true,
+            Oppref = "oppref",
             OsName = "os_name",
             OsVersion = "os_version",
             PageHash = 0,
@@ -711,6 +718,7 @@ public class DefaultPropertiesTest : TestBase
         string expectedMsclkid = "msclkid";
         string expectedNdclid = "ndclid";
         bool expectedNewS = true;
+        string expectedOppref = "oppref";
         string expectedOsName = "os_name";
         string expectedOsVersion = "os_version";
         double expectedPageHash = 0;
@@ -788,6 +796,7 @@ public class DefaultPropertiesTest : TestBase
         Assert.Equal(expectedMsclkid, model.Msclkid);
         Assert.Equal(expectedNdclid, model.Ndclid);
         Assert.Equal(expectedNewS, model.NewS);
+        Assert.Equal(expectedOppref, model.Oppref);
         Assert.Equal(expectedOsName, model.OsName);
         Assert.Equal(expectedOsVersion, model.OsVersion);
         Assert.Equal(expectedPageHash, model.PageHash);
@@ -871,6 +880,7 @@ public class DefaultPropertiesTest : TestBase
             Msclkid = "msclkid",
             Ndclid = "ndclid",
             NewS = true,
+            Oppref = "oppref",
             OsName = "os_name",
             OsVersion = "os_version",
             PageHash = 0,
@@ -963,6 +973,7 @@ public class DefaultPropertiesTest : TestBase
             Msclkid = "msclkid",
             Ndclid = "ndclid",
             NewS = true,
+            Oppref = "oppref",
             OsName = "os_name",
             OsVersion = "os_version",
             PageHash = 0,
@@ -1048,6 +1059,7 @@ public class DefaultPropertiesTest : TestBase
         string expectedMsclkid = "msclkid";
         string expectedNdclid = "ndclid";
         bool expectedNewS = true;
+        string expectedOppref = "oppref";
         string expectedOsName = "os_name";
         string expectedOsVersion = "os_version";
         double expectedPageHash = 0;
@@ -1125,6 +1137,7 @@ public class DefaultPropertiesTest : TestBase
         Assert.Equal(expectedMsclkid, deserialized.Msclkid);
         Assert.Equal(expectedNdclid, deserialized.Ndclid);
         Assert.Equal(expectedNewS, deserialized.NewS);
+        Assert.Equal(expectedOppref, deserialized.Oppref);
         Assert.Equal(expectedOsName, deserialized.OsName);
         Assert.Equal(expectedOsVersion, deserialized.OsVersion);
         Assert.Equal(expectedPageHash, deserialized.PageHash);
@@ -1208,6 +1221,7 @@ public class DefaultPropertiesTest : TestBase
             Msclkid = "msclkid",
             Ndclid = "ndclid",
             NewS = true,
+            Oppref = "oppref",
             OsName = "os_name",
             OsVersion = "os_version",
             PageHash = 0,
@@ -1338,6 +1352,8 @@ public class DefaultPropertiesTest : TestBase
         Assert.False(model.RawData.ContainsKey("ndclid"));
         Assert.Null(model.NewS);
         Assert.False(model.RawData.ContainsKey("new_s"));
+        Assert.Null(model.Oppref);
+        Assert.False(model.RawData.ContainsKey("oppref"));
         Assert.Null(model.OsName);
         Assert.False(model.RawData.ContainsKey("os_name"));
         Assert.Null(model.OsVersion);
@@ -1461,6 +1477,7 @@ public class DefaultPropertiesTest : TestBase
             Msclkid = null,
             Ndclid = null,
             NewS = null,
+            Oppref = null,
             OsName = null,
             OsVersion = null,
             PageHash = null,
@@ -1583,6 +1600,8 @@ public class DefaultPropertiesTest : TestBase
         Assert.True(model.RawData.ContainsKey("ndclid"));
         Assert.Null(model.NewS);
         Assert.True(model.RawData.ContainsKey("new_s"));
+        Assert.Null(model.Oppref);
+        Assert.True(model.RawData.ContainsKey("oppref"));
         Assert.Null(model.OsName);
         Assert.True(model.RawData.ContainsKey("os_name"));
         Assert.Null(model.OsVersion);
@@ -1698,6 +1717,7 @@ public class DefaultPropertiesTest : TestBase
             Msclkid = null,
             Ndclid = null,
             NewS = null,
+            Oppref = null,
             OsName = null,
             OsVersion = null,
             PageHash = null,
@@ -1784,6 +1804,7 @@ public class DefaultPropertiesTest : TestBase
             Msclkid = "msclkid",
             Ndclid = "ndclid",
             NewS = true,
+            Oppref = "oppref",
             OsName = "os_name",
             OsVersion = "os_version",
             PageHash = 0,
@@ -1936,6 +1957,7 @@ public class UserPropertiesTest : TestBase
             LiFatID = "li_fat_id",
             Msclkid = "msclkid",
             Ndclid = "ndclid",
+            Oppref = "oppref",
             PhoneNumber = "phone_number",
             Qclid = "qclid",
             RdtCid = "rdt_cid",
@@ -2000,6 +2022,7 @@ public class UserPropertiesTest : TestBase
         string expectedLiFatID = "li_fat_id";
         string expectedMsclkid = "msclkid";
         string expectedNdclid = "ndclid";
+        string expectedOppref = "oppref";
         string expectedPhoneNumber = "phone_number";
         string expectedQclid = "qclid";
         string expectedRdtCid = "rdt_cid";
@@ -2077,6 +2100,7 @@ public class UserPropertiesTest : TestBase
         Assert.Equal(expectedLiFatID, model.LiFatID);
         Assert.Equal(expectedMsclkid, model.Msclkid);
         Assert.Equal(expectedNdclid, model.Ndclid);
+        Assert.Equal(expectedOppref, model.Oppref);
         Assert.Equal(expectedPhoneNumber, model.PhoneNumber);
         Assert.Equal(expectedQclid, model.Qclid);
         Assert.Equal(expectedRdtCid, model.RdtCid);
@@ -2146,6 +2170,7 @@ public class UserPropertiesTest : TestBase
             LiFatID = "li_fat_id",
             Msclkid = "msclkid",
             Ndclid = "ndclid",
+            Oppref = "oppref",
             PhoneNumber = "phone_number",
             Qclid = "qclid",
             RdtCid = "rdt_cid",
@@ -2224,6 +2249,7 @@ public class UserPropertiesTest : TestBase
             LiFatID = "li_fat_id",
             Msclkid = "msclkid",
             Ndclid = "ndclid",
+            Oppref = "oppref",
             PhoneNumber = "phone_number",
             Qclid = "qclid",
             RdtCid = "rdt_cid",
@@ -2295,6 +2321,7 @@ public class UserPropertiesTest : TestBase
         string expectedLiFatID = "li_fat_id";
         string expectedMsclkid = "msclkid";
         string expectedNdclid = "ndclid";
+        string expectedOppref = "oppref";
         string expectedPhoneNumber = "phone_number";
         string expectedQclid = "qclid";
         string expectedRdtCid = "rdt_cid";
@@ -2372,6 +2399,7 @@ public class UserPropertiesTest : TestBase
         Assert.Equal(expectedLiFatID, deserialized.LiFatID);
         Assert.Equal(expectedMsclkid, deserialized.Msclkid);
         Assert.Equal(expectedNdclid, deserialized.Ndclid);
+        Assert.Equal(expectedOppref, deserialized.Oppref);
         Assert.Equal(expectedPhoneNumber, deserialized.PhoneNumber);
         Assert.Equal(expectedQclid, deserialized.Qclid);
         Assert.Equal(expectedRdtCid, deserialized.RdtCid);
@@ -2441,6 +2469,7 @@ public class UserPropertiesTest : TestBase
             LiFatID = "li_fat_id",
             Msclkid = "msclkid",
             Ndclid = "ndclid",
+            Oppref = "oppref",
             PhoneNumber = "phone_number",
             Qclid = "qclid",
             RdtCid = "rdt_cid",
@@ -2552,6 +2581,8 @@ public class UserPropertiesTest : TestBase
         Assert.False(model.RawData.ContainsKey("msclkid"));
         Assert.Null(model.Ndclid);
         Assert.False(model.RawData.ContainsKey("ndclid"));
+        Assert.Null(model.Oppref);
+        Assert.False(model.RawData.ContainsKey("oppref"));
         Assert.Null(model.PhoneNumber);
         Assert.False(model.RawData.ContainsKey("phone_number"));
         Assert.Null(model.Qclid);
@@ -2652,6 +2683,7 @@ public class UserPropertiesTest : TestBase
             LiFatID = null,
             Msclkid = null,
             Ndclid = null,
+            Oppref = null,
             PhoneNumber = null,
             Qclid = null,
             RdtCid = null,
@@ -2755,6 +2787,8 @@ public class UserPropertiesTest : TestBase
         Assert.True(model.RawData.ContainsKey("msclkid"));
         Assert.Null(model.Ndclid);
         Assert.True(model.RawData.ContainsKey("ndclid"));
+        Assert.Null(model.Oppref);
+        Assert.True(model.RawData.ContainsKey("oppref"));
         Assert.Null(model.PhoneNumber);
         Assert.True(model.RawData.ContainsKey("phone_number"));
         Assert.Null(model.Qclid);
@@ -2847,6 +2881,7 @@ public class UserPropertiesTest : TestBase
             LiFatID = null,
             Msclkid = null,
             Ndclid = null,
+            Oppref = null,
             PhoneNumber = null,
             Qclid = null,
             RdtCid = null,
@@ -2919,6 +2954,7 @@ public class UserPropertiesTest : TestBase
             LiFatID = "li_fat_id",
             Msclkid = "msclkid",
             Ndclid = "ndclid",
+            Oppref = "oppref",
             PhoneNumber = "phone_number",
             Qclid = "qclid",
             RdtCid = "rdt_cid",

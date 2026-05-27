@@ -53,6 +53,7 @@ public class VisitorServiceTest : TestBase
                     LiFatID = "li_fat_id",
                     Msclkid = "msclkid",
                     Ndclid = "ndclid",
+                    Oppref = "oppref",
                     PhoneNumber = "phone_number",
                     Qclid = "qclid",
                     RdtCid = "rdt_cid",
