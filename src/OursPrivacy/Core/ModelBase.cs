@@ -1,6 +1,7 @@
 using System.Text.Json;
 using OursPrivacy.Exceptions;
 using OursPrivacy.Models.Batch;
+using Experiments = OursPrivacy.Models.Experiments;
 using Track = OursPrivacy.Models.Track;
 using Visitor = OursPrivacy.Models.Visitor;
 
@@ -28,6 +29,11 @@ public abstract record class ModelBase
             new ApiEnumConverter<bool, UnionMember1Success>(),
             new ApiEnumConverter<bool, Track::Success>(),
             new ApiEnumConverter<bool, Visitor::Success>(),
+            new ApiEnumConverter<bool, Experiments::InExperiment>(),
+            new ApiEnumConverter<bool, Experiments::Success>(),
+            new ApiEnumConverter<bool, Experiments::UnionMember1InExperiment>(),
+            new ApiEnumConverter<bool, Experiments::UnionMember1Success>(),
+            new ApiEnumConverter<bool, Experiments::ExperimentPersonalizationResponseSuccess>(),
         },
     };
 

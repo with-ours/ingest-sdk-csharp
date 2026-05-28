@@ -54,6 +54,8 @@ public interface IOursPrivacyClient : IDisposable
     ITrackService Track { get; }
 
     IVisitorService Visitor { get; }
+
+    IExperimentService Experiments { get; }
 }
 
 /// <summary>
@@ -88,6 +90,8 @@ public interface IOursPrivacyClientWithRawResponse : IDisposable
     ITrackServiceWithRawResponse Track { get; }
 
     IVisitorServiceWithRawResponse Visitor { get; }
+
+    IExperimentServiceWithRawResponse Experiments { get; }
 
     /// <summary>
     /// Sends a request to the Ours Privacy REST API.

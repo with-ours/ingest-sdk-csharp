@@ -83,6 +83,12 @@ public sealed class OursPrivacyClient : IOursPrivacyClient
         get { return _visitor.Value; }
     }
 
+    readonly Lazy<IExperimentService> _experiments;
+    public IExperimentService Experiments
+    {
+        get { return _experiments.Value; }
+    }
+
     public void Dispose() => this.HttpClient.Dispose();
 
     public OursPrivacyClient()
@@ -93,6 +99,7 @@ public sealed class OursPrivacyClient : IOursPrivacyClient
         _batch = new(() => new BatchService(this));
         _track = new(() => new TrackService(this));
         _visitor = new(() => new VisitorService(this));
+        _experiments = new(() => new ExperimentService(this));
     }
 
     public OursPrivacyClient(ClientOptions options)
@@ -177,6 +184,12 @@ public sealed class OursPrivacyClientWithRawResponse : IOursPrivacyClientWithRaw
     public IVisitorServiceWithRawResponse Visitor
     {
         get { return _visitor.Value; }
+    }
+
+    readonly Lazy<IExperimentServiceWithRawResponse> _experiments;
+    public IExperimentServiceWithRawResponse Experiments
+    {
+        get { return _experiments.Value; }
     }
 
     /// <inheritdoc/>
@@ -380,6 +393,7 @@ public sealed class OursPrivacyClientWithRawResponse : IOursPrivacyClientWithRaw
         _batch = new(() => new BatchServiceWithRawResponse(this));
         _track = new(() => new TrackServiceWithRawResponse(this));
         _visitor = new(() => new VisitorServiceWithRawResponse(this));
+        _experiments = new(() => new ExperimentServiceWithRawResponse(this));
     }
 
     public OursPrivacyClientWithRawResponse(ClientOptions options)
