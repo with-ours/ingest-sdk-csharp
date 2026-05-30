@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.12.0 (2026-05-30)
+
+Full Changelog: [v1.11.0...v1.12.0](https://github.com/with-ours/ingest-sdk-csharp/compare/v1.11.0...v1.12.0)
+
+### Features
+
+* **api:** api update ([d8f9059](https://github.com/with-ours/ingest-sdk-csharp/commit/d8f9059d644c754c67a74b7ffeecba17b163f97a))
+
+
+### Bug Fixes
+
+* **csharp:** resolve ambiguity in parsing query strings ([f8c9b69](https://github.com/with-ours/ingest-sdk-csharp/commit/f8c9b693eb20fab98531eb6fad4134b9ede4d526))
+
 ## 1.11.0 (2026-05-27)
 
 Full Changelog: [v1.10.0...v1.11.0](https://github.com/with-ours/ingest-sdk-csharp/compare/v1.10.0...v1.11.0)
