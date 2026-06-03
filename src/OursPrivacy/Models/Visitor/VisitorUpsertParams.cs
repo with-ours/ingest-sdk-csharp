@@ -661,6 +661,16 @@ public sealed record class UserProperties : JsonModel
         init { this._rawData.Set("ndclid", value); }
     }
 
+    public string? ObClickID
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("ob_click_id");
+        }
+        init { this._rawData.Set("ob_click_id", value); }
+    }
+
     public string? Oppref
     {
         get
@@ -943,6 +953,7 @@ public sealed record class UserProperties : JsonModel
         _ = this.LiFatID;
         _ = this.Msclkid;
         _ = this.Ndclid;
+        _ = this.ObClickID;
         _ = this.Oppref;
         _ = this.PhoneNumber;
         _ = this.Qclid;
@@ -1587,6 +1598,20 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
+    /// The Outbrain click ID, captured from the `ob_click_id` URL parameter (Outbrain
+    /// `{{ob_click_id}}` macro) on the landing page. Ex: ob_click_abc123
+    /// </summary>
+    public string? ObClickID
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("ob_click_id");
+        }
+        init { this._rawData.Set("ob_click_id", value); }
+    }
+
+    /// <summary>
     /// The OpenAI Ads privacy-preserving reference, captured from the `oppref` URL
     /// parameter on landing pages (the OpenAI Pixel also stores it in a `__oppref`
     /// cookie). Sent to OpenAI Ads on Conversions API events for attribution. Ex: oppref_abc
@@ -2065,6 +2090,7 @@ public sealed record class DefaultProperties : JsonModel
         _ = this.Msclkid;
         _ = this.Ndclid;
         _ = this.NewS;
+        _ = this.ObClickID;
         _ = this.Oppref;
         _ = this.OsName;
         _ = this.OsVersion;
