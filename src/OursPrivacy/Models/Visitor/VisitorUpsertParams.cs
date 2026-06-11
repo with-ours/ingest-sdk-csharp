@@ -1114,7 +1114,7 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The AppLovin Axon pixel cookie value (_axwrt). Web-only.
+    /// The AppLovin pixel cookie value (_axwrt). Web-only.
     /// </summary>
     public string? Axwrt
     {
