@@ -1269,7 +1269,7 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The version of the web SDK
+    /// The SDK version (e.g., web SDK or ingest-sdk-* via Stainless headers)
     /// </summary>
     public string? Version
     {
