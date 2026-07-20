@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.16.0 (2026-07-18)
+
+Full Changelog: [v1.15.0...v1.16.0](https://github.com/with-ours/ingest-sdk-csharp/compare/v1.15.0...v1.16.0)
+
+### Features
+
+* **stlc:** configurable CI runner and private-production-repo support in workflow templates ([f0bc263](https://github.com/with-ours/ingest-sdk-csharp/commit/f0bc263cb09dc76cf63388642dc9d68500c58829))
+
 ## 1.15.0 (2026-06-12)
 
 Full Changelog: [v1.14.0...v1.15.0](https://github.com/with-ours/ingest-sdk-csharp/compare/v1.14.0...v1.15.0)
