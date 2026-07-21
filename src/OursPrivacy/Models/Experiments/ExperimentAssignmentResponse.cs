@@ -334,6 +334,22 @@ public sealed record class UnionMember0 : JsonModel
         init { this._rawData.Set("is_control", value); }
     }
 
+    /// <summary>
+    /// Redirect destination for redirect (split-URL) variants — a same-domain relative
+    /// path or an absolute https:// URL. Present only when the assigned variant
+    /// is a redirect; absent for on-page (DOM-modification) variants. Read it straight
+    /// off the payload and issue the redirect server-side.
+    /// </summary>
+    public string? Redirect
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("redirect");
+        }
+        init { this._rawData.Set("redirect", value); }
+    }
+
     public string? Type
     {
         get
@@ -364,6 +380,7 @@ public sealed record class UnionMember0 : JsonModel
         _ = this.ExperimentKey;
         _ = this.ExperimentName;
         _ = this.IsControl;
+        _ = this.Redirect;
         _ = this.Type;
         _ = this.VariantName;
     }
