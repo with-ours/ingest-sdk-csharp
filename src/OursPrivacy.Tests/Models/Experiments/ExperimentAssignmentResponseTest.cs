@@ -19,6 +19,7 @@ public class ExperimentAssignmentResponseTest : TestBase
             ExperimentKey = "experiment_key",
             ExperimentName = "experiment_name",
             IsControl = true,
+            Redirect = "redirect",
             Type = "type",
             VariantName = "variant_name",
         };
@@ -48,6 +49,7 @@ public class ExperimentAssignmentResponseTest : TestBase
             ExperimentKey = "experiment_key",
             ExperimentName = "experiment_name",
             IsControl = true,
+            Redirect = "redirect",
             Type = "type",
             VariantName = "variant_name",
         };
@@ -92,6 +94,7 @@ public class UnionMember0Test : TestBase
             ExperimentKey = "experiment_key",
             ExperimentName = "experiment_name",
             IsControl = true,
+            Redirect = "redirect",
             Type = "type",
             VariantName = "variant_name",
         };
@@ -103,6 +106,7 @@ public class UnionMember0Test : TestBase
         string expectedExperimentKey = "experiment_key";
         string expectedExperimentName = "experiment_name";
         bool expectedIsControl = true;
+        string expectedRedirect = "redirect";
         string expectedType = "type";
         string expectedVariantName = "variant_name";
 
@@ -113,6 +117,7 @@ public class UnionMember0Test : TestBase
         Assert.Equal(expectedExperimentKey, model.ExperimentKey);
         Assert.Equal(expectedExperimentName, model.ExperimentName);
         Assert.Equal(expectedIsControl, model.IsControl);
+        Assert.Equal(expectedRedirect, model.Redirect);
         Assert.Equal(expectedType, model.Type);
         Assert.Equal(expectedVariantName, model.VariantName);
     }
@@ -129,6 +134,7 @@ public class UnionMember0Test : TestBase
             ExperimentKey = "experiment_key",
             ExperimentName = "experiment_name",
             IsControl = true,
+            Redirect = "redirect",
             Type = "type",
             VariantName = "variant_name",
         };
@@ -154,6 +160,7 @@ public class UnionMember0Test : TestBase
             ExperimentKey = "experiment_key",
             ExperimentName = "experiment_name",
             IsControl = true,
+            Redirect = "redirect",
             Type = "type",
             VariantName = "variant_name",
         };
@@ -172,6 +179,7 @@ public class UnionMember0Test : TestBase
         string expectedExperimentKey = "experiment_key";
         string expectedExperimentName = "experiment_name";
         bool expectedIsControl = true;
+        string expectedRedirect = "redirect";
         string expectedType = "type";
         string expectedVariantName = "variant_name";
 
@@ -182,6 +190,7 @@ public class UnionMember0Test : TestBase
         Assert.Equal(expectedExperimentKey, deserialized.ExperimentKey);
         Assert.Equal(expectedExperimentName, deserialized.ExperimentName);
         Assert.Equal(expectedIsControl, deserialized.IsControl);
+        Assert.Equal(expectedRedirect, deserialized.Redirect);
         Assert.Equal(expectedType, deserialized.Type);
         Assert.Equal(expectedVariantName, deserialized.VariantName);
     }
@@ -198,6 +207,7 @@ public class UnionMember0Test : TestBase
             ExperimentKey = "experiment_key",
             ExperimentName = "experiment_name",
             IsControl = true,
+            Redirect = "redirect",
             Type = "type",
             VariantName = "variant_name",
         };
@@ -222,6 +232,8 @@ public class UnionMember0Test : TestBase
         Assert.False(model.RawData.ContainsKey("experiment_name"));
         Assert.Null(model.IsControl);
         Assert.False(model.RawData.ContainsKey("is_control"));
+        Assert.Null(model.Redirect);
+        Assert.False(model.RawData.ContainsKey("redirect"));
         Assert.Null(model.Type);
         Assert.False(model.RawData.ContainsKey("type"));
         Assert.Null(model.VariantName);
@@ -255,6 +267,7 @@ public class UnionMember0Test : TestBase
             ExperimentKey = null,
             ExperimentName = null,
             IsControl = null,
+            Redirect = null,
             Type = null,
             VariantName = null,
         };
@@ -265,6 +278,8 @@ public class UnionMember0Test : TestBase
         Assert.True(model.RawData.ContainsKey("experiment_name"));
         Assert.Null(model.IsControl);
         Assert.True(model.RawData.ContainsKey("is_control"));
+        Assert.Null(model.Redirect);
+        Assert.True(model.RawData.ContainsKey("redirect"));
         Assert.Null(model.Type);
         Assert.True(model.RawData.ContainsKey("type"));
         Assert.Null(model.VariantName);
@@ -284,6 +299,7 @@ public class UnionMember0Test : TestBase
             ExperimentKey = null,
             ExperimentName = null,
             IsControl = null,
+            Redirect = null,
             Type = null,
             VariantName = null,
         };
@@ -303,6 +319,7 @@ public class UnionMember0Test : TestBase
             ExperimentKey = "experiment_key",
             ExperimentName = "experiment_name",
             IsControl = true,
+            Redirect = "redirect",
             Type = "type",
             VariantName = "variant_name",
         };
