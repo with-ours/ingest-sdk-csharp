@@ -324,7 +324,7 @@ sealed class ResultConverter : JsonConverter<Result>
         var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
         try
         {
-            var deserialized = JsonSerializer.Deserialize<UnionMember0>(element, options);
+            var deserialized = JsonSerializer.Deserialize<UnionMember1>(element, options);
             if (deserialized != null)
             {
                 deserialized.Validate();
@@ -338,7 +338,7 @@ sealed class ResultConverter : JsonConverter<Result>
 
         try
         {
-            var deserialized = JsonSerializer.Deserialize<UnionMember1>(element, options);
+            var deserialized = JsonSerializer.Deserialize<UnionMember0>(element, options);
             if (deserialized != null)
             {
                 deserialized.Validate();
