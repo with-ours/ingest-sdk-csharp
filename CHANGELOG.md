@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.17.1 (2026-07-25)
+
+Full Changelog: [v1.17.0...v1.17.1](https://github.com/with-ours/ingest-sdk-csharp/compare/v1.17.0...v1.17.1)
+
+### Bug Fixes
+
+* **client:** tolerate JSON null in required untyped fields and prefer more specific union variants ([b89f22e](https://github.com/with-ours/ingest-sdk-csharp/commit/b89f22e4105f5c574c68577ca3dcd9a6f3a165ad))
+
 ## 1.17.0 (2026-07-21)
 
 Full Changelog: [v1.16.0...v1.17.0](https://github.com/with-ours/ingest-sdk-csharp/compare/v1.16.0...v1.17.0)
