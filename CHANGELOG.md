@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.17.2 (2026-08-03)
+
+Full Changelog: [v1.17.1...v1.17.2](https://github.com/with-ours/ingest-sdk-csharp/compare/v1.17.1...v1.17.2)
+
+### Chores
+
+* add CODEOWNERS ([#32](https://github.com/with-ours/ingest-sdk-csharp/issues/32)) ([3b293f6](https://github.com/with-ours/ingest-sdk-csharp/commit/3b293f643342f8bad5befe2d356829377f39b186))
+
 ## 1.17.1 (2026-07-25)
 
 Full Changelog: [v1.17.0...v1.17.1](https://github.com/with-ours/ingest-sdk-csharp/compare/v1.17.0...v1.17.1)
