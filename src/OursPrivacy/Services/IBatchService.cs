@@ -27,9 +27,10 @@ public interface IBatchService
     IBatchService WithOptions(Func<ClientOptions, ClientOptions> modifier);
 
     /// <summary>
-    /// Send multiple `/track`-shaped events in a single request. The top-level token is
-    /// authorized once for the full batch. Each batch row must include `distinctId`,
-    /// and mixed validation or queue outcomes are reported per row.
+    /// Send multiple `/track`-shaped events in a single request. This endpoint is
+    /// intended for replay, backfill, and asynchronous bulk delivery. The top-level
+    /// token is authorized once for the full batch. Each batch row must include
+    /// `distinctId`, and mixed validation or queue outcomes are reported per row.
     /// </summary>
     Task<BatchCreateResponse> Create(
         BatchCreateParams parameters,
