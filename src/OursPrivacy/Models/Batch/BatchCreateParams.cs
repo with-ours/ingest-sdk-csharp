@@ -12,9 +12,10 @@ using OursPrivacy.Core;
 namespace OursPrivacy.Models.Batch;
 
 /// <summary>
-/// Send multiple `/track`-shaped events in a single request. The top-level token
-/// is authorized once for the full batch. Each batch row must include `distinctId`,
-/// and mixed validation or queue outcomes are reported per row.
+/// Send multiple `/track`-shaped events in a single request. This endpoint is intended
+/// for replay, backfill, and asynchronous bulk delivery. The top-level token is authorized
+/// once for the full batch. Each batch row must include `distinctId`, and mixed validation
+/// or queue outcomes are reported per row.
 ///
 /// <para>NOTE: Do not inherit from this type outside the SDK unless you're okay with
 /// breaking changes in non-major versions. We may add new methods in the future that
