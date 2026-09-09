@@ -2,6 +2,8 @@
 
 The Ours Privacy C# SDK provides convenient access to the [Ours Privacy REST API](https://docs.oursprivacy.com) from applications written in C#.
 
+It is generated with [Stainless](https://www.stainless.com/).
+
 The REST API documentation can be found on [docs.oursprivacy.com](https://docs.oursprivacy.com).
 
 ## Installation
