@@ -1,16 +1,76 @@
-# workflow for re-running publishing to NuGet in case it fails for some reason
-# you can run this workflow by navigating to https://www.github.com/with-ours/ingest-sdk-csharp/actions/workflows/publish-nuget.yml
 name: Publish to NuGet
+
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: Semantic version to publish
+        required: true
+        type: string
+      commit:
+        description: Full release commit SHA already merged into main
+        required: true
+        type: string
+  pull_request:
+    types: [closed]
+
+permissions: {}
+
+concurrency:
+  group: release-${{ github.repository }}
+  cancel-in-progress: false
 
 jobs:
   publish:
+    if: >-
+      (github.event_name == 'workflow_dispatch' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)) ||
+      (github.event.pull_request.merged == true &&
+      github.event.pull_request.base.ref == github.event.repository.default_branch &&
+      startsWith(github.event.pull_request.title, 'release: '))
     name: publish
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.merge_commit_sha || inputs.commit }}
+
+      - name: Validate release version and commit
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          INPUT_VERSION: ${{ inputs.version }}
+          RELEASE_COMMIT: ${{ github.event.pull_request.merge_commit_sha || inputs.commit }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          set -euo pipefail
+          if [[ "$GITHUB_EVENT_NAME" == 'pull_request' ]]; then
+            RELEASE_VERSION="${PR_TITLE#release: }"
+          else
+            RELEASE_VERSION="$INPUT_VERSION"
+          fi
+          RELEASE_VERSION="${RELEASE_VERSION#v}"
+          if ! [[ "$RELEASE_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$ ]]; then
+            echo "Expected a semantic release version" >&2
+            exit 1
+          fi
+          if ! [[ "$RELEASE_COMMIT" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "Expected a full release commit SHA" >&2
+            exit 1
+          fi
+          test "$(git rev-parse HEAD)" = "$RELEASE_COMMIT"
+          git merge-base --is-ancestor "$RELEASE_COMMIT" "origin/$DEFAULT_BRANCH"
+          test "$(jq -er '.["."]' .release-please-manifest.json)" = "$RELEASE_VERSION"
+          TAG="v${RELEASE_VERSION}"
+          if git show-ref --verify --quiet "refs/tags/$TAG"; then
+            test "$(git rev-parse "$TAG^{commit}")" = "$RELEASE_COMMIT"
+          fi
+          echo "RELEASE_VERSION=$RELEASE_VERSION" >> "$GITHUB_ENV"
+          echo "RELEASE_COMMIT=$RELEASE_COMMIT" >> "$GITHUB_ENV"
 
       - name: Set up .NET
         uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7 # v5.2.0
@@ -18,14 +78,33 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Build and pack
-        run: dotnet pack
-          --configuration Release
-          --output "${{github.workspace}}/artifacts/packages"
+        run: dotnet pack --configuration Release --output "$GITHUB_WORKSPACE/artifacts/packages"
 
       - name: Publish package to nuget.org
-        run: dotnet nuget push
-          $(find ${{ github.workspace }}/artifacts/packages/*.nupkg ! -name "*.symbols.nupkg")
-          --source https://api.nuget.org/v3/index.json
-          --api-key $NUGET_API_KEY
+        # NuGet trusted publishing requires a separately configured account trust policy.
+        run: | # zizmor: ignore[use-trusted-publishing]
+          for package in "$GITHUB_WORKSPACE"/artifacts/packages/*.nupkg; do
+            [[ "$package" == *.symbols.nupkg ]] && continue
+            dotnet nuget push "$package" --source https://api.nuget.org/v3/index.json --api-key "$NUGET_API_KEY" --skip-duplicate
+          done
         env:
           NUGET_API_KEY: ${{ secrets.OURS_PRIVACY_NUGET_API_KEY || secrets.NUGET_API_KEY }}
+
+      - name: Tag and create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GIT_COMMITTER_NAME: github-actions[bot]
+          GIT_COMMITTER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+        run: |
+          set -euo pipefail
+          TAG="v${RELEASE_VERSION}"
+          git fetch --tags origin
+          if git show-ref --verify --quiet "refs/tags/$TAG"; then
+            test "$(git rev-parse "$TAG^{commit}")" = "$RELEASE_COMMIT"
+          else
+            git tag -a "$TAG" "$RELEASE_COMMIT" -m "Release $TAG"
+            git -c credential.helper='!gh auth git-credential' push origin "refs/tags/$TAG"
+          fi
+          if ! gh release view "$TAG" >/dev/null 2>&1; then
+            gh release create "$TAG" --verify-tag --target "$RELEASE_COMMIT" --generate-notes --title "$TAG"
+          fi
