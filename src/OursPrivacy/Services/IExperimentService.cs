@@ -46,10 +46,13 @@ public interface IExperimentService
     );
 
     /// <summary>
-    /// Return the active personalization assignments for a visitor. Read-only and never
-    /// records an impression. Personalizations are populated by the event-driven rule
-    /// engine — until that ships, this endpoint returns an empty list for every
-    /// visitor, which is the correct fail-closed behavior (no false positives).
+    /// Return a visitor's active personalization assignments and accumulated
+    /// personalization properties. Read-only and never records an impression.
+    /// `personalizations` lists the personalization experiences the visitor is
+    /// currently assigned to; `properties` returns the visitor traits your
+    /// personalization property rules have accumulated, ready to use in server-rendered
+    /// copy or targeting. Both are empty for a visitor who has not matched anything
+    /// yet.
     /// </summary>
     Task<ExperimentPersonalizationResponse> Personalization(
         ExperimentPersonalizationParams parameters,
