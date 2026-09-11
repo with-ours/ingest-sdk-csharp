@@ -25,6 +25,7 @@ public class ExperimentPersonalizationResponseTest : TestBase
                     VariantName = "variant_name",
                 },
             ],
+            Properties = new Dictionary<string, Property>() { { "foo", "string" } },
             Success = ExperimentPersonalizationResponseSuccess.True,
         };
 
@@ -40,6 +41,7 @@ public class ExperimentPersonalizationResponseTest : TestBase
                 VariantName = "variant_name",
             },
         ];
+        Dictionary<string, Property> expectedProperties = new() { { "foo", "string" } };
         ApiEnum<bool, ExperimentPersonalizationResponseSuccess> expectedSuccess =
             ExperimentPersonalizationResponseSuccess.True;
 
@@ -47,6 +49,13 @@ public class ExperimentPersonalizationResponseTest : TestBase
         for (int i = 0; i < expectedPersonalizations.Count; i++)
         {
             Assert.Equal(expectedPersonalizations[i], model.Personalizations[i]);
+        }
+        Assert.Equal(expectedProperties.Count, model.Properties.Count);
+        foreach (var item in expectedProperties)
+        {
+            Assert.True(model.Properties.TryGetValue(item.Key, out var value));
+
+            Assert.Equal(value, model.Properties[item.Key]);
         }
         Assert.Equal(expectedSuccess, model.Success);
     }
@@ -68,6 +77,7 @@ public class ExperimentPersonalizationResponseTest : TestBase
                     VariantName = "variant_name",
                 },
             ],
+            Properties = new Dictionary<string, Property>() { { "foo", "string" } },
             Success = ExperimentPersonalizationResponseSuccess.True,
         };
 
@@ -97,6 +107,7 @@ public class ExperimentPersonalizationResponseTest : TestBase
                     VariantName = "variant_name",
                 },
             ],
+            Properties = new Dictionary<string, Property>() { { "foo", "string" } },
             Success = ExperimentPersonalizationResponseSuccess.True,
         };
 
@@ -119,6 +130,7 @@ public class ExperimentPersonalizationResponseTest : TestBase
                 VariantName = "variant_name",
             },
         ];
+        Dictionary<string, Property> expectedProperties = new() { { "foo", "string" } };
         ApiEnum<bool, ExperimentPersonalizationResponseSuccess> expectedSuccess =
             ExperimentPersonalizationResponseSuccess.True;
 
@@ -126,6 +138,13 @@ public class ExperimentPersonalizationResponseTest : TestBase
         for (int i = 0; i < expectedPersonalizations.Count; i++)
         {
             Assert.Equal(expectedPersonalizations[i], deserialized.Personalizations[i]);
+        }
+        Assert.Equal(expectedProperties.Count, deserialized.Properties.Count);
+        foreach (var item in expectedProperties)
+        {
+            Assert.True(deserialized.Properties.TryGetValue(item.Key, out var value));
+
+            Assert.Equal(value, deserialized.Properties[item.Key]);
         }
         Assert.Equal(expectedSuccess, deserialized.Success);
     }
@@ -147,6 +166,7 @@ public class ExperimentPersonalizationResponseTest : TestBase
                     VariantName = "variant_name",
                 },
             ],
+            Properties = new Dictionary<string, Property>() { { "foo", "string" } },
             Success = ExperimentPersonalizationResponseSuccess.True,
         };
 
@@ -170,6 +190,7 @@ public class ExperimentPersonalizationResponseTest : TestBase
                     VariantName = "variant_name",
                 },
             ],
+            Properties = new Dictionary<string, Property>() { { "foo", "string" } },
             Success = ExperimentPersonalizationResponseSuccess.True,
         };
 
@@ -368,6 +389,69 @@ public class PersonalizationTest : TestBase
         Personalization copied = new(model);
 
         Assert.Equal(model, copied);
+    }
+}
+
+public class PropertyTest : TestBase
+{
+    [Fact]
+    public void StringValidationWorks()
+    {
+        Property value = "string";
+        value.Validate();
+    }
+
+    [Fact]
+    public void DoubleValidationWorks()
+    {
+        Property value = 0;
+        value.Validate();
+    }
+
+    [Fact]
+    public void BoolValidationWorks()
+    {
+        Property value = true;
+        value.Validate();
+    }
+
+    [Fact]
+    public void StringSerializationRoundtripWorks()
+    {
+        Property value = "string";
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<Property>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void DoubleSerializationRoundtripWorks()
+    {
+        Property value = 0;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<Property>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void BoolSerializationRoundtripWorks()
+    {
+        Property value = true;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<Property>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
     }
 }
 
