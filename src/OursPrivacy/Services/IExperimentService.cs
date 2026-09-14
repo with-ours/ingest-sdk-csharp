@@ -46,13 +46,10 @@ public interface IExperimentService
     );
 
     /// <summary>
-    /// Return a visitor's active personalization assignments and accumulated
-    /// personalization properties. Read-only and never records an impression.
-    /// `personalizations` lists the personalization experiences the visitor is
-    /// currently assigned to; `properties` returns the visitor traits your
-    /// personalization property rules have accumulated, ready to use in server-rendered
-    /// copy or targeting. Both are empty for a visitor who has not matched anything
-    /// yet.
+    /// Return the visitor traits accumulated by personalization property rules.
+    /// Read-only and never records an impression. Use the properties to select
+    /// personalized server-rendered copy or targeting; the browser experiment runtime
+    /// receives the same bag at initialization.
     /// </summary>
     Task<ExperimentPersonalizationResponse> Personalization(
         ExperimentPersonalizationParams parameters,
