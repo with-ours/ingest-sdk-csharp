@@ -18,24 +18,6 @@ namespace OursPrivacy.Models.Experiments;
 )]
 public sealed record class ExperimentPersonalizationResponse : JsonModel
 {
-    public required IReadOnlyList<Personalization> Personalizations
-    {
-        get
-        {
-            this._rawData.Freeze();
-            return this._rawData.GetNotNullStruct<ImmutableArray<Personalization>>(
-                "personalizations"
-            );
-        }
-        init
-        {
-            this._rawData.Set<ImmutableArray<Personalization>>(
-                "personalizations",
-                ImmutableArray.ToImmutableArray(value)
-            );
-        }
-    }
-
     /// <summary>
     /// The visitor traits accumulated by your personalization property rules, keyed
     /// by property key. Values are always scalars — a string, number, or boolean,
@@ -72,18 +54,47 @@ public sealed record class ExperimentPersonalizationResponse : JsonModel
         init { this._rawData.Set("success", value); }
     }
 
+    /// <summary>
+    /// Deprecated legacy personalization assignments. Current API responses omit
+    /// this field; use properties for accumulated personalization traits. Retained
+    /// in the SDK for callers using older responses.
+    /// </summary>
+    [Obsolete("deprecated")]
+    public IReadOnlyList<Personalization>? Personalizations
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableStruct<ImmutableArray<Personalization>>(
+                "personalizations"
+            );
+        }
+        init
+        {
+            if (value == null)
+            {
+                return;
+            }
+
+            this._rawData.Set<ImmutableArray<Personalization>?>(
+                "personalizations",
+                value == null ? null : ImmutableArray.ToImmutableArray(value)
+            );
+        }
+    }
+
     /// <inheritdoc/>
     public override void Validate()
     {
-        foreach (var item in this.Personalizations)
-        {
-            item.Validate();
-        }
         foreach (var item in this.Properties.Values)
         {
             item.Validate();
         }
         this.Success.Validate();
+        foreach (var item in this.Personalizations ?? [])
+        {
+            item.Validate();
+        }
     }
 
     public ExperimentPersonalizationResponse() { }
@@ -124,115 +135,6 @@ class ExperimentPersonalizationResponseFromRaw : IFromRawJson<ExperimentPersonal
     public ExperimentPersonalizationResponse FromRawUnchecked(
         IReadOnlyDictionary<string, JsonElement> rawData
     ) => ExperimentPersonalizationResponse.FromRawUnchecked(rawData);
-}
-
-[JsonConverter(typeof(JsonModelConverter<Personalization, PersonalizationFromRaw>))]
-public sealed record class Personalization : JsonModel
-{
-    public required double AssignedAt
-    {
-        get
-        {
-            this._rawData.Freeze();
-            return this._rawData.GetNotNullStruct<double>("assigned_at");
-        }
-        init { this._rawData.Set("assigned_at", value); }
-    }
-
-    public required string ExperimentID
-    {
-        get
-        {
-            this._rawData.Freeze();
-            return this._rawData.GetNotNullClass<string>("experiment_id");
-        }
-        init { this._rawData.Set("experiment_id", value); }
-    }
-
-    public required string VariantID
-    {
-        get
-        {
-            this._rawData.Freeze();
-            return this._rawData.GetNotNullClass<string>("variant_id");
-        }
-        init { this._rawData.Set("variant_id", value); }
-    }
-
-    public string? ExperimentKey
-    {
-        get
-        {
-            this._rawData.Freeze();
-            return this._rawData.GetNullableClass<string>("experiment_key");
-        }
-        init { this._rawData.Set("experiment_key", value); }
-    }
-
-    public string? ExperimentName
-    {
-        get
-        {
-            this._rawData.Freeze();
-            return this._rawData.GetNullableClass<string>("experiment_name");
-        }
-        init { this._rawData.Set("experiment_name", value); }
-    }
-
-    public string? VariantName
-    {
-        get
-        {
-            this._rawData.Freeze();
-            return this._rawData.GetNullableClass<string>("variant_name");
-        }
-        init { this._rawData.Set("variant_name", value); }
-    }
-
-    /// <inheritdoc/>
-    public override void Validate()
-    {
-        _ = this.AssignedAt;
-        _ = this.ExperimentID;
-        _ = this.VariantID;
-        _ = this.ExperimentKey;
-        _ = this.ExperimentName;
-        _ = this.VariantName;
-    }
-
-    public Personalization() { }
-
-#pragma warning disable CS8618
-    [SetsRequiredMembers]
-    public Personalization(Personalization personalization)
-        : base(personalization) { }
-#pragma warning restore CS8618
-
-    public Personalization(IReadOnlyDictionary<string, JsonElement> rawData)
-    {
-        this._rawData = new(rawData);
-    }
-
-#pragma warning disable CS8618
-    [SetsRequiredMembers]
-    Personalization(FrozenDictionary<string, JsonElement> rawData)
-    {
-        this._rawData = new(rawData);
-    }
-#pragma warning restore CS8618
-
-    /// <inheritdoc cref="PersonalizationFromRaw.FromRawUnchecked"/>
-    public static Personalization FromRawUnchecked(IReadOnlyDictionary<string, JsonElement> rawData)
-    {
-        return new(FrozenDictionary.ToFrozenDictionary(rawData));
-    }
-}
-
-class PersonalizationFromRaw : IFromRawJson<Personalization>
-{
-    /// <inheritdoc/>
-    public Personalization FromRawUnchecked(IReadOnlyDictionary<string, JsonElement> rawData) =>
-        Personalization.FromRawUnchecked(rawData);
 }
 
 [JsonConverter(typeof(PropertyConverter))]
@@ -556,4 +458,113 @@ sealed class ExperimentPersonalizationResponseSuccessConverter
             options
         );
     }
+}
+
+[JsonConverter(typeof(JsonModelConverter<Personalization, PersonalizationFromRaw>))]
+public sealed record class Personalization : JsonModel
+{
+    public required double AssignedAt
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNotNullStruct<double>("assigned_at");
+        }
+        init { this._rawData.Set("assigned_at", value); }
+    }
+
+    public required string ExperimentID
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNotNullClass<string>("experiment_id");
+        }
+        init { this._rawData.Set("experiment_id", value); }
+    }
+
+    public required string VariantID
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNotNullClass<string>("variant_id");
+        }
+        init { this._rawData.Set("variant_id", value); }
+    }
+
+    public string? ExperimentKey
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("experiment_key");
+        }
+        init { this._rawData.Set("experiment_key", value); }
+    }
+
+    public string? ExperimentName
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("experiment_name");
+        }
+        init { this._rawData.Set("experiment_name", value); }
+    }
+
+    public string? VariantName
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("variant_name");
+        }
+        init { this._rawData.Set("variant_name", value); }
+    }
+
+    /// <inheritdoc/>
+    public override void Validate()
+    {
+        _ = this.AssignedAt;
+        _ = this.ExperimentID;
+        _ = this.VariantID;
+        _ = this.ExperimentKey;
+        _ = this.ExperimentName;
+        _ = this.VariantName;
+    }
+
+    public Personalization() { }
+
+#pragma warning disable CS8618
+    [SetsRequiredMembers]
+    public Personalization(Personalization personalization)
+        : base(personalization) { }
+#pragma warning restore CS8618
+
+    public Personalization(IReadOnlyDictionary<string, JsonElement> rawData)
+    {
+        this._rawData = new(rawData);
+    }
+
+#pragma warning disable CS8618
+    [SetsRequiredMembers]
+    Personalization(FrozenDictionary<string, JsonElement> rawData)
+    {
+        this._rawData = new(rawData);
+    }
+#pragma warning restore CS8618
+
+    /// <inheritdoc cref="PersonalizationFromRaw.FromRawUnchecked"/>
+    public static Personalization FromRawUnchecked(IReadOnlyDictionary<string, JsonElement> rawData)
+    {
+        return new(FrozenDictionary.ToFrozenDictionary(rawData));
+    }
+}
+
+class PersonalizationFromRaw : IFromRawJson<Personalization>
+{
+    /// <inheritdoc/>
+    public Personalization FromRawUnchecked(IReadOnlyDictionary<string, JsonElement> rawData) =>
+        Personalization.FromRawUnchecked(rawData);
 }
