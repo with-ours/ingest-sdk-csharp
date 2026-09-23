@@ -217,9 +217,9 @@ public sealed record class Event : JsonModel
     }
 
     /// <summary>
-    /// The email address of a user. Used as a fallback lookup when neither userId
-    /// nor externalId is provided. We search your account for a visitor with this
-    /// email and attach the event to them. If no match is found, a new visitor is created.
+    /// The email address of a user. When userId is absent and externalId does not
+    /// resolve a visitor, we search your account for a visitor with this email. If
+    /// no match is found, we try userProperties.phone_number before creating a new visitor.
     /// </summary>
     public string? Email
     {
@@ -253,11 +253,11 @@ public sealed record class Event : JsonModel
     }
 
     /// <summary>
-    /// Your system's unique identifier for this user. We search your account for
-    /// an existing visitor with this externalId and attach the event to them (resolving
-    /// to their Ours Visitor ID). If no match is found, a new visitor is created.
-    /// When present, email lookup is skipped. If you also have the userId from cookies
-    /// or local storage, send both — it removes the lookup round-trip.
+    /// Your system's unique identifier for this user. When userId is absent, we
+    /// search your account for an existing visitor with this externalId. If no match
+    /// is found, we try email and then userProperties.phone_number before creating
+    /// a new visitor. If you also have the userId from cookies or local storage,
+    /// send both — it removes the lookup round-trip.
     /// </summary>
     public string? ExternalID
     {
@@ -299,8 +299,8 @@ public sealed record class Event : JsonModel
 
     /// <summary>
     /// The Ours Visitor ID stored in local storage and cookies on your web properties.
-    /// When present, this is used directly — no lookup by externalId or email is
-    /// performed. If you have both a userId and an externalId, send both so the
+    /// When present, this is used directly — no lookup by externalId, email, or phone
+    /// is performed. If you have both a userId and an externalId, send both so the
     /// event is attached to the right visitor without any lookup overhead.
     /// </summary>
     public string? UserID
