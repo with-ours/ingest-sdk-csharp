@@ -26,16 +26,16 @@ public sealed record class ExperimentPersonalizationResponse : JsonModel
     /// browser and are readable by anyone who knows the visitor_id, so never accumulate
     /// secrets, credentials, PHI, or confidential data into a property.
     /// </summary>
-    public required IReadOnlyDictionary<string, Property> Properties
+    public required IReadOnlyDictionary<string, Property?> Properties
     {
         get
         {
             this._rawData.Freeze();
-            return this._rawData.GetNotNullClass<FrozenDictionary<string, Property>>("properties");
+            return this._rawData.GetNotNullClass<FrozenDictionary<string, Property?>>("properties");
         }
         init
         {
-            this._rawData.Set<FrozenDictionary<string, Property>>(
+            this._rawData.Set<FrozenDictionary<string, Property?>>(
                 "properties",
                 FrozenDictionary.ToFrozenDictionary(value)
             );
@@ -88,7 +88,7 @@ public sealed record class ExperimentPersonalizationResponse : JsonModel
     {
         foreach (var item in this.Properties.Values)
         {
-            item.Validate();
+            item?.Validate();
         }
         this.Success.Validate();
         foreach (var item in this.Personalizations ?? [])
@@ -369,7 +369,7 @@ public record class Property : ModelBase
     }
 }
 
-sealed class PropertyConverter : JsonConverter<Property>
+sealed class PropertyConverter : JsonConverter<Property?>
 {
     public override Property? Read(
         ref Utf8JsonReader reader,
@@ -412,9 +412,13 @@ sealed class PropertyConverter : JsonConverter<Property>
         return new(element);
     }
 
-    public override void Write(Utf8JsonWriter writer, Property value, JsonSerializerOptions options)
+    public override void Write(
+        Utf8JsonWriter writer,
+        Property? value,
+        JsonSerializerOptions options
+    )
     {
-        JsonSerializer.Serialize(writer, value.Json, options);
+        JsonSerializer.Serialize(writer, value?.Json, options);
     }
 }
 
