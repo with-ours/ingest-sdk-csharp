@@ -13,7 +13,7 @@ public class ExperimentPersonalizationResponseTest : TestBase
     {
         var model = new ExperimentPersonalizationResponse
         {
-            Properties = new Dictionary<string, Property>() { { "foo", "string" } },
+            Properties = new Dictionary<string, Property?>() { { "foo", "string" } },
             Success = ExperimentPersonalizationResponseSuccess.True,
             Personalizations =
             [
@@ -29,7 +29,7 @@ public class ExperimentPersonalizationResponseTest : TestBase
             ],
         };
 
-        Dictionary<string, Property> expectedProperties = new() { { "foo", "string" } };
+        Dictionary<string, Property?> expectedProperties = new() { { "foo", "string" } };
         ApiEnum<bool, ExperimentPersonalizationResponseSuccess> expectedSuccess =
             ExperimentPersonalizationResponseSuccess.True;
         List<Personalization> expectedPersonalizations =
@@ -66,7 +66,7 @@ public class ExperimentPersonalizationResponseTest : TestBase
     {
         var model = new ExperimentPersonalizationResponse
         {
-            Properties = new Dictionary<string, Property>() { { "foo", "string" } },
+            Properties = new Dictionary<string, Property?>() { { "foo", "string" } },
             Success = ExperimentPersonalizationResponseSuccess.True,
             Personalizations =
             [
@@ -96,7 +96,7 @@ public class ExperimentPersonalizationResponseTest : TestBase
     {
         var model = new ExperimentPersonalizationResponse
         {
-            Properties = new Dictionary<string, Property>() { { "foo", "string" } },
+            Properties = new Dictionary<string, Property?>() { { "foo", "string" } },
             Success = ExperimentPersonalizationResponseSuccess.True,
             Personalizations =
             [
@@ -119,7 +119,7 @@ public class ExperimentPersonalizationResponseTest : TestBase
         );
         Assert.NotNull(deserialized);
 
-        Dictionary<string, Property> expectedProperties = new() { { "foo", "string" } };
+        Dictionary<string, Property?> expectedProperties = new() { { "foo", "string" } };
         ApiEnum<bool, ExperimentPersonalizationResponseSuccess> expectedSuccess =
             ExperimentPersonalizationResponseSuccess.True;
         List<Personalization> expectedPersonalizations =
@@ -156,7 +156,7 @@ public class ExperimentPersonalizationResponseTest : TestBase
     {
         var model = new ExperimentPersonalizationResponse
         {
-            Properties = new Dictionary<string, Property>() { { "foo", "string" } },
+            Properties = new Dictionary<string, Property?>() { { "foo", "string" } },
             Success = ExperimentPersonalizationResponseSuccess.True,
             Personalizations =
             [
@@ -180,7 +180,7 @@ public class ExperimentPersonalizationResponseTest : TestBase
     {
         var model = new ExperimentPersonalizationResponse
         {
-            Properties = new Dictionary<string, Property>() { { "foo", "string" } },
+            Properties = new Dictionary<string, Property?>() { { "foo", "string" } },
             Success = ExperimentPersonalizationResponseSuccess.True,
         };
 
@@ -193,7 +193,7 @@ public class ExperimentPersonalizationResponseTest : TestBase
     {
         var model = new ExperimentPersonalizationResponse
         {
-            Properties = new Dictionary<string, Property>() { { "foo", "string" } },
+            Properties = new Dictionary<string, Property?>() { { "foo", "string" } },
             Success = ExperimentPersonalizationResponseSuccess.True,
         };
 
@@ -205,7 +205,7 @@ public class ExperimentPersonalizationResponseTest : TestBase
     {
         var model = new ExperimentPersonalizationResponse
         {
-            Properties = new Dictionary<string, Property>() { { "foo", "string" } },
+            Properties = new Dictionary<string, Property?>() { { "foo", "string" } },
             Success = ExperimentPersonalizationResponseSuccess.True,
 
             // Null should be interpreted as omitted for these properties
@@ -221,7 +221,7 @@ public class ExperimentPersonalizationResponseTest : TestBase
     {
         var model = new ExperimentPersonalizationResponse
         {
-            Properties = new Dictionary<string, Property>() { { "foo", "string" } },
+            Properties = new Dictionary<string, Property?>() { { "foo", "string" } },
             Success = ExperimentPersonalizationResponseSuccess.True,
 
             // Null should be interpreted as omitted for these properties
@@ -236,7 +236,7 @@ public class ExperimentPersonalizationResponseTest : TestBase
     {
         var model = new ExperimentPersonalizationResponse
         {
-            Properties = new Dictionary<string, Property>() { { "foo", "string" } },
+            Properties = new Dictionary<string, Property?>() { { "foo", "string" } },
             Success = ExperimentPersonalizationResponseSuccess.True,
             Personalizations =
             [
