@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using OursPrivacy.Models.Batch;
 
 namespace OursPrivacy.Tests.Services;
 
@@ -11,13 +12,13 @@ public class BatchServiceTest : TestBase
         var batch = await this.client.Batch.Create(
             new()
             {
-                Token = "x",
+                Token = "P",
                 Events =
                 [
                     new()
                     {
-                        DistinctID = "x",
-                        EventValue = "x",
+                        DistinctID = "P",
+                        EventValue = "P",
                         DefaultProperties = new()
                         {
                             _EfTransactionID = "_ef_transaction_id",
@@ -54,12 +55,14 @@ public class BatchServiceTest : TestBase
                             GadSource = "gad_source",
                             Gbraid = "gbraid",
                             Gclid = "gclid",
+                            Graid = "graid",
+                            Grclid = "grclid",
                             Host = "host",
                             Iframe = true,
                             ImRef = "im_ref",
                             IP = "ip",
                             Irclickid = "irclickid",
-                            IsBot = "is_bot",
+                            IsBot = "string",
                             LiFatID = "li_fat_id",
                             Msclkid = "msclkid",
                             Ndclid = "ndclid",
@@ -99,12 +102,15 @@ public class BatchServiceTest : TestBase
                             Wbraid = "wbraid",
                             Webview = true,
                         },
-                        Email = "x",
-                        EventProperties = new Dictionary<string, string?>() { { "foo", "string" } },
-                        ExternalID = "x",
+                        Email = "P",
+                        EventProperties = new Dictionary<string, EventProperty?>()
+                        {
+                            { "foo", "string" },
+                        },
+                        ExternalID = "P",
                         IdentityContext = new() { IP = "ip", UserAgent = "userAgent" },
                         Time = 0,
-                        UserID = "x",
+                        UserID = "P",
                         UserProperties = new()
                         {
                             _EfTransactionID = "_ef_transaction_id",
@@ -121,9 +127,9 @@ public class BatchServiceTest : TestBase
                             Clickid = "clickid",
                             Clid = "clid",
                             CompanyName = "company_name",
-                            Consent = new Dictionary<string, string?>() { { "foo", "string" } },
+                            Consent = new Dictionary<string, Consent?>() { { "foo", "string" } },
                             Country = "country",
-                            CustomProperties = new Dictionary<string, string?>()
+                            CustomProperties = new Dictionary<string, CustomProperty?>()
                             {
                                 { "foo", "string" },
                             },
@@ -140,10 +146,12 @@ public class BatchServiceTest : TestBase
                             Gbraid = "gbraid",
                             Gclid = "gclid",
                             Gender = "gender",
+                            Graid = "graid",
+                            Grclid = "grclid",
                             ImRef = "im_ref",
                             IP = "ip",
                             Irclickid = "irclickid",
-                            IsBot = "is_bot",
+                            IsBot = "string",
                             JobTitle = "job_title",
                             LastName = "last_name",
                             LiFatID = "li_fat_id",
@@ -151,7 +159,7 @@ public class BatchServiceTest : TestBase
                             Ndclid = "ndclid",
                             ObClickID = "ob_click_id",
                             Oppref = "oppref",
-                            PhoneNumber = "phone_number",
+                            PhoneNumber = "string",
                             Qclid = "qclid",
                             RdtCid = "rdt_cid",
                             Referrer = "referrer",
@@ -173,7 +181,7 @@ public class BatchServiceTest : TestBase
                             ViantClickID = "viant_click_id",
                             ViantImpressionID = "viant_impression_id",
                             Wbraid = "wbraid",
-                            Zip = "zip",
+                            Zip = "string",
                         },
                     },
                 ],

@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using OursPrivacy.Core;
+using OursPrivacy.Exceptions;
 
 namespace OursPrivacy.Models.Batch;
 
@@ -30,7 +31,8 @@ public record class BatchCreateParams : ParamsBase
     }
 
     /// <summary>
-    /// The token for your Source. You can find this in the dashboard.
+    /// The token for your Source. You can find this in the dashboard. Leading and
+    /// trailing whitespace is removed before validation.
     /// </summary>
     public required string Token
     {
@@ -178,7 +180,7 @@ public sealed record class Event : JsonModel
     /// A unique identifier for this event used for deduplication. Highly recommended
     /// — if omitted, Ours will generate one for you, but supplying your own gives
     /// you stronger idempotency guarantees (e.g. a Stripe payment intent ID or your
-    /// internal order ID).
+    /// internal order ID). Leading and trailing whitespace is removed before validation.
     /// </summary>
     public required string DistinctID
     {
@@ -191,7 +193,8 @@ public sealed record class Event : JsonModel
     }
 
     /// <summary>
-    /// The name of the event you're tracking. This must be whitelisted in the Ours dashboard.
+    /// The name of the event you're tracking. This must be whitelisted in the Ours
+    /// dashboard. Leading and trailing whitespace is removed before validation.
     /// </summary>
     public required string EventValue
     {
@@ -219,7 +222,8 @@ public sealed record class Event : JsonModel
     /// <summary>
     /// The email address of a user. When userId is absent and externalId does not
     /// resolve a visitor, we search your account for a visitor with this email. If
-    /// no match is found, we try userProperties.phone_number before creating a new visitor.
+    /// no match is found, we try userProperties.phone_number before creating a new
+    /// visitor. Leading and trailing whitespace is removed before validation.
     /// </summary>
     public string? Email
     {
@@ -232,20 +236,25 @@ public sealed record class Event : JsonModel
     }
 
     /// <summary>
-    /// Any additional event properties you want to pass along.
+    /// Any additional event properties you want to pass along. Use at most 200 nonempty
+    /// property keys and five object levels. Array contents do not count toward
+    /// the object-depth limit. Empty keys are removed recursively, arrays are truncated
+    /// to 250 entries, and top-level numbers outside the safe integer range become
+    /// strings. After normalization, the serialized JSON must be shorter than 1,048,576
+    /// UTF-16 code units.
     /// </summary>
-    public IReadOnlyDictionary<string, string?>? EventProperties
+    public IReadOnlyDictionary<string, EventProperty?>? EventProperties
     {
         get
         {
             this._rawData.Freeze();
-            return this._rawData.GetNullableClass<FrozenDictionary<string, string?>>(
+            return this._rawData.GetNullableClass<FrozenDictionary<string, EventProperty?>>(
                 "eventProperties"
             );
         }
         init
         {
-            this._rawData.Set<FrozenDictionary<string, string?>?>(
+            this._rawData.Set<FrozenDictionary<string, EventProperty?>?>(
                 "eventProperties",
                 value == null ? null : FrozenDictionary.ToFrozenDictionary(value)
             );
@@ -257,7 +266,9 @@ public sealed record class Event : JsonModel
     /// search your account for an existing visitor with this externalId. If no match
     /// is found, we try email and then userProperties.phone_number before creating
     /// a new visitor. If you also have the userId from cookies or local storage,
-    /// send both — it removes the lookup round-trip.
+    /// send both — it removes the lookup round-trip. Non-string input is converted
+    /// to text before validation; clients should send a string. Leading and trailing
+    /// whitespace is removed before validation.
     /// </summary>
     public string? ExternalID
     {
@@ -301,7 +312,8 @@ public sealed record class Event : JsonModel
     /// The Ours Visitor ID stored in local storage and cookies on your web properties.
     /// When present, this is used directly — no lookup by externalId, email, or phone
     /// is performed. If you have both a userId and an externalId, send both so the
-    /// event is attached to the right visitor without any lookup overhead.
+    /// event is attached to the right visitor without any lookup overhead. Leading
+    /// and trailing whitespace is removed before validation.
     /// </summary>
     public string? UserID
     {
@@ -334,7 +346,13 @@ public sealed record class Event : JsonModel
         _ = this.EventValue;
         this.DefaultProperties?.Validate();
         _ = this.Email;
-        _ = this.EventProperties;
+        if (this.EventProperties != null)
+        {
+            foreach (var item in this.EventProperties.Values)
+            {
+                item?.Validate();
+            }
+        }
         _ = this.ExternalID;
         this.IdentityContext?.Validate();
         _ = this.Time;
@@ -385,7 +403,8 @@ public sealed record class DefaultProperties : JsonModel
 {
     /// <summary>
     /// The Everflow affiliate Click (Transaction) ID, captured from the `_ef_transaction_id`
-    /// URL parameter. Ex: ef_click_abc123
+    /// URL parameter. Ex: ef_click_abc123 Leading and trailing whitespace is removed
+    /// before validation.
     /// </summary>
     public string? _EfTransactionID
     {
@@ -412,6 +431,7 @@ public sealed record class DefaultProperties : JsonModel
 
     /// <summary>
     /// The ad id for detected in the session. This is set by the web sdk automatically.
+    /// Leading and trailing whitespace is removed before validation.
     /// </summary>
     public string? AdID
     {
@@ -424,7 +444,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The Admitad (Mitgo) affiliate Click ID. Ex: admitad_uid_abc123
+    /// The Admitad (Mitgo) affiliate Click ID. Ex: admitad_uid_abc123 Leading and
+    /// trailing whitespace is removed before validation.
     /// </summary>
     public string? AdmitadUid
     {
@@ -438,6 +459,7 @@ public sealed record class DefaultProperties : JsonModel
 
     /// <summary>
     /// The adset id for detected in the session. This is set by the web sdk automatically.
+    /// Leading and trailing whitespace is removed before validation.
     /// </summary>
     public string? AdsetID
     {
@@ -450,7 +472,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The AppLovin alart query parameter. Ex: alart123
+    /// The AppLovin alart query parameter. Ex: alart123 Leading and trailing whitespace
+    /// is removed before validation.
     /// </summary>
     public string? Alart
     {
@@ -463,7 +486,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The AppLovin aleid query parameter. Ex: aleid123
+    /// The AppLovin aleid query parameter. Ex: aleid123 Leading and trailing whitespace
+    /// is removed before validation.
     /// </summary>
     public string? Aleid
     {
@@ -476,7 +500,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The AppLovin pixel cookie value (_axwrt). Web-only.
+    /// The AppLovin pixel cookie value (_axwrt). Web-only. Leading and trailing
+    /// whitespace is removed before validation.
     /// </summary>
     public string? Axwrt
     {
@@ -489,7 +514,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The Basis DSP Click ID. Ex: basis_cid123
+    /// The Basis DSP Click ID. Ex: basis_cid123 Leading and trailing whitespace is
+    /// removed before validation.
     /// </summary>
     public string? BasisCid
     {
@@ -503,7 +529,8 @@ public sealed record class DefaultProperties : JsonModel
 
     /// <summary>
     /// The Beeswax (FreeWheel Buyer Cloud) auction ID, captured from the `{{AUCTION_ID}}`
-    /// macro on creative click URLs. Ex: bx-auc-abc123
+    /// macro on creative click URLs. Ex: bx-auc-abc123 Leading and trailing whitespace
+    /// is removed before validation.
     /// </summary>
     public string? BeeswaxAuctionID
     {
@@ -516,7 +543,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The language of the browser. Ex: en-US
+    /// The language of the browser. Ex: en-US Leading and trailing whitespace is
+    /// removed before validation.
     /// </summary>
     public string? BrowserLanguage
     {
@@ -529,7 +557,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The name of the browser. Ex: Chrome
+    /// The name of the browser. Ex: Chrome Leading and trailing whitespace is removed
+    /// before validation.
     /// </summary>
     public string? BrowserName
     {
@@ -542,7 +571,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The version of the browser. Ex: 114.0
+    /// The version of the browser. Ex: 114.0 Leading and trailing whitespace is
+    /// removed before validation.
     /// </summary>
     public string? BrowserVersion
     {
@@ -556,6 +586,7 @@ public sealed record class DefaultProperties : JsonModel
 
     /// <summary>
     /// The campaign id for detected in the session. This is set by the web sdk automatically.
+    /// Leading and trailing whitespace is removed before validation.
     /// </summary>
     public string? CampaignID
     {
@@ -568,7 +599,7 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The Click ID. Ex: clickid123
+    /// The Click ID. Ex: clickid123 Leading and trailing whitespace is removed before validation.
     /// </summary>
     public string? Clickid
     {
@@ -581,7 +612,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The Generic Click ID. Ex: clid123
+    /// The Generic Click ID. Ex: clid123 Leading and trailing whitespace is removed
+    /// before validation.
     /// </summary>
     public string? Clid
     {
@@ -594,7 +626,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The architecture of the CPU. Ex: x64
+    /// The architecture of the CPU. Ex: x64 Leading and trailing whitespace is removed
+    /// before validation.
     /// </summary>
     public string? CpuArchitecture
     {
@@ -607,7 +640,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The full url (including query params) of the current page
+    /// The full url (including query params) of the current page Leading and trailing
+    /// whitespace is removed before validation.
     /// </summary>
     public string? CurrentUrl
     {
@@ -620,7 +654,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The DoubleClick Click ID. Ex: dclid123
+    /// The DoubleClick Click ID. Ex: dclid123 Leading and trailing whitespace is
+    /// removed before validation.
     /// </summary>
     public string? Dclid
     {
@@ -633,7 +668,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The model of the device. Ex: iPhone 13
+    /// The model of the device. Ex: iPhone 13 Leading and trailing whitespace is
+    /// removed before validation.
     /// </summary>
     public string? DeviceModel
     {
@@ -646,7 +682,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The type of device the user is using. Ex: mobile
+    /// The type of device the user is using. Ex: mobile Leading and trailing whitespace
+    /// is removed before validation.
     /// </summary>
     public string? DeviceType
     {
@@ -659,7 +696,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The vendor of the device. Ex: Apple
+    /// The vendor of the device. Ex: Apple Leading and trailing whitespace is removed
+    /// before validation.
     /// </summary>
     public string? DeviceVendor
     {
@@ -685,7 +723,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The browsers encoding. Ex: UTF-8
+    /// The browsers encoding. Ex: UTF-8 Leading and trailing whitespace is removed
+    /// before validation.
     /// </summary>
     public string? Encoding
     {
@@ -698,7 +737,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The name of the browser engine. Ex: Blink
+    /// The name of the browser engine. Ex: Blink Leading and trailing whitespace
+    /// is removed before validation.
     /// </summary>
     public string? EngineName
     {
@@ -711,7 +751,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The version of the browser engine. Ex: 114.0
+    /// The version of the browser engine. Ex: 114.0 Leading and trailing whitespace
+    /// is removed before validation.
     /// </summary>
     public string? EngineVersion
     {
@@ -724,7 +765,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The Pinterest Click ID. Ex: epik456
+    /// The Pinterest Click ID. Ex: epik456 Leading and trailing whitespace is removed
+    /// before validation.
     /// </summary>
     public string? Epik
     {
@@ -738,6 +780,7 @@ public sealed record class DefaultProperties : JsonModel
 
     /// <summary>
     /// Facebook Click ID with prefix format for Conversions API tracking. Ex: fb.1.1554763741205.AbCdEfGhIjKlMnOpQrStUvWxYz1234567890
+    /// Leading and trailing whitespace is removed before validation.
     /// </summary>
     public string? Fbc
     {
@@ -750,7 +793,9 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// Raw Facebook Click ID query parameter without prefix from ad clicks. Ex: AbCdEfGhIjKlMnOpQrStUvWxYz1234567890
+    /// Raw Facebook Click ID query parameter without prefix from ad clicks. Ex:
+    /// AbCdEfGhIjKlMnOpQrStUvWxYz1234567890 Leading and trailing whitespace is removed
+    /// before validation.
     /// </summary>
     public string? Fbclid
     {
@@ -764,7 +809,8 @@ public sealed record class DefaultProperties : JsonModel
 
     /// <summary>
     /// Facebook Browser ID parameter for identifying browsers and attributing events.
-    /// Ex: fb.1.1554763741205.1098115397
+    /// Ex: fb.1.1554763741205.1098115397 Leading and trailing whitespace is removed
+    /// before validation.
     /// </summary>
     public string? Fbp
     {
@@ -790,7 +836,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The Google Ad Source. Ex: google
+    /// The Google Ad Source. Ex: google Leading and trailing whitespace is removed
+    /// before validation.
     /// </summary>
     public string? GadSource
     {
@@ -803,7 +850,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The Google Braid ID. Ex: gbraid123
+    /// The Google Braid ID. Ex: gbraid123 Leading and trailing whitespace is removed
+    /// before validation.
     /// </summary>
     public string? Gbraid
     {
@@ -816,7 +864,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The Google Click ID. Ex: gclid123
+    /// The Google Click ID. Ex: gclid123 Leading and trailing whitespace is removed
+    /// before validation.
     /// </summary>
     public string? Gclid
     {
@@ -829,7 +878,38 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The host of the current page. Ex: example.com
+    /// The Gravity attribution ID, captured from the `graid` URL parameter on the
+    /// landing page. Gravity resolves it to the campaign, publisher, and ad IDs
+    /// server-side. Ex: graid-abc123 Leading and trailing whitespace is removed before validation.
+    /// </summary>
+    public string? Graid
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("graid");
+        }
+        init { this._rawData.Set("graid", value); }
+    }
+
+    /// <summary>
+    /// The Gravity click ID, captured from the `grclid` URL parameter that Gravity
+    /// (trygravity.com) appends to ad click-through URLs on the landing page. Ex:
+    /// grclid-abc123 Leading and trailing whitespace is removed before validation.
+    /// </summary>
+    public string? Grclid
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("grclid");
+        }
+        init { this._rawData.Set("grclid", value); }
+    }
+
+    /// <summary>
+    /// The host of the current page. Ex: example.com Leading and trailing whitespace
+    /// is removed before validation.
     /// </summary>
     public string? Host
     {
@@ -855,7 +935,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The Impact Click ID reference. Ex: im_ref123
+    /// The Impact Click ID reference. Ex: im_ref123 Leading and trailing whitespace
+    /// is removed before validation.
     /// </summary>
     public string? ImRef
     {
@@ -868,7 +949,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The IP address of the user. Ex: 127.0.0.1
+    /// The IP address of the user. Ex: 127.0.0.1 Leading and trailing whitespace
+    /// is removed before validation.
     /// </summary>
     public string? IP
     {
@@ -881,7 +963,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The Impact Click ID. Ex: irclickid123
+    /// The Impact Click ID. Ex: irclickid123 Leading and trailing whitespace is removed
+    /// before validation.
     /// </summary>
     public string? Irclickid
     {
@@ -894,21 +977,21 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// Whether we have detected that the user is a bot. This is set automatically
-    /// by the Ours server primarily for events tracked through the web SDK.
+    /// Any JSON value: string, number, boolean, array, object, or null.
     /// </summary>
-    public string? IsBot
+    public IsBot? IsBot
     {
         get
         {
             this._rawData.Freeze();
-            return this._rawData.GetNullableClass<string>("is_bot");
+            return this._rawData.GetNullableClass<IsBot>("is_bot");
         }
         init { this._rawData.Set("is_bot", value); }
     }
 
     /// <summary>
-    /// The LinkedIn Click ID. Ex: li_fat_id123
+    /// The LinkedIn Click ID. Ex: li_fat_id123 Leading and trailing whitespace is
+    /// removed before validation.
     /// </summary>
     public string? LiFatID
     {
@@ -921,7 +1004,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The Microsoft Click ID. Ex: msclkid123
+    /// The Microsoft Click ID. Ex: msclkid123 Leading and trailing whitespace is
+    /// removed before validation.
     /// </summary>
     public string? Msclkid
     {
@@ -934,7 +1018,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The NextDoor Click ID. Ex: ndclid123
+    /// The NextDoor Click ID. Ex: ndclid123 Leading and trailing whitespace is removed
+    /// before validation.
     /// </summary>
     public string? Ndclid
     {
@@ -961,7 +1046,8 @@ public sealed record class DefaultProperties : JsonModel
 
     /// <summary>
     /// The Outbrain click ID, captured from the `ob_click_id` URL parameter (Outbrain
-    /// `{{ob_click_id}}` macro) on the landing page. Ex: ob_click_abc123
+    /// `{{ob_click_id}}` macro) on the landing page. Ex: ob_click_abc123 Leading
+    /// and trailing whitespace is removed before validation.
     /// </summary>
     public string? ObClickID
     {
@@ -976,7 +1062,8 @@ public sealed record class DefaultProperties : JsonModel
     /// <summary>
     /// The OpenAI Ads privacy-preserving reference, captured from the `oppref` URL
     /// parameter on landing pages (the OpenAI Pixel also stores it in a `__oppref`
-    /// cookie). Sent to OpenAI Ads on Conversions API events for attribution. Ex: oppref_abc
+    /// cookie). Sent to OpenAI Ads on Conversions API events for attribution. Ex:
+    /// oppref_abc Leading and trailing whitespace is removed before validation.
     /// </summary>
     public string? Oppref
     {
@@ -989,7 +1076,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The name of the operating system. Ex: Windows
+    /// The name of the operating system. Ex: Windows Leading and trailing whitespace
+    /// is removed before validation.
     /// </summary>
     public string? OsName
     {
@@ -1002,7 +1090,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The version of the operating system. Ex: 10.0
+    /// The version of the operating system. Ex: 10.0 Leading and trailing whitespace
+    /// is removed before validation.
     /// </summary>
     public string? OsVersion
     {
@@ -1028,7 +1117,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The pathname of the current page. Ex: /home
+    /// The pathname of the current page. Ex: /home Leading and trailing whitespace
+    /// is removed before validation.
     /// </summary>
     public string? Pathname
     {
@@ -1041,7 +1131,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The Quora Click ID. Ex: qclid123
+    /// The Quora Click ID. Ex: qclid123 Leading and trailing whitespace is removed
+    /// before validation.
     /// </summary>
     public string? Qclid
     {
@@ -1054,7 +1145,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The Reddit Click ID. Ex: rdt_cid123
+    /// The Reddit Click ID. Ex: rdt_cid123 Leading and trailing whitespace is removed
+    /// before validation.
     /// </summary>
     public string? RdtCid
     {
@@ -1080,7 +1172,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The referrer URL of the current page
+    /// The referrer URL of the current page Leading and trailing whitespace is removed
+    /// before validation.
     /// </summary>
     public string? Referrer
     {
@@ -1093,7 +1186,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The referring domain of the current page
+    /// The referring domain of the current page Leading and trailing whitespace is
+    /// removed before validation.
     /// </summary>
     public string? ReferringDomain
     {
@@ -1106,7 +1200,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The StackAdapt Tracking ID. Ex: sacid123
+    /// The StackAdapt Tracking ID. Ex: sacid123 Leading and trailing whitespace
+    /// is removed before validation.
     /// </summary>
     public string? Sacid
     {
@@ -1119,7 +1214,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The SnapChat Click ID. Ex: sccid123
+    /// The SnapChat Click ID. Ex: sccid123 Leading and trailing whitespace is removed
+    /// before validation.
     /// </summary>
     public string? Sccid
     {
@@ -1172,7 +1268,7 @@ public sealed record class DefaultProperties : JsonModel
 
     /// <summary>
     /// The session ID as assigned automatically by the web SDK. This is required
-    /// for session replay
+    /// for session replay Leading and trailing whitespace is removed before validation.
     /// </summary>
     public string? Sid
     {
@@ -1184,6 +1280,9 @@ public sealed record class DefaultProperties : JsonModel
         init { this._rawData.Set("sid", value); }
     }
 
+    /// <summary>
+    /// Leading and trailing whitespace is removed before validation.
+    /// </summary>
     public string? Sr
     {
         get
@@ -1195,7 +1294,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The title of the current page
+    /// The title of the current page Leading and trailing whitespace is removed
+    /// before validation.
     /// </summary>
     public string? Title
     {
@@ -1208,7 +1308,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The TikTok Click ID. Ex: ttclid123
+    /// The TikTok Click ID. Ex: ttclid123 Leading and trailing whitespace is removed
+    /// before validation.
     /// </summary>
     public string? Ttclid
     {
@@ -1221,7 +1322,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The Twitter Click ID. Ex: twclid123
+    /// The Twitter Click ID. Ex: twclid123 Leading and trailing whitespace is removed
+    /// before validation.
     /// </summary>
     public string? Twclid
     {
@@ -1234,7 +1336,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// User agent as a full list of strings.
+    /// User agent as a full list of strings. Leading and trailing whitespace is removed
+    /// before validation.
     /// </summary>
     public string? Uafvl
     {
@@ -1247,7 +1350,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The user agent of the browser
+    /// The user agent of the browser Leading and trailing whitespace is removed
+    /// before validation.
     /// </summary>
     public string? UserAgent
     {
@@ -1260,7 +1364,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The UTM Campaign. The web SDK automatically captures this from the query params.
+    /// The UTM Campaign. The web SDK automatically captures this from the query
+    /// params. Leading and trailing whitespace is removed before validation.
     /// </summary>
     public string? UtmCampaign
     {
@@ -1274,6 +1379,7 @@ public sealed record class DefaultProperties : JsonModel
 
     /// <summary>
     /// The UTM Content. The web SDK automatically captures this from the query params.
+    /// Leading and trailing whitespace is removed before validation.
     /// </summary>
     public string? UtmContent
     {
@@ -1287,6 +1393,7 @@ public sealed record class DefaultProperties : JsonModel
 
     /// <summary>
     /// The UTM Medium. The web SDK automatically captures this from the query params.
+    /// Leading and trailing whitespace is removed before validation.
     /// </summary>
     public string? UtmMedium
     {
@@ -1300,6 +1407,7 @@ public sealed record class DefaultProperties : JsonModel
 
     /// <summary>
     /// The UTM Name. The web SDK automatically captures this from the query params.
+    /// Leading and trailing whitespace is removed before validation.
     /// </summary>
     public string? UtmName
     {
@@ -1313,6 +1421,7 @@ public sealed record class DefaultProperties : JsonModel
 
     /// <summary>
     /// The UTM Source. The web SDK automatically captures this from the query params.
+    /// Leading and trailing whitespace is removed before validation.
     /// </summary>
     public string? UtmSource
     {
@@ -1326,6 +1435,7 @@ public sealed record class DefaultProperties : JsonModel
 
     /// <summary>
     /// The UTM Term. The web SDK automatically captures this from the query params.
+    /// Leading and trailing whitespace is removed before validation.
     /// </summary>
     public string? UtmTerm
     {
@@ -1339,6 +1449,7 @@ public sealed record class DefaultProperties : JsonModel
 
     /// <summary>
     /// The SDK version (e.g., web SDK or ingest-sdk-* via generated SDK headers)
+    /// Leading and trailing whitespace is removed before validation.
     /// </summary>
     public string? Version
     {
@@ -1352,7 +1463,8 @@ public sealed record class DefaultProperties : JsonModel
 
     /// <summary>
     /// The Viant (Adelphic) Click ID, captured from the `viant_click_id` URL parameter
-    /// (Viant `${ADELPHIC_CLICKID}` macro). Sent as `xid` on Viant postbacks. Ex: viant_click_abc123
+    /// (Viant `${ADELPHIC_CLICKID}` macro). Sent as `xid` on Viant postbacks. Ex:
+    /// viant_click_abc123 Leading and trailing whitespace is removed before validation.
     /// </summary>
     public string? ViantClickID
     {
@@ -1367,7 +1479,8 @@ public sealed record class DefaultProperties : JsonModel
     /// <summary>
     /// The Viant (Adelphic) Impression ID, captured from the `viant_impression_id`
     /// URL parameter (Viant `${ADELPHIC_IMPRESSIONID}` macro). Sent as `imp_id` on
-    /// Viant postbacks for post-view attribution. Ex: viant_imp_abc123
+    /// Viant postbacks for post-view attribution. Ex: viant_imp_abc123 Leading and
+    /// trailing whitespace is removed before validation.
     /// </summary>
     public string? ViantImpressionID
     {
@@ -1380,7 +1493,8 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
-    /// The WBRAID Identifier. The web SDK automatically captures this from the query params.
+    /// The WBRAID Identifier. The web SDK automatically captures this from the query
+    /// params. Leading and trailing whitespace is removed before validation.
     /// </summary>
     public string? Wbraid
     {
@@ -1442,12 +1556,14 @@ public sealed record class DefaultProperties : JsonModel
         _ = this.GadSource;
         _ = this.Gbraid;
         _ = this.Gclid;
+        _ = this.Graid;
+        _ = this.Grclid;
         _ = this.Host;
         _ = this.Iframe;
         _ = this.ImRef;
         _ = this.IP;
         _ = this.Irclickid;
-        _ = this.IsBot;
+        this.IsBot?.Validate();
         _ = this.LiFatID;
         _ = this.Msclkid;
         _ = this.Ndclid;
@@ -1523,6 +1639,4771 @@ class DefaultPropertiesFromRaw : IFromRawJson<DefaultProperties>
     /// <inheritdoc/>
     public DefaultProperties FromRawUnchecked(IReadOnlyDictionary<string, JsonElement> rawData) =>
         DefaultProperties.FromRawUnchecked(rawData);
+}
+
+/// <summary>
+/// Any JSON value: string, number, boolean, array, object, or null.
+/// </summary>
+[JsonConverter(typeof(IsBotConverter))]
+public record class IsBot : ModelBase
+{
+    public object? Value { get; } = null;
+
+    JsonElement? _element = null;
+
+    public JsonElement Json
+    {
+        get
+        {
+            return this._element ??= JsonSerializer.SerializeToElement(
+                this.Value,
+                ModelBase.SerializerOptions
+            );
+        }
+    }
+
+    public IsBot(string value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public IsBot(double value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public IsBot(bool value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public IsBot(IReadOnlyList<JsonElement> value, JsonElement? element = null)
+    {
+        this.Value = ImmutableArray.ToImmutableArray(value);
+        this._element = element;
+    }
+
+    public IsBot(IReadOnlyDictionary<string, JsonElement> value, JsonElement? element = null)
+    {
+        this.Value = FrozenDictionary.ToFrozenDictionary(value);
+        this._element = element;
+    }
+
+    public IsBot(JsonElement element)
+    {
+        this._element = element;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="string"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickString(out var value)) {
+    ///     // `value` is of type `string`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickString([NotNullWhen(true)] out string? value)
+    {
+        value = this.Value as string;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="double"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickDouble(out var value)) {
+    ///     // `value` is of type `double`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickDouble([NotNullWhen(true)] out double? value)
+    {
+        value = this.Value as double?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="bool"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickBool(out var value)) {
+    ///     // `value` is of type `bool`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickBool([NotNullWhen(true)] out bool? value)
+    {
+        value = this.Value as bool?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="List{T}"/> where <c>T</c> is a <c>JsonElement</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonElements(out var value)) {
+    ///     // `value` is of type `IReadOnlyList&lt;JsonElement&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonElements([NotNullWhen(true)] out IReadOnlyList<JsonElement>? value)
+    {
+        value = this.Value as IReadOnlyList<JsonElement>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="Dictionary{Key, Value}"/> with a <c>Key</c> of <c>string</c> and a <c>Value</c> of <c>JsonElement</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonElements1(out var value)) {
+    ///     // `value` is of type `IReadOnlyDictionary&lt;string, JsonElement&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonElements1(
+        [NotNullWhen(true)] out IReadOnlyDictionary<string, JsonElement>? value
+    )
+    {
+        value = this.Value as IReadOnlyDictionary<string, JsonElement>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Match"/>
+    /// if you need your function parameters to return something.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// instance.Switch(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonElement&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, JsonElement&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public void Switch(
+        Action<string> @string,
+        Action<double> @double,
+        Action<bool> @bool,
+        Action<IReadOnlyList<JsonElement>> jsonElements,
+        Action<IReadOnlyDictionary<string, JsonElement>> jsonElements1
+    )
+    {
+        switch (this.Value)
+        {
+            case string value:
+                @string(value);
+                break;
+            case double value:
+                @double(value);
+                break;
+            case bool value:
+                @bool(value);
+                break;
+            case IReadOnlyList<JsonElement> value:
+                jsonElements(value);
+                break;
+            case IReadOnlyDictionary<string, JsonElement> value:
+                jsonElements1(value);
+                break;
+            default:
+                throw new OursPrivacyInvalidDataException(
+                    "Data did not match any variant of IsBot"
+                );
+        }
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with and
+    /// returns its result.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Switch"/>
+    /// if you don't need your function parameters to return a value.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// var result = instance.Match(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonElement&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, JsonElement&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public T Match<T>(
+        Func<string, T> @string,
+        Func<double, T> @double,
+        Func<bool, T> @bool,
+        Func<IReadOnlyList<JsonElement>, T> jsonElements,
+        Func<IReadOnlyDictionary<string, JsonElement>, T> jsonElements1
+    )
+    {
+        return this.Value switch
+        {
+            string value => @string(value),
+            double value => @double(value),
+            bool value => @bool(value),
+            IReadOnlyList<JsonElement> value => jsonElements(value),
+            IReadOnlyDictionary<string, JsonElement> value => jsonElements1(value),
+            _ => throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of IsBot"
+            ),
+        };
+    }
+
+    public static implicit operator IsBot(string value) => new(value);
+
+    public static implicit operator IsBot(double value) => new(value);
+
+    public static implicit operator IsBot(bool value) => new(value);
+
+    public static implicit operator IsBot(List<JsonElement> value) =>
+        new((IReadOnlyList<JsonElement>)value);
+
+    public static implicit operator IsBot(Dictionary<string, JsonElement> value) =>
+        new((IReadOnlyDictionary<string, JsonElement>)value);
+
+    /// <summary>
+    /// Validates that the instance was constructed with a known variant and that this variant is valid
+    /// (based on its own <c>Validate</c> method).
+    ///
+    /// <para>This is useful for instances constructed from raw JSON data (e.g. deserialized from an API response).</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance does not pass validation.
+    /// </exception>
+    /// </summary>
+    public override void Validate()
+    {
+        if (this.Value == null)
+        {
+            throw new OursPrivacyInvalidDataException("Data did not match any variant of IsBot");
+        }
+    }
+
+    public virtual bool Equals(IsBot? other) =>
+        other != null
+        && this.VariantIndex() == other.VariantIndex()
+        && JsonElement.DeepEquals(this.Json, other.Json);
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
+    public override string ToString() =>
+        JsonSerializer.Serialize(
+            FriendlyJsonPrinter.PrintValue(this.Json),
+            ModelBase.ToStringSerializerOptions
+        );
+
+    int VariantIndex()
+    {
+        return this.Value switch
+        {
+            string _ => 0,
+            double _ => 1,
+            bool _ => 2,
+            IReadOnlyList<JsonElement> _ => 3,
+            IReadOnlyDictionary<string, JsonElement> _ => 4,
+            _ => -1,
+        };
+    }
+}
+
+sealed class IsBotConverter : JsonConverter<IsBot?>
+{
+    public override IsBot? Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
+    {
+        var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<string>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<double>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<bool>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<List<JsonElement>>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(
+                element,
+                options
+            );
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        return new(element);
+    }
+
+    public override void Write(Utf8JsonWriter writer, IsBot? value, JsonSerializerOptions options)
+    {
+        JsonSerializer.Serialize(writer, value?.Json, options);
+    }
+}
+
+[JsonConverter(typeof(EventPropertyConverter))]
+public record class EventProperty : ModelBase
+{
+    public object? Value { get; } = null;
+
+    JsonElement? _element = null;
+
+    public JsonElement Json
+    {
+        get
+        {
+            return this._element ??= JsonSerializer.SerializeToElement(
+                this.Value,
+                ModelBase.SerializerOptions
+            );
+        }
+    }
+
+    public EventProperty(string value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public EventProperty(double value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public EventProperty(bool value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public EventProperty(IReadOnlyList<JsonValue?> value, JsonElement? element = null)
+    {
+        this.Value = ImmutableArray.ToImmutableArray(value);
+        this._element = element;
+    }
+
+    public EventProperty(
+        IReadOnlyDictionary<string, UnionMember4Item?> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = FrozenDictionary.ToFrozenDictionary(value);
+        this._element = element;
+    }
+
+    public EventProperty(JsonElement element)
+    {
+        this._element = element;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="string"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickString(out var value)) {
+    ///     // `value` is of type `string`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickString([NotNullWhen(true)] out string? value)
+    {
+        value = this.Value as string;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="double"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickDouble(out var value)) {
+    ///     // `value` is of type `double`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickDouble([NotNullWhen(true)] out double? value)
+    {
+        value = this.Value as double?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="bool"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickBool(out var value)) {
+    ///     // `value` is of type `bool`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickBool([NotNullWhen(true)] out bool? value)
+    {
+        value = this.Value as bool?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="List{T}"/> where <c>T</c> is a <c>JsonValue?</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonValues(out var value)) {
+    ///     // `value` is of type `IReadOnlyList&lt;JsonValue?&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonValues([NotNullWhen(true)] out IReadOnlyList<JsonValue?>? value)
+    {
+        value = this.Value as IReadOnlyList<JsonValue?>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="Dictionary{Key, Value}"/> with a <c>Key</c> of <c>string</c> and a <c>Value</c> of <c>UnionMember4Item?</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickUnionMember4Items(out var value)) {
+    ///     // `value` is of type `IReadOnlyDictionary&lt;string, UnionMember4Item?&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickUnionMember4Items(
+        [NotNullWhen(true)] out IReadOnlyDictionary<string, UnionMember4Item?>? value
+    )
+    {
+        value = this.Value as IReadOnlyDictionary<string, UnionMember4Item?>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Match"/>
+    /// if you need your function parameters to return something.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// instance.Switch(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonValue?&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, UnionMember4Item?&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public void Switch(
+        Action<string> @string,
+        Action<double> @double,
+        Action<bool> @bool,
+        Action<IReadOnlyList<JsonValue?>> jsonValues,
+        Action<IReadOnlyDictionary<string, UnionMember4Item?>> unionMember4Items
+    )
+    {
+        switch (this.Value)
+        {
+            case string value:
+                @string(value);
+                break;
+            case double value:
+                @double(value);
+                break;
+            case bool value:
+                @bool(value);
+                break;
+            case IReadOnlyList<JsonValue?> value:
+                jsonValues(value);
+                break;
+            case IReadOnlyDictionary<string, UnionMember4Item?> value:
+                unionMember4Items(value);
+                break;
+            default:
+                throw new OursPrivacyInvalidDataException(
+                    "Data did not match any variant of EventProperty"
+                );
+        }
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with and
+    /// returns its result.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Switch"/>
+    /// if you don't need your function parameters to return a value.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// var result = instance.Match(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonValue?&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, UnionMember4Item?&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public T Match<T>(
+        Func<string, T> @string,
+        Func<double, T> @double,
+        Func<bool, T> @bool,
+        Func<IReadOnlyList<JsonValue?>, T> jsonValues,
+        Func<IReadOnlyDictionary<string, UnionMember4Item?>, T> unionMember4Items
+    )
+    {
+        return this.Value switch
+        {
+            string value => @string(value),
+            double value => @double(value),
+            bool value => @bool(value),
+            IReadOnlyList<JsonValue?> value => jsonValues(value),
+            IReadOnlyDictionary<string, UnionMember4Item?> value => unionMember4Items(value),
+            _ => throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of EventProperty"
+            ),
+        };
+    }
+
+    public static implicit operator EventProperty(string value) => new(value);
+
+    public static implicit operator EventProperty(double value) => new(value);
+
+    public static implicit operator EventProperty(bool value) => new(value);
+
+    public static implicit operator EventProperty(List<JsonValue?> value) =>
+        new((IReadOnlyList<JsonValue?>)value);
+
+    public static implicit operator EventProperty(Dictionary<string, UnionMember4Item?> value) =>
+        new((IReadOnlyDictionary<string, UnionMember4Item?>)value);
+
+    /// <summary>
+    /// Validates that the instance was constructed with a known variant and that this variant is valid
+    /// (based on its own <c>Validate</c> method).
+    ///
+    /// <para>This is useful for instances constructed from raw JSON data (e.g. deserialized from an API response).</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance does not pass validation.
+    /// </exception>
+    /// </summary>
+    public override void Validate()
+    {
+        if (this.Value == null)
+        {
+            throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of EventProperty"
+            );
+        }
+        this.Switch(
+            (_) => { },
+            (_) => { },
+            (_) => { },
+            (jsonValues) =>
+            {
+                foreach (var item in jsonValues)
+                {
+                    item?.Validate();
+                }
+            },
+            (unionMember4Items) =>
+            {
+                foreach (var item in unionMember4Items.Values)
+                {
+                    item?.Validate();
+                }
+            }
+        );
+    }
+
+    public virtual bool Equals(EventProperty? other) =>
+        other != null
+        && this.VariantIndex() == other.VariantIndex()
+        && JsonElement.DeepEquals(this.Json, other.Json);
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
+    public override string ToString() =>
+        JsonSerializer.Serialize(
+            FriendlyJsonPrinter.PrintValue(this.Json),
+            ModelBase.ToStringSerializerOptions
+        );
+
+    int VariantIndex()
+    {
+        return this.Value switch
+        {
+            string _ => 0,
+            double _ => 1,
+            bool _ => 2,
+            IReadOnlyList<JsonValue?> _ => 3,
+            IReadOnlyDictionary<string, UnionMember4Item?> _ => 4,
+            _ => -1,
+        };
+    }
+}
+
+sealed class EventPropertyConverter : JsonConverter<EventProperty?>
+{
+    public override EventProperty? Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
+    {
+        var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<string>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<double>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<bool>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<List<JsonValue?>>(element, options);
+            if (deserialized != null)
+            {
+                foreach (var item in deserialized)
+                {
+                    item?.Validate();
+                }
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<Dictionary<string, UnionMember4Item?>>(
+                element,
+                options
+            );
+            if (deserialized != null)
+            {
+                foreach (var item in deserialized.Values)
+                {
+                    item?.Validate();
+                }
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        return new(element);
+    }
+
+    public override void Write(
+        Utf8JsonWriter writer,
+        EventProperty? value,
+        JsonSerializerOptions options
+    )
+    {
+        JsonSerializer.Serialize(writer, value?.Json, options);
+    }
+}
+
+/// <summary>
+/// Any JSON value: string, number, boolean, array, object, or null.
+/// </summary>
+[JsonConverter(typeof(JsonValueConverter))]
+public record class JsonValue : ModelBase
+{
+    public object? Value { get; } = null;
+
+    JsonElement? _element = null;
+
+    public JsonElement Json
+    {
+        get
+        {
+            return this._element ??= JsonSerializer.SerializeToElement(
+                this.Value,
+                ModelBase.SerializerOptions
+            );
+        }
+    }
+
+    public JsonValue(string value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public JsonValue(double value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public JsonValue(bool value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public JsonValue(IReadOnlyList<JsonElement> value, JsonElement? element = null)
+    {
+        this.Value = ImmutableArray.ToImmutableArray(value);
+        this._element = element;
+    }
+
+    public JsonValue(IReadOnlyDictionary<string, JsonElement> value, JsonElement? element = null)
+    {
+        this.Value = FrozenDictionary.ToFrozenDictionary(value);
+        this._element = element;
+    }
+
+    public JsonValue(JsonElement element)
+    {
+        this._element = element;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="string"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickString(out var value)) {
+    ///     // `value` is of type `string`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickString([NotNullWhen(true)] out string? value)
+    {
+        value = this.Value as string;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="double"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickDouble(out var value)) {
+    ///     // `value` is of type `double`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickDouble([NotNullWhen(true)] out double? value)
+    {
+        value = this.Value as double?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="bool"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickBool(out var value)) {
+    ///     // `value` is of type `bool`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickBool([NotNullWhen(true)] out bool? value)
+    {
+        value = this.Value as bool?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="List{T}"/> where <c>T</c> is a <c>JsonElement</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonElements(out var value)) {
+    ///     // `value` is of type `IReadOnlyList&lt;JsonElement&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonElements([NotNullWhen(true)] out IReadOnlyList<JsonElement>? value)
+    {
+        value = this.Value as IReadOnlyList<JsonElement>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="Dictionary{Key, Value}"/> with a <c>Key</c> of <c>string</c> and a <c>Value</c> of <c>JsonElement</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonElements1(out var value)) {
+    ///     // `value` is of type `IReadOnlyDictionary&lt;string, JsonElement&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonElements1(
+        [NotNullWhen(true)] out IReadOnlyDictionary<string, JsonElement>? value
+    )
+    {
+        value = this.Value as IReadOnlyDictionary<string, JsonElement>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Match"/>
+    /// if you need your function parameters to return something.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// instance.Switch(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonElement&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, JsonElement&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public void Switch(
+        Action<string> @string,
+        Action<double> @double,
+        Action<bool> @bool,
+        Action<IReadOnlyList<JsonElement>> jsonElements,
+        Action<IReadOnlyDictionary<string, JsonElement>> jsonElements1
+    )
+    {
+        switch (this.Value)
+        {
+            case string value:
+                @string(value);
+                break;
+            case double value:
+                @double(value);
+                break;
+            case bool value:
+                @bool(value);
+                break;
+            case IReadOnlyList<JsonElement> value:
+                jsonElements(value);
+                break;
+            case IReadOnlyDictionary<string, JsonElement> value:
+                jsonElements1(value);
+                break;
+            default:
+                throw new OursPrivacyInvalidDataException(
+                    "Data did not match any variant of JsonValue"
+                );
+        }
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with and
+    /// returns its result.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Switch"/>
+    /// if you don't need your function parameters to return a value.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// var result = instance.Match(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonElement&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, JsonElement&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public T Match<T>(
+        Func<string, T> @string,
+        Func<double, T> @double,
+        Func<bool, T> @bool,
+        Func<IReadOnlyList<JsonElement>, T> jsonElements,
+        Func<IReadOnlyDictionary<string, JsonElement>, T> jsonElements1
+    )
+    {
+        return this.Value switch
+        {
+            string value => @string(value),
+            double value => @double(value),
+            bool value => @bool(value),
+            IReadOnlyList<JsonElement> value => jsonElements(value),
+            IReadOnlyDictionary<string, JsonElement> value => jsonElements1(value),
+            _ => throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of JsonValue"
+            ),
+        };
+    }
+
+    public static implicit operator JsonValue(string value) => new(value);
+
+    public static implicit operator JsonValue(double value) => new(value);
+
+    public static implicit operator JsonValue(bool value) => new(value);
+
+    public static implicit operator JsonValue(List<JsonElement> value) =>
+        new((IReadOnlyList<JsonElement>)value);
+
+    public static implicit operator JsonValue(Dictionary<string, JsonElement> value) =>
+        new((IReadOnlyDictionary<string, JsonElement>)value);
+
+    /// <summary>
+    /// Validates that the instance was constructed with a known variant and that this variant is valid
+    /// (based on its own <c>Validate</c> method).
+    ///
+    /// <para>This is useful for instances constructed from raw JSON data (e.g. deserialized from an API response).</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance does not pass validation.
+    /// </exception>
+    /// </summary>
+    public override void Validate()
+    {
+        if (this.Value == null)
+        {
+            throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of JsonValue"
+            );
+        }
+    }
+
+    public virtual bool Equals(JsonValue? other) =>
+        other != null
+        && this.VariantIndex() == other.VariantIndex()
+        && JsonElement.DeepEquals(this.Json, other.Json);
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
+    public override string ToString() =>
+        JsonSerializer.Serialize(
+            FriendlyJsonPrinter.PrintValue(this.Json),
+            ModelBase.ToStringSerializerOptions
+        );
+
+    int VariantIndex()
+    {
+        return this.Value switch
+        {
+            string _ => 0,
+            double _ => 1,
+            bool _ => 2,
+            IReadOnlyList<JsonElement> _ => 3,
+            IReadOnlyDictionary<string, JsonElement> _ => 4,
+            _ => -1,
+        };
+    }
+}
+
+sealed class JsonValueConverter : JsonConverter<JsonValue?>
+{
+    public override JsonValue? Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
+    {
+        var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<string>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<double>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<bool>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<List<JsonElement>>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(
+                element,
+                options
+            );
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        return new(element);
+    }
+
+    public override void Write(
+        Utf8JsonWriter writer,
+        JsonValue? value,
+        JsonSerializerOptions options
+    )
+    {
+        JsonSerializer.Serialize(writer, value?.Json, options);
+    }
+}
+
+[JsonConverter(typeof(UnionMember4ItemConverter))]
+public record class UnionMember4Item : ModelBase
+{
+    public object? Value { get; } = null;
+
+    JsonElement? _element = null;
+
+    public JsonElement Json
+    {
+        get
+        {
+            return this._element ??= JsonSerializer.SerializeToElement(
+                this.Value,
+                ModelBase.SerializerOptions
+            );
+        }
+    }
+
+    public UnionMember4Item(string value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public UnionMember4Item(double value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public UnionMember4Item(bool value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public UnionMember4Item(
+        IReadOnlyList<UnionMember4ItemJsonValue?> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = ImmutableArray.ToImmutableArray(value);
+        this._element = element;
+    }
+
+    public UnionMember4Item(
+        IReadOnlyDictionary<string, UnionMember4ItemUnionMember4Item?> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = FrozenDictionary.ToFrozenDictionary(value);
+        this._element = element;
+    }
+
+    public UnionMember4Item(JsonElement element)
+    {
+        this._element = element;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="string"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickString(out var value)) {
+    ///     // `value` is of type `string`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickString([NotNullWhen(true)] out string? value)
+    {
+        value = this.Value as string;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="double"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickDouble(out var value)) {
+    ///     // `value` is of type `double`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickDouble([NotNullWhen(true)] out double? value)
+    {
+        value = this.Value as double?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="bool"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickBool(out var value)) {
+    ///     // `value` is of type `bool`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickBool([NotNullWhen(true)] out bool? value)
+    {
+        value = this.Value as bool?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="List{T}"/> where <c>T</c> is a <c>UnionMember4ItemJsonValue?</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickUnionMember4ItemJsonValues(out var value)) {
+    ///     // `value` is of type `IReadOnlyList&lt;UnionMember4ItemJsonValue?&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickUnionMember4ItemJsonValues(
+        [NotNullWhen(true)] out IReadOnlyList<UnionMember4ItemJsonValue?>? value
+    )
+    {
+        value = this.Value as IReadOnlyList<UnionMember4ItemJsonValue?>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="Dictionary{Key, Value}"/> with a <c>Key</c> of <c>string</c> and a <c>Value</c> of <c>UnionMember4ItemUnionMember4Item?</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickUnionMember4ItemUnionMember4Items(out var value)) {
+    ///     // `value` is of type `IReadOnlyDictionary&lt;string, UnionMember4ItemUnionMember4Item?&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickUnionMember4ItemUnionMember4Items(
+        [NotNullWhen(true)]
+            out IReadOnlyDictionary<string, UnionMember4ItemUnionMember4Item?>? value
+    )
+    {
+        value = this.Value as IReadOnlyDictionary<string, UnionMember4ItemUnionMember4Item?>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Match"/>
+    /// if you need your function parameters to return something.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// instance.Switch(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;UnionMember4ItemJsonValue?&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, UnionMember4ItemUnionMember4Item?&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public void Switch(
+        Action<string> @string,
+        Action<double> @double,
+        Action<bool> @bool,
+        Action<IReadOnlyList<UnionMember4ItemJsonValue?>> unionMember4ItemJsonValues,
+        Action<
+            IReadOnlyDictionary<string, UnionMember4ItemUnionMember4Item?>
+        > unionMember4ItemUnionMember4Items
+    )
+    {
+        switch (this.Value)
+        {
+            case string value:
+                @string(value);
+                break;
+            case double value:
+                @double(value);
+                break;
+            case bool value:
+                @bool(value);
+                break;
+            case IReadOnlyList<UnionMember4ItemJsonValue?> value:
+                unionMember4ItemJsonValues(value);
+                break;
+            case IReadOnlyDictionary<string, UnionMember4ItemUnionMember4Item?> value:
+                unionMember4ItemUnionMember4Items(value);
+                break;
+            default:
+                throw new OursPrivacyInvalidDataException(
+                    "Data did not match any variant of UnionMember4Item"
+                );
+        }
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with and
+    /// returns its result.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Switch"/>
+    /// if you don't need your function parameters to return a value.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// var result = instance.Match(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;UnionMember4ItemJsonValue?&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, UnionMember4ItemUnionMember4Item?&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public T Match<T>(
+        Func<string, T> @string,
+        Func<double, T> @double,
+        Func<bool, T> @bool,
+        Func<IReadOnlyList<UnionMember4ItemJsonValue?>, T> unionMember4ItemJsonValues,
+        Func<
+            IReadOnlyDictionary<string, UnionMember4ItemUnionMember4Item?>,
+            T
+        > unionMember4ItemUnionMember4Items
+    )
+    {
+        return this.Value switch
+        {
+            string value => @string(value),
+            double value => @double(value),
+            bool value => @bool(value),
+            IReadOnlyList<UnionMember4ItemJsonValue?> value => unionMember4ItemJsonValues(value),
+            IReadOnlyDictionary<string, UnionMember4ItemUnionMember4Item?> value =>
+                unionMember4ItemUnionMember4Items(value),
+            _ => throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of UnionMember4Item"
+            ),
+        };
+    }
+
+    public static implicit operator UnionMember4Item(string value) => new(value);
+
+    public static implicit operator UnionMember4Item(double value) => new(value);
+
+    public static implicit operator UnionMember4Item(bool value) => new(value);
+
+    public static implicit operator UnionMember4Item(List<UnionMember4ItemJsonValue?> value) =>
+        new((IReadOnlyList<UnionMember4ItemJsonValue?>)value);
+
+    public static implicit operator UnionMember4Item(
+        Dictionary<string, UnionMember4ItemUnionMember4Item?> value
+    ) => new((IReadOnlyDictionary<string, UnionMember4ItemUnionMember4Item?>)value);
+
+    /// <summary>
+    /// Validates that the instance was constructed with a known variant and that this variant is valid
+    /// (based on its own <c>Validate</c> method).
+    ///
+    /// <para>This is useful for instances constructed from raw JSON data (e.g. deserialized from an API response).</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance does not pass validation.
+    /// </exception>
+    /// </summary>
+    public override void Validate()
+    {
+        if (this.Value == null)
+        {
+            throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of UnionMember4Item"
+            );
+        }
+        this.Switch(
+            (_) => { },
+            (_) => { },
+            (_) => { },
+            (unionMember4ItemJsonValues) =>
+            {
+                foreach (var item in unionMember4ItemJsonValues)
+                {
+                    item?.Validate();
+                }
+            },
+            (unionMember4ItemUnionMember4Items) =>
+            {
+                foreach (var item in unionMember4ItemUnionMember4Items.Values)
+                {
+                    item?.Validate();
+                }
+            }
+        );
+    }
+
+    public virtual bool Equals(UnionMember4Item? other) =>
+        other != null
+        && this.VariantIndex() == other.VariantIndex()
+        && JsonElement.DeepEquals(this.Json, other.Json);
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
+    public override string ToString() =>
+        JsonSerializer.Serialize(
+            FriendlyJsonPrinter.PrintValue(this.Json),
+            ModelBase.ToStringSerializerOptions
+        );
+
+    int VariantIndex()
+    {
+        return this.Value switch
+        {
+            string _ => 0,
+            double _ => 1,
+            bool _ => 2,
+            IReadOnlyList<UnionMember4ItemJsonValue?> _ => 3,
+            IReadOnlyDictionary<string, UnionMember4ItemUnionMember4Item?> _ => 4,
+            _ => -1,
+        };
+    }
+}
+
+sealed class UnionMember4ItemConverter : JsonConverter<UnionMember4Item?>
+{
+    public override UnionMember4Item? Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
+    {
+        var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<string>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<double>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<bool>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<List<UnionMember4ItemJsonValue?>>(
+                element,
+                options
+            );
+            if (deserialized != null)
+            {
+                foreach (var item in deserialized)
+                {
+                    item?.Validate();
+                }
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<
+                Dictionary<string, UnionMember4ItemUnionMember4Item?>
+            >(element, options);
+            if (deserialized != null)
+            {
+                foreach (var item in deserialized.Values)
+                {
+                    item?.Validate();
+                }
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        return new(element);
+    }
+
+    public override void Write(
+        Utf8JsonWriter writer,
+        UnionMember4Item? value,
+        JsonSerializerOptions options
+    )
+    {
+        JsonSerializer.Serialize(writer, value?.Json, options);
+    }
+}
+
+/// <summary>
+/// Any JSON value: string, number, boolean, array, object, or null.
+/// </summary>
+[JsonConverter(typeof(UnionMember4ItemJsonValueConverter))]
+public record class UnionMember4ItemJsonValue : ModelBase
+{
+    public object? Value { get; } = null;
+
+    JsonElement? _element = null;
+
+    public JsonElement Json
+    {
+        get
+        {
+            return this._element ??= JsonSerializer.SerializeToElement(
+                this.Value,
+                ModelBase.SerializerOptions
+            );
+        }
+    }
+
+    public UnionMember4ItemJsonValue(string value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public UnionMember4ItemJsonValue(double value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public UnionMember4ItemJsonValue(bool value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public UnionMember4ItemJsonValue(IReadOnlyList<JsonElement> value, JsonElement? element = null)
+    {
+        this.Value = ImmutableArray.ToImmutableArray(value);
+        this._element = element;
+    }
+
+    public UnionMember4ItemJsonValue(
+        IReadOnlyDictionary<string, JsonElement> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = FrozenDictionary.ToFrozenDictionary(value);
+        this._element = element;
+    }
+
+    public UnionMember4ItemJsonValue(JsonElement element)
+    {
+        this._element = element;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="string"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickString(out var value)) {
+    ///     // `value` is of type `string`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickString([NotNullWhen(true)] out string? value)
+    {
+        value = this.Value as string;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="double"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickDouble(out var value)) {
+    ///     // `value` is of type `double`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickDouble([NotNullWhen(true)] out double? value)
+    {
+        value = this.Value as double?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="bool"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickBool(out var value)) {
+    ///     // `value` is of type `bool`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickBool([NotNullWhen(true)] out bool? value)
+    {
+        value = this.Value as bool?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="List{T}"/> where <c>T</c> is a <c>JsonElement</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonElements(out var value)) {
+    ///     // `value` is of type `IReadOnlyList&lt;JsonElement&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonElements([NotNullWhen(true)] out IReadOnlyList<JsonElement>? value)
+    {
+        value = this.Value as IReadOnlyList<JsonElement>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="Dictionary{Key, Value}"/> with a <c>Key</c> of <c>string</c> and a <c>Value</c> of <c>JsonElement</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonElements1(out var value)) {
+    ///     // `value` is of type `IReadOnlyDictionary&lt;string, JsonElement&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonElements1(
+        [NotNullWhen(true)] out IReadOnlyDictionary<string, JsonElement>? value
+    )
+    {
+        value = this.Value as IReadOnlyDictionary<string, JsonElement>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Match"/>
+    /// if you need your function parameters to return something.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// instance.Switch(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonElement&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, JsonElement&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public void Switch(
+        Action<string> @string,
+        Action<double> @double,
+        Action<bool> @bool,
+        Action<IReadOnlyList<JsonElement>> jsonElements,
+        Action<IReadOnlyDictionary<string, JsonElement>> jsonElements1
+    )
+    {
+        switch (this.Value)
+        {
+            case string value:
+                @string(value);
+                break;
+            case double value:
+                @double(value);
+                break;
+            case bool value:
+                @bool(value);
+                break;
+            case IReadOnlyList<JsonElement> value:
+                jsonElements(value);
+                break;
+            case IReadOnlyDictionary<string, JsonElement> value:
+                jsonElements1(value);
+                break;
+            default:
+                throw new OursPrivacyInvalidDataException(
+                    "Data did not match any variant of UnionMember4ItemJsonValue"
+                );
+        }
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with and
+    /// returns its result.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Switch"/>
+    /// if you don't need your function parameters to return a value.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// var result = instance.Match(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonElement&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, JsonElement&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public T Match<T>(
+        Func<string, T> @string,
+        Func<double, T> @double,
+        Func<bool, T> @bool,
+        Func<IReadOnlyList<JsonElement>, T> jsonElements,
+        Func<IReadOnlyDictionary<string, JsonElement>, T> jsonElements1
+    )
+    {
+        return this.Value switch
+        {
+            string value => @string(value),
+            double value => @double(value),
+            bool value => @bool(value),
+            IReadOnlyList<JsonElement> value => jsonElements(value),
+            IReadOnlyDictionary<string, JsonElement> value => jsonElements1(value),
+            _ => throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of UnionMember4ItemJsonValue"
+            ),
+        };
+    }
+
+    public static implicit operator UnionMember4ItemJsonValue(string value) => new(value);
+
+    public static implicit operator UnionMember4ItemJsonValue(double value) => new(value);
+
+    public static implicit operator UnionMember4ItemJsonValue(bool value) => new(value);
+
+    public static implicit operator UnionMember4ItemJsonValue(List<JsonElement> value) =>
+        new((IReadOnlyList<JsonElement>)value);
+
+    public static implicit operator UnionMember4ItemJsonValue(
+        Dictionary<string, JsonElement> value
+    ) => new((IReadOnlyDictionary<string, JsonElement>)value);
+
+    /// <summary>
+    /// Validates that the instance was constructed with a known variant and that this variant is valid
+    /// (based on its own <c>Validate</c> method).
+    ///
+    /// <para>This is useful for instances constructed from raw JSON data (e.g. deserialized from an API response).</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance does not pass validation.
+    /// </exception>
+    /// </summary>
+    public override void Validate()
+    {
+        if (this.Value == null)
+        {
+            throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of UnionMember4ItemJsonValue"
+            );
+        }
+    }
+
+    public virtual bool Equals(UnionMember4ItemJsonValue? other) =>
+        other != null
+        && this.VariantIndex() == other.VariantIndex()
+        && JsonElement.DeepEquals(this.Json, other.Json);
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
+    public override string ToString() =>
+        JsonSerializer.Serialize(
+            FriendlyJsonPrinter.PrintValue(this.Json),
+            ModelBase.ToStringSerializerOptions
+        );
+
+    int VariantIndex()
+    {
+        return this.Value switch
+        {
+            string _ => 0,
+            double _ => 1,
+            bool _ => 2,
+            IReadOnlyList<JsonElement> _ => 3,
+            IReadOnlyDictionary<string, JsonElement> _ => 4,
+            _ => -1,
+        };
+    }
+}
+
+sealed class UnionMember4ItemJsonValueConverter : JsonConverter<UnionMember4ItemJsonValue?>
+{
+    public override UnionMember4ItemJsonValue? Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
+    {
+        var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<string>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<double>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<bool>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<List<JsonElement>>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(
+                element,
+                options
+            );
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        return new(element);
+    }
+
+    public override void Write(
+        Utf8JsonWriter writer,
+        UnionMember4ItemJsonValue? value,
+        JsonSerializerOptions options
+    )
+    {
+        JsonSerializer.Serialize(writer, value?.Json, options);
+    }
+}
+
+[JsonConverter(typeof(UnionMember4ItemUnionMember4ItemConverter))]
+public record class UnionMember4ItemUnionMember4Item : ModelBase
+{
+    public object? Value { get; } = null;
+
+    JsonElement? _element = null;
+
+    public JsonElement Json
+    {
+        get
+        {
+            return this._element ??= JsonSerializer.SerializeToElement(
+                this.Value,
+                ModelBase.SerializerOptions
+            );
+        }
+    }
+
+    public UnionMember4ItemUnionMember4Item(string value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public UnionMember4ItemUnionMember4Item(double value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public UnionMember4ItemUnionMember4Item(bool value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public UnionMember4ItemUnionMember4Item(
+        IReadOnlyList<UnionMember4ItemUnionMember4ItemJsonValue?> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = ImmutableArray.ToImmutableArray(value);
+        this._element = element;
+    }
+
+    public UnionMember4ItemUnionMember4Item(
+        IReadOnlyDictionary<string, UnionMember4ItemUnionMember4ItemUnionMember4Item?> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = FrozenDictionary.ToFrozenDictionary(value);
+        this._element = element;
+    }
+
+    public UnionMember4ItemUnionMember4Item(JsonElement element)
+    {
+        this._element = element;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="string"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickString(out var value)) {
+    ///     // `value` is of type `string`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickString([NotNullWhen(true)] out string? value)
+    {
+        value = this.Value as string;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="double"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickDouble(out var value)) {
+    ///     // `value` is of type `double`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickDouble([NotNullWhen(true)] out double? value)
+    {
+        value = this.Value as double?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="bool"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickBool(out var value)) {
+    ///     // `value` is of type `bool`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickBool([NotNullWhen(true)] out bool? value)
+    {
+        value = this.Value as bool?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="List{T}"/> where <c>T</c> is a <c>UnionMember4ItemUnionMember4ItemJsonValue?</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickUnionMember4ItemUnionMember4ItemJsonValues(out var value)) {
+    ///     // `value` is of type `IReadOnlyList&lt;UnionMember4ItemUnionMember4ItemJsonValue?&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickUnionMember4ItemUnionMember4ItemJsonValues(
+        [NotNullWhen(true)] out IReadOnlyList<UnionMember4ItemUnionMember4ItemJsonValue?>? value
+    )
+    {
+        value = this.Value as IReadOnlyList<UnionMember4ItemUnionMember4ItemJsonValue?>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="Dictionary{Key, Value}"/> with a <c>Key</c> of <c>string</c> and a <c>Value</c> of <c>UnionMember4ItemUnionMember4ItemUnionMember4Item?</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickUnionMember4ItemUnionMember4ItemUnionMember4Items(out var value)) {
+    ///     // `value` is of type `IReadOnlyDictionary&lt;string, UnionMember4ItemUnionMember4ItemUnionMember4Item?&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickUnionMember4ItemUnionMember4ItemUnionMember4Items(
+        [NotNullWhen(true)]
+            out IReadOnlyDictionary<
+            string,
+            UnionMember4ItemUnionMember4ItemUnionMember4Item?
+        >? value
+    )
+    {
+        value =
+            this.Value
+            as IReadOnlyDictionary<string, UnionMember4ItemUnionMember4ItemUnionMember4Item?>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Match"/>
+    /// if you need your function parameters to return something.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// instance.Switch(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;UnionMember4ItemUnionMember4ItemJsonValue?&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, UnionMember4ItemUnionMember4ItemUnionMember4Item?&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public void Switch(
+        Action<string> @string,
+        Action<double> @double,
+        Action<bool> @bool,
+        Action<
+            IReadOnlyList<UnionMember4ItemUnionMember4ItemJsonValue?>
+        > unionMember4ItemUnionMember4ItemJsonValues,
+        Action<
+            IReadOnlyDictionary<string, UnionMember4ItemUnionMember4ItemUnionMember4Item?>
+        > unionMember4ItemUnionMember4ItemUnionMember4Items
+    )
+    {
+        switch (this.Value)
+        {
+            case string value:
+                @string(value);
+                break;
+            case double value:
+                @double(value);
+                break;
+            case bool value:
+                @bool(value);
+                break;
+            case IReadOnlyList<UnionMember4ItemUnionMember4ItemJsonValue?> value:
+                unionMember4ItemUnionMember4ItemJsonValues(value);
+                break;
+            case IReadOnlyDictionary<
+                string,
+                UnionMember4ItemUnionMember4ItemUnionMember4Item?
+            > value:
+                unionMember4ItemUnionMember4ItemUnionMember4Items(value);
+                break;
+            default:
+                throw new OursPrivacyInvalidDataException(
+                    "Data did not match any variant of UnionMember4ItemUnionMember4Item"
+                );
+        }
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with and
+    /// returns its result.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Switch"/>
+    /// if you don't need your function parameters to return a value.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// var result = instance.Match(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;UnionMember4ItemUnionMember4ItemJsonValue?&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, UnionMember4ItemUnionMember4ItemUnionMember4Item?&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public T Match<T>(
+        Func<string, T> @string,
+        Func<double, T> @double,
+        Func<bool, T> @bool,
+        Func<
+            IReadOnlyList<UnionMember4ItemUnionMember4ItemJsonValue?>,
+            T
+        > unionMember4ItemUnionMember4ItemJsonValues,
+        Func<
+            IReadOnlyDictionary<string, UnionMember4ItemUnionMember4ItemUnionMember4Item?>,
+            T
+        > unionMember4ItemUnionMember4ItemUnionMember4Items
+    )
+    {
+        return this.Value switch
+        {
+            string value => @string(value),
+            double value => @double(value),
+            bool value => @bool(value),
+            IReadOnlyList<UnionMember4ItemUnionMember4ItemJsonValue?> value =>
+                unionMember4ItemUnionMember4ItemJsonValues(value),
+            IReadOnlyDictionary<string, UnionMember4ItemUnionMember4ItemUnionMember4Item?> value =>
+                unionMember4ItemUnionMember4ItemUnionMember4Items(value),
+            _ => throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of UnionMember4ItemUnionMember4Item"
+            ),
+        };
+    }
+
+    public static implicit operator UnionMember4ItemUnionMember4Item(string value) => new(value);
+
+    public static implicit operator UnionMember4ItemUnionMember4Item(double value) => new(value);
+
+    public static implicit operator UnionMember4ItemUnionMember4Item(bool value) => new(value);
+
+    public static implicit operator UnionMember4ItemUnionMember4Item(
+        List<UnionMember4ItemUnionMember4ItemJsonValue?> value
+    ) => new((IReadOnlyList<UnionMember4ItemUnionMember4ItemJsonValue?>)value);
+
+    public static implicit operator UnionMember4ItemUnionMember4Item(
+        Dictionary<string, UnionMember4ItemUnionMember4ItemUnionMember4Item?> value
+    ) => new((IReadOnlyDictionary<string, UnionMember4ItemUnionMember4ItemUnionMember4Item?>)value);
+
+    /// <summary>
+    /// Validates that the instance was constructed with a known variant and that this variant is valid
+    /// (based on its own <c>Validate</c> method).
+    ///
+    /// <para>This is useful for instances constructed from raw JSON data (e.g. deserialized from an API response).</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance does not pass validation.
+    /// </exception>
+    /// </summary>
+    public override void Validate()
+    {
+        if (this.Value == null)
+        {
+            throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of UnionMember4ItemUnionMember4Item"
+            );
+        }
+        this.Switch(
+            (_) => { },
+            (_) => { },
+            (_) => { },
+            (unionMember4ItemUnionMember4ItemJsonValues) =>
+            {
+                foreach (var item in unionMember4ItemUnionMember4ItemJsonValues)
+                {
+                    item?.Validate();
+                }
+            },
+            (unionMember4ItemUnionMember4ItemUnionMember4Items) =>
+            {
+                foreach (var item in unionMember4ItemUnionMember4ItemUnionMember4Items.Values)
+                {
+                    item?.Validate();
+                }
+            }
+        );
+    }
+
+    public virtual bool Equals(UnionMember4ItemUnionMember4Item? other) =>
+        other != null
+        && this.VariantIndex() == other.VariantIndex()
+        && JsonElement.DeepEquals(this.Json, other.Json);
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
+    public override string ToString() =>
+        JsonSerializer.Serialize(
+            FriendlyJsonPrinter.PrintValue(this.Json),
+            ModelBase.ToStringSerializerOptions
+        );
+
+    int VariantIndex()
+    {
+        return this.Value switch
+        {
+            string _ => 0,
+            double _ => 1,
+            bool _ => 2,
+            IReadOnlyList<UnionMember4ItemUnionMember4ItemJsonValue?> _ => 3,
+            IReadOnlyDictionary<string, UnionMember4ItemUnionMember4ItemUnionMember4Item?> _ => 4,
+            _ => -1,
+        };
+    }
+}
+
+sealed class UnionMember4ItemUnionMember4ItemConverter
+    : JsonConverter<UnionMember4ItemUnionMember4Item?>
+{
+    public override UnionMember4ItemUnionMember4Item? Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
+    {
+        var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<string>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<double>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<bool>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<
+                List<UnionMember4ItemUnionMember4ItemJsonValue?>
+            >(element, options);
+            if (deserialized != null)
+            {
+                foreach (var item in deserialized)
+                {
+                    item?.Validate();
+                }
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<
+                Dictionary<string, UnionMember4ItemUnionMember4ItemUnionMember4Item?>
+            >(element, options);
+            if (deserialized != null)
+            {
+                foreach (var item in deserialized.Values)
+                {
+                    item?.Validate();
+                }
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        return new(element);
+    }
+
+    public override void Write(
+        Utf8JsonWriter writer,
+        UnionMember4ItemUnionMember4Item? value,
+        JsonSerializerOptions options
+    )
+    {
+        JsonSerializer.Serialize(writer, value?.Json, options);
+    }
+}
+
+/// <summary>
+/// Any JSON value: string, number, boolean, array, object, or null.
+/// </summary>
+[JsonConverter(typeof(UnionMember4ItemUnionMember4ItemJsonValueConverter))]
+public record class UnionMember4ItemUnionMember4ItemJsonValue : ModelBase
+{
+    public object? Value { get; } = null;
+
+    JsonElement? _element = null;
+
+    public JsonElement Json
+    {
+        get
+        {
+            return this._element ??= JsonSerializer.SerializeToElement(
+                this.Value,
+                ModelBase.SerializerOptions
+            );
+        }
+    }
+
+    public UnionMember4ItemUnionMember4ItemJsonValue(string value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public UnionMember4ItemUnionMember4ItemJsonValue(double value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public UnionMember4ItemUnionMember4ItemJsonValue(bool value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public UnionMember4ItemUnionMember4ItemJsonValue(
+        IReadOnlyList<JsonElement> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = ImmutableArray.ToImmutableArray(value);
+        this._element = element;
+    }
+
+    public UnionMember4ItemUnionMember4ItemJsonValue(
+        IReadOnlyDictionary<string, JsonElement> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = FrozenDictionary.ToFrozenDictionary(value);
+        this._element = element;
+    }
+
+    public UnionMember4ItemUnionMember4ItemJsonValue(JsonElement element)
+    {
+        this._element = element;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="string"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickString(out var value)) {
+    ///     // `value` is of type `string`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickString([NotNullWhen(true)] out string? value)
+    {
+        value = this.Value as string;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="double"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickDouble(out var value)) {
+    ///     // `value` is of type `double`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickDouble([NotNullWhen(true)] out double? value)
+    {
+        value = this.Value as double?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="bool"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickBool(out var value)) {
+    ///     // `value` is of type `bool`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickBool([NotNullWhen(true)] out bool? value)
+    {
+        value = this.Value as bool?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="List{T}"/> where <c>T</c> is a <c>JsonElement</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonElements(out var value)) {
+    ///     // `value` is of type `IReadOnlyList&lt;JsonElement&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonElements([NotNullWhen(true)] out IReadOnlyList<JsonElement>? value)
+    {
+        value = this.Value as IReadOnlyList<JsonElement>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="Dictionary{Key, Value}"/> with a <c>Key</c> of <c>string</c> and a <c>Value</c> of <c>JsonElement</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonElements1(out var value)) {
+    ///     // `value` is of type `IReadOnlyDictionary&lt;string, JsonElement&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonElements1(
+        [NotNullWhen(true)] out IReadOnlyDictionary<string, JsonElement>? value
+    )
+    {
+        value = this.Value as IReadOnlyDictionary<string, JsonElement>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Match"/>
+    /// if you need your function parameters to return something.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// instance.Switch(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonElement&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, JsonElement&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public void Switch(
+        Action<string> @string,
+        Action<double> @double,
+        Action<bool> @bool,
+        Action<IReadOnlyList<JsonElement>> jsonElements,
+        Action<IReadOnlyDictionary<string, JsonElement>> jsonElements1
+    )
+    {
+        switch (this.Value)
+        {
+            case string value:
+                @string(value);
+                break;
+            case double value:
+                @double(value);
+                break;
+            case bool value:
+                @bool(value);
+                break;
+            case IReadOnlyList<JsonElement> value:
+                jsonElements(value);
+                break;
+            case IReadOnlyDictionary<string, JsonElement> value:
+                jsonElements1(value);
+                break;
+            default:
+                throw new OursPrivacyInvalidDataException(
+                    "Data did not match any variant of UnionMember4ItemUnionMember4ItemJsonValue"
+                );
+        }
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with and
+    /// returns its result.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Switch"/>
+    /// if you don't need your function parameters to return a value.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// var result = instance.Match(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonElement&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, JsonElement&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public T Match<T>(
+        Func<string, T> @string,
+        Func<double, T> @double,
+        Func<bool, T> @bool,
+        Func<IReadOnlyList<JsonElement>, T> jsonElements,
+        Func<IReadOnlyDictionary<string, JsonElement>, T> jsonElements1
+    )
+    {
+        return this.Value switch
+        {
+            string value => @string(value),
+            double value => @double(value),
+            bool value => @bool(value),
+            IReadOnlyList<JsonElement> value => jsonElements(value),
+            IReadOnlyDictionary<string, JsonElement> value => jsonElements1(value),
+            _ => throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of UnionMember4ItemUnionMember4ItemJsonValue"
+            ),
+        };
+    }
+
+    public static implicit operator UnionMember4ItemUnionMember4ItemJsonValue(string value) =>
+        new(value);
+
+    public static implicit operator UnionMember4ItemUnionMember4ItemJsonValue(double value) =>
+        new(value);
+
+    public static implicit operator UnionMember4ItemUnionMember4ItemJsonValue(bool value) =>
+        new(value);
+
+    public static implicit operator UnionMember4ItemUnionMember4ItemJsonValue(
+        List<JsonElement> value
+    ) => new((IReadOnlyList<JsonElement>)value);
+
+    public static implicit operator UnionMember4ItemUnionMember4ItemJsonValue(
+        Dictionary<string, JsonElement> value
+    ) => new((IReadOnlyDictionary<string, JsonElement>)value);
+
+    /// <summary>
+    /// Validates that the instance was constructed with a known variant and that this variant is valid
+    /// (based on its own <c>Validate</c> method).
+    ///
+    /// <para>This is useful for instances constructed from raw JSON data (e.g. deserialized from an API response).</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance does not pass validation.
+    /// </exception>
+    /// </summary>
+    public override void Validate()
+    {
+        if (this.Value == null)
+        {
+            throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of UnionMember4ItemUnionMember4ItemJsonValue"
+            );
+        }
+    }
+
+    public virtual bool Equals(UnionMember4ItemUnionMember4ItemJsonValue? other) =>
+        other != null
+        && this.VariantIndex() == other.VariantIndex()
+        && JsonElement.DeepEquals(this.Json, other.Json);
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
+    public override string ToString() =>
+        JsonSerializer.Serialize(
+            FriendlyJsonPrinter.PrintValue(this.Json),
+            ModelBase.ToStringSerializerOptions
+        );
+
+    int VariantIndex()
+    {
+        return this.Value switch
+        {
+            string _ => 0,
+            double _ => 1,
+            bool _ => 2,
+            IReadOnlyList<JsonElement> _ => 3,
+            IReadOnlyDictionary<string, JsonElement> _ => 4,
+            _ => -1,
+        };
+    }
+}
+
+sealed class UnionMember4ItemUnionMember4ItemJsonValueConverter
+    : JsonConverter<UnionMember4ItemUnionMember4ItemJsonValue?>
+{
+    public override UnionMember4ItemUnionMember4ItemJsonValue? Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
+    {
+        var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<string>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<double>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<bool>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<List<JsonElement>>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(
+                element,
+                options
+            );
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        return new(element);
+    }
+
+    public override void Write(
+        Utf8JsonWriter writer,
+        UnionMember4ItemUnionMember4ItemJsonValue? value,
+        JsonSerializerOptions options
+    )
+    {
+        JsonSerializer.Serialize(writer, value?.Json, options);
+    }
+}
+
+[JsonConverter(typeof(UnionMember4ItemUnionMember4ItemUnionMember4ItemConverter))]
+public record class UnionMember4ItemUnionMember4ItemUnionMember4Item : ModelBase
+{
+    public object? Value { get; } = null;
+
+    JsonElement? _element = null;
+
+    public JsonElement Json
+    {
+        get
+        {
+            return this._element ??= JsonSerializer.SerializeToElement(
+                this.Value,
+                ModelBase.SerializerOptions
+            );
+        }
+    }
+
+    public UnionMember4ItemUnionMember4ItemUnionMember4Item(
+        string value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public UnionMember4ItemUnionMember4ItemUnionMember4Item(
+        double value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public UnionMember4ItemUnionMember4ItemUnionMember4Item(bool value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public UnionMember4ItemUnionMember4ItemUnionMember4Item(
+        IReadOnlyList<UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = ImmutableArray.ToImmutableArray(value);
+        this._element = element;
+    }
+
+    public UnionMember4ItemUnionMember4ItemUnionMember4Item(
+        IReadOnlyDictionary<
+            string,
+            UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?
+        > value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = FrozenDictionary.ToFrozenDictionary(value);
+        this._element = element;
+    }
+
+    public UnionMember4ItemUnionMember4ItemUnionMember4Item(JsonElement element)
+    {
+        this._element = element;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="string"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickString(out var value)) {
+    ///     // `value` is of type `string`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickString([NotNullWhen(true)] out string? value)
+    {
+        value = this.Value as string;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="double"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickDouble(out var value)) {
+    ///     // `value` is of type `double`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickDouble([NotNullWhen(true)] out double? value)
+    {
+        value = this.Value as double?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="bool"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickBool(out var value)) {
+    ///     // `value` is of type `bool`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickBool([NotNullWhen(true)] out bool? value)
+    {
+        value = this.Value as bool?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="List{T}"/> where <c>T</c> is a <c>UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues(out var value)) {
+    ///     // `value` is of type `IReadOnlyList&lt;UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues(
+        [NotNullWhen(true)]
+            out IReadOnlyList<UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>? value
+    )
+    {
+        value =
+            this.Value as IReadOnlyList<UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="Dictionary{Key, Value}"/> with a <c>Key</c> of <c>string</c> and a <c>Value</c> of <c>UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Items(out var value)) {
+    ///     // `value` is of type `IReadOnlyDictionary&lt;string, UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Items(
+        [NotNullWhen(true)]
+            out IReadOnlyDictionary<
+            string,
+            UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?
+        >? value
+    )
+    {
+        value =
+            this.Value
+            as IReadOnlyDictionary<
+                string,
+                UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            >;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Match"/>
+    /// if you need your function parameters to return something.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// instance.Switch(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public void Switch(
+        Action<string> @string,
+        Action<double> @double,
+        Action<bool> @bool,
+        Action<
+            IReadOnlyList<UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>
+        > unionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues,
+        Action<
+            IReadOnlyDictionary<
+                string,
+                UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            >
+        > unionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Items
+    )
+    {
+        switch (this.Value)
+        {
+            case string value:
+                @string(value);
+                break;
+            case double value:
+                @double(value);
+                break;
+            case bool value:
+                @bool(value);
+                break;
+            case IReadOnlyList<UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?> value:
+                unionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues(value);
+                break;
+            case IReadOnlyDictionary<
+                string,
+                UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            > value:
+                unionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Items(value);
+                break;
+            default:
+                throw new OursPrivacyInvalidDataException(
+                    "Data did not match any variant of UnionMember4ItemUnionMember4ItemUnionMember4Item"
+                );
+        }
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with and
+    /// returns its result.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Switch"/>
+    /// if you don't need your function parameters to return a value.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// var result = instance.Match(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public T Match<T>(
+        Func<string, T> @string,
+        Func<double, T> @double,
+        Func<bool, T> @bool,
+        Func<
+            IReadOnlyList<UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>,
+            T
+        > unionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues,
+        Func<
+            IReadOnlyDictionary<
+                string,
+                UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            >,
+            T
+        > unionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Items
+    )
+    {
+        return this.Value switch
+        {
+            string value => @string(value),
+            double value => @double(value),
+            bool value => @bool(value),
+            IReadOnlyList<UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?> value =>
+                unionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues(value),
+            IReadOnlyDictionary<
+                string,
+                UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            > value => unionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Items(value),
+            _ => throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of UnionMember4ItemUnionMember4ItemUnionMember4Item"
+            ),
+        };
+    }
+
+    public static implicit operator UnionMember4ItemUnionMember4ItemUnionMember4Item(
+        string value
+    ) => new(value);
+
+    public static implicit operator UnionMember4ItemUnionMember4ItemUnionMember4Item(
+        double value
+    ) => new(value);
+
+    public static implicit operator UnionMember4ItemUnionMember4ItemUnionMember4Item(bool value) =>
+        new(value);
+
+    public static implicit operator UnionMember4ItemUnionMember4ItemUnionMember4Item(
+        List<UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?> value
+    ) => new((IReadOnlyList<UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>)value);
+
+    public static implicit operator UnionMember4ItemUnionMember4ItemUnionMember4Item(
+        Dictionary<string, UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?> value
+    ) =>
+        new(
+            (IReadOnlyDictionary<
+                string,
+                UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            >)
+                value
+        );
+
+    /// <summary>
+    /// Validates that the instance was constructed with a known variant and that this variant is valid
+    /// (based on its own <c>Validate</c> method).
+    ///
+    /// <para>This is useful for instances constructed from raw JSON data (e.g. deserialized from an API response).</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance does not pass validation.
+    /// </exception>
+    /// </summary>
+    public override void Validate()
+    {
+        if (this.Value == null)
+        {
+            throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of UnionMember4ItemUnionMember4ItemUnionMember4Item"
+            );
+        }
+        this.Switch(
+            (_) => { },
+            (_) => { },
+            (_) => { },
+            (unionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues) =>
+            {
+                foreach (var item in unionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues)
+                {
+                    item?.Validate();
+                }
+            },
+            (unionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Items) =>
+            {
+                foreach (
+                    var item in unionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Items.Values
+                )
+                {
+                    item?.Validate();
+                }
+            }
+        );
+    }
+
+    public virtual bool Equals(UnionMember4ItemUnionMember4ItemUnionMember4Item? other) =>
+        other != null
+        && this.VariantIndex() == other.VariantIndex()
+        && JsonElement.DeepEquals(this.Json, other.Json);
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
+    public override string ToString() =>
+        JsonSerializer.Serialize(
+            FriendlyJsonPrinter.PrintValue(this.Json),
+            ModelBase.ToStringSerializerOptions
+        );
+
+    int VariantIndex()
+    {
+        return this.Value switch
+        {
+            string _ => 0,
+            double _ => 1,
+            bool _ => 2,
+            IReadOnlyList<UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?> _ => 3,
+            IReadOnlyDictionary<
+                string,
+                UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            > _ => 4,
+            _ => -1,
+        };
+    }
+}
+
+sealed class UnionMember4ItemUnionMember4ItemUnionMember4ItemConverter
+    : JsonConverter<UnionMember4ItemUnionMember4ItemUnionMember4Item?>
+{
+    public override UnionMember4ItemUnionMember4ItemUnionMember4Item? Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
+    {
+        var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<string>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<double>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<bool>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<
+                List<UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>
+            >(element, options);
+            if (deserialized != null)
+            {
+                foreach (var item in deserialized)
+                {
+                    item?.Validate();
+                }
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<
+                Dictionary<
+                    string,
+                    UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?
+                >
+            >(element, options);
+            if (deserialized != null)
+            {
+                foreach (var item in deserialized.Values)
+                {
+                    item?.Validate();
+                }
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        return new(element);
+    }
+
+    public override void Write(
+        Utf8JsonWriter writer,
+        UnionMember4ItemUnionMember4ItemUnionMember4Item? value,
+        JsonSerializerOptions options
+    )
+    {
+        JsonSerializer.Serialize(writer, value?.Json, options);
+    }
+}
+
+/// <summary>
+/// Any JSON value: string, number, boolean, array, object, or null.
+/// </summary>
+[JsonConverter(typeof(UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValueConverter))]
+public record class UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue : ModelBase
+{
+    public object? Value { get; } = null;
+
+    JsonElement? _element = null;
+
+    public JsonElement Json
+    {
+        get
+        {
+            return this._element ??= JsonSerializer.SerializeToElement(
+                this.Value,
+                ModelBase.SerializerOptions
+            );
+        }
+    }
+
+    public UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        string value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        double value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        bool value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        IReadOnlyList<JsonElement> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = ImmutableArray.ToImmutableArray(value);
+        this._element = element;
+    }
+
+    public UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        IReadOnlyDictionary<string, JsonElement> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = FrozenDictionary.ToFrozenDictionary(value);
+        this._element = element;
+    }
+
+    public UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(JsonElement element)
+    {
+        this._element = element;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="string"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickString(out var value)) {
+    ///     // `value` is of type `string`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickString([NotNullWhen(true)] out string? value)
+    {
+        value = this.Value as string;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="double"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickDouble(out var value)) {
+    ///     // `value` is of type `double`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickDouble([NotNullWhen(true)] out double? value)
+    {
+        value = this.Value as double?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="bool"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickBool(out var value)) {
+    ///     // `value` is of type `bool`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickBool([NotNullWhen(true)] out bool? value)
+    {
+        value = this.Value as bool?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="List{T}"/> where <c>T</c> is a <c>JsonElement</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonElements(out var value)) {
+    ///     // `value` is of type `IReadOnlyList&lt;JsonElement&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonElements([NotNullWhen(true)] out IReadOnlyList<JsonElement>? value)
+    {
+        value = this.Value as IReadOnlyList<JsonElement>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="Dictionary{Key, Value}"/> with a <c>Key</c> of <c>string</c> and a <c>Value</c> of <c>JsonElement</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonElements1(out var value)) {
+    ///     // `value` is of type `IReadOnlyDictionary&lt;string, JsonElement&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonElements1(
+        [NotNullWhen(true)] out IReadOnlyDictionary<string, JsonElement>? value
+    )
+    {
+        value = this.Value as IReadOnlyDictionary<string, JsonElement>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Match"/>
+    /// if you need your function parameters to return something.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// instance.Switch(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonElement&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, JsonElement&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public void Switch(
+        Action<string> @string,
+        Action<double> @double,
+        Action<bool> @bool,
+        Action<IReadOnlyList<JsonElement>> jsonElements,
+        Action<IReadOnlyDictionary<string, JsonElement>> jsonElements1
+    )
+    {
+        switch (this.Value)
+        {
+            case string value:
+                @string(value);
+                break;
+            case double value:
+                @double(value);
+                break;
+            case bool value:
+                @bool(value);
+                break;
+            case IReadOnlyList<JsonElement> value:
+                jsonElements(value);
+                break;
+            case IReadOnlyDictionary<string, JsonElement> value:
+                jsonElements1(value);
+                break;
+            default:
+                throw new OursPrivacyInvalidDataException(
+                    "Data did not match any variant of UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue"
+                );
+        }
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with and
+    /// returns its result.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Switch"/>
+    /// if you don't need your function parameters to return a value.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// var result = instance.Match(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonElement&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, JsonElement&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public T Match<T>(
+        Func<string, T> @string,
+        Func<double, T> @double,
+        Func<bool, T> @bool,
+        Func<IReadOnlyList<JsonElement>, T> jsonElements,
+        Func<IReadOnlyDictionary<string, JsonElement>, T> jsonElements1
+    )
+    {
+        return this.Value switch
+        {
+            string value => @string(value),
+            double value => @double(value),
+            bool value => @bool(value),
+            IReadOnlyList<JsonElement> value => jsonElements(value),
+            IReadOnlyDictionary<string, JsonElement> value => jsonElements1(value),
+            _ => throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue"
+            ),
+        };
+    }
+
+    public static implicit operator UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        string value
+    ) => new(value);
+
+    public static implicit operator UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        double value
+    ) => new(value);
+
+    public static implicit operator UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        bool value
+    ) => new(value);
+
+    public static implicit operator UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        List<JsonElement> value
+    ) => new((IReadOnlyList<JsonElement>)value);
+
+    public static implicit operator UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        Dictionary<string, JsonElement> value
+    ) => new((IReadOnlyDictionary<string, JsonElement>)value);
+
+    /// <summary>
+    /// Validates that the instance was constructed with a known variant and that this variant is valid
+    /// (based on its own <c>Validate</c> method).
+    ///
+    /// <para>This is useful for instances constructed from raw JSON data (e.g. deserialized from an API response).</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance does not pass validation.
+    /// </exception>
+    /// </summary>
+    public override void Validate()
+    {
+        if (this.Value == null)
+        {
+            throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue"
+            );
+        }
+    }
+
+    public virtual bool Equals(UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue? other) =>
+        other != null
+        && this.VariantIndex() == other.VariantIndex()
+        && JsonElement.DeepEquals(this.Json, other.Json);
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
+    public override string ToString() =>
+        JsonSerializer.Serialize(
+            FriendlyJsonPrinter.PrintValue(this.Json),
+            ModelBase.ToStringSerializerOptions
+        );
+
+    int VariantIndex()
+    {
+        return this.Value switch
+        {
+            string _ => 0,
+            double _ => 1,
+            bool _ => 2,
+            IReadOnlyList<JsonElement> _ => 3,
+            IReadOnlyDictionary<string, JsonElement> _ => 4,
+            _ => -1,
+        };
+    }
+}
+
+sealed class UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValueConverter
+    : JsonConverter<UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>
+{
+    public override UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue? Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
+    {
+        var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<string>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<double>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<bool>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<List<JsonElement>>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(
+                element,
+                options
+            );
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        return new(element);
+    }
+
+    public override void Write(
+        Utf8JsonWriter writer,
+        UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue? value,
+        JsonSerializerOptions options
+    )
+    {
+        JsonSerializer.Serialize(writer, value?.Json, options);
+    }
+}
+
+[JsonConverter(typeof(UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemConverter))]
+public record class UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item : ModelBase
+{
+    public object? Value { get; } = null;
+
+    JsonElement? _element = null;
+
+    public JsonElement Json
+    {
+        get
+        {
+            return this._element ??= JsonSerializer.SerializeToElement(
+                this.Value,
+                ModelBase.SerializerOptions
+            );
+        }
+    }
+
+    public UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        string value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        double value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        bool value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        IReadOnlyList<UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = ImmutableArray.ToImmutableArray(value);
+        this._element = element;
+    }
+
+    public UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item(JsonElement element)
+    {
+        this._element = element;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="string"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickString(out var value)) {
+    ///     // `value` is of type `string`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickString([NotNullWhen(true)] out string? value)
+    {
+        value = this.Value as string;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="double"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickDouble(out var value)) {
+    ///     // `value` is of type `double`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickDouble([NotNullWhen(true)] out double? value)
+    {
+        value = this.Value as double?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="bool"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickBool(out var value)) {
+    ///     // `value` is of type `bool`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickBool([NotNullWhen(true)] out bool? value)
+    {
+        value = this.Value as bool?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="List{T}"/> where <c>T</c> is a <c>UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues(out var value)) {
+    ///     // `value` is of type `IReadOnlyList&lt;UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues(
+        [NotNullWhen(true)]
+            out IReadOnlyList<UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>? value
+    )
+    {
+        value =
+            this.Value
+            as IReadOnlyList<UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Match"/>
+    /// if you need your function parameters to return something.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// instance.Switch(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public void Switch(
+        Action<string> @string,
+        Action<double> @double,
+        Action<bool> @bool,
+        Action<
+            IReadOnlyList<UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>
+        > unionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues
+    )
+    {
+        switch (this.Value)
+        {
+            case string value:
+                @string(value);
+                break;
+            case double value:
+                @double(value);
+                break;
+            case bool value:
+                @bool(value);
+                break;
+            case IReadOnlyList<UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?> value:
+                unionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues(value);
+                break;
+            default:
+                throw new OursPrivacyInvalidDataException(
+                    "Data did not match any variant of UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item"
+                );
+        }
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with and
+    /// returns its result.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Switch"/>
+    /// if you don't need your function parameters to return a value.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// var result = instance.Match(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public T Match<T>(
+        Func<string, T> @string,
+        Func<double, T> @double,
+        Func<bool, T> @bool,
+        Func<
+            IReadOnlyList<UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>,
+            T
+        > unionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues
+    )
+    {
+        return this.Value switch
+        {
+            string value => @string(value),
+            double value => @double(value),
+            bool value => @bool(value),
+            IReadOnlyList<UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?> value =>
+                unionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues(value),
+            _ => throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item"
+            ),
+        };
+    }
+
+    public static implicit operator UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        string value
+    ) => new(value);
+
+    public static implicit operator UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        double value
+    ) => new(value);
+
+    public static implicit operator UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        bool value
+    ) => new(value);
+
+    public static implicit operator UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        List<UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?> value
+    ) =>
+        new(
+            (IReadOnlyList<UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>)
+                value
+        );
+
+    /// <summary>
+    /// Validates that the instance was constructed with a known variant and that this variant is valid
+    /// (based on its own <c>Validate</c> method).
+    ///
+    /// <para>This is useful for instances constructed from raw JSON data (e.g. deserialized from an API response).</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance does not pass validation.
+    /// </exception>
+    /// </summary>
+    public override void Validate()
+    {
+        if (this.Value == null)
+        {
+            throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item"
+            );
+        }
+        this.Switch(
+            (_) => { },
+            (_) => { },
+            (_) => { },
+            (unionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues) =>
+            {
+                foreach (
+                    var item in unionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues
+                )
+                {
+                    item?.Validate();
+                }
+            }
+        );
+    }
+
+    public virtual bool Equals(
+        UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item? other
+    ) =>
+        other != null
+        && this.VariantIndex() == other.VariantIndex()
+        && JsonElement.DeepEquals(this.Json, other.Json);
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
+    public override string ToString() =>
+        JsonSerializer.Serialize(
+            FriendlyJsonPrinter.PrintValue(this.Json),
+            ModelBase.ToStringSerializerOptions
+        );
+
+    int VariantIndex()
+    {
+        return this.Value switch
+        {
+            string _ => 0,
+            double _ => 1,
+            bool _ => 2,
+            IReadOnlyList<UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?> _ =>
+                3,
+            _ => -1,
+        };
+    }
+}
+
+sealed class UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemConverter
+    : JsonConverter<UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?>
+{
+    public override UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item? Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
+    {
+        var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<string>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<double>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<bool>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<
+                List<UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>
+            >(element, options);
+            if (deserialized != null)
+            {
+                foreach (var item in deserialized)
+                {
+                    item?.Validate();
+                }
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        return new(element);
+    }
+
+    public override void Write(
+        Utf8JsonWriter writer,
+        UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item? value,
+        JsonSerializerOptions options
+    )
+    {
+        JsonSerializer.Serialize(writer, value?.Json, options);
+    }
+}
+
+/// <summary>
+/// Any JSON value: string, number, boolean, array, object, or null.
+/// </summary>
+[JsonConverter(
+    typeof(UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValueConverter)
+)]
+public record class UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue
+    : ModelBase
+{
+    public object? Value { get; } = null;
+
+    JsonElement? _element = null;
+
+    public JsonElement Json
+    {
+        get
+        {
+            return this._element ??= JsonSerializer.SerializeToElement(
+                this.Value,
+                ModelBase.SerializerOptions
+            );
+        }
+    }
+
+    public UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        string value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        double value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        bool value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        IReadOnlyList<JsonElement> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = ImmutableArray.ToImmutableArray(value);
+        this._element = element;
+    }
+
+    public UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        IReadOnlyDictionary<string, JsonElement> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = FrozenDictionary.ToFrozenDictionary(value);
+        this._element = element;
+    }
+
+    public UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        JsonElement element
+    )
+    {
+        this._element = element;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="string"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickString(out var value)) {
+    ///     // `value` is of type `string`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickString([NotNullWhen(true)] out string? value)
+    {
+        value = this.Value as string;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="double"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickDouble(out var value)) {
+    ///     // `value` is of type `double`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickDouble([NotNullWhen(true)] out double? value)
+    {
+        value = this.Value as double?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="bool"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickBool(out var value)) {
+    ///     // `value` is of type `bool`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickBool([NotNullWhen(true)] out bool? value)
+    {
+        value = this.Value as bool?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="List{T}"/> where <c>T</c> is a <c>JsonElement</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonElements(out var value)) {
+    ///     // `value` is of type `IReadOnlyList&lt;JsonElement&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonElements([NotNullWhen(true)] out IReadOnlyList<JsonElement>? value)
+    {
+        value = this.Value as IReadOnlyList<JsonElement>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="Dictionary{Key, Value}"/> with a <c>Key</c> of <c>string</c> and a <c>Value</c> of <c>JsonElement</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonElements1(out var value)) {
+    ///     // `value` is of type `IReadOnlyDictionary&lt;string, JsonElement&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonElements1(
+        [NotNullWhen(true)] out IReadOnlyDictionary<string, JsonElement>? value
+    )
+    {
+        value = this.Value as IReadOnlyDictionary<string, JsonElement>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Match"/>
+    /// if you need your function parameters to return something.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// instance.Switch(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonElement&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, JsonElement&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public void Switch(
+        Action<string> @string,
+        Action<double> @double,
+        Action<bool> @bool,
+        Action<IReadOnlyList<JsonElement>> jsonElements,
+        Action<IReadOnlyDictionary<string, JsonElement>> jsonElements1
+    )
+    {
+        switch (this.Value)
+        {
+            case string value:
+                @string(value);
+                break;
+            case double value:
+                @double(value);
+                break;
+            case bool value:
+                @bool(value);
+                break;
+            case IReadOnlyList<JsonElement> value:
+                jsonElements(value);
+                break;
+            case IReadOnlyDictionary<string, JsonElement> value:
+                jsonElements1(value);
+                break;
+            default:
+                throw new OursPrivacyInvalidDataException(
+                    "Data did not match any variant of UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue"
+                );
+        }
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with and
+    /// returns its result.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Switch"/>
+    /// if you don't need your function parameters to return a value.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// var result = instance.Match(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonElement&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, JsonElement&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public T Match<T>(
+        Func<string, T> @string,
+        Func<double, T> @double,
+        Func<bool, T> @bool,
+        Func<IReadOnlyList<JsonElement>, T> jsonElements,
+        Func<IReadOnlyDictionary<string, JsonElement>, T> jsonElements1
+    )
+    {
+        return this.Value switch
+        {
+            string value => @string(value),
+            double value => @double(value),
+            bool value => @bool(value),
+            IReadOnlyList<JsonElement> value => jsonElements(value),
+            IReadOnlyDictionary<string, JsonElement> value => jsonElements1(value),
+            _ => throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue"
+            ),
+        };
+    }
+
+    public static implicit operator UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        string value
+    ) => new(value);
+
+    public static implicit operator UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        double value
+    ) => new(value);
+
+    public static implicit operator UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        bool value
+    ) => new(value);
+
+    public static implicit operator UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        List<JsonElement> value
+    ) => new((IReadOnlyList<JsonElement>)value);
+
+    public static implicit operator UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        Dictionary<string, JsonElement> value
+    ) => new((IReadOnlyDictionary<string, JsonElement>)value);
+
+    /// <summary>
+    /// Validates that the instance was constructed with a known variant and that this variant is valid
+    /// (based on its own <c>Validate</c> method).
+    ///
+    /// <para>This is useful for instances constructed from raw JSON data (e.g. deserialized from an API response).</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance does not pass validation.
+    /// </exception>
+    /// </summary>
+    public override void Validate()
+    {
+        if (this.Value == null)
+        {
+            throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue"
+            );
+        }
+    }
+
+    public virtual bool Equals(
+        UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue? other
+    ) =>
+        other != null
+        && this.VariantIndex() == other.VariantIndex()
+        && JsonElement.DeepEquals(this.Json, other.Json);
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
+    public override string ToString() =>
+        JsonSerializer.Serialize(
+            FriendlyJsonPrinter.PrintValue(this.Json),
+            ModelBase.ToStringSerializerOptions
+        );
+
+    int VariantIndex()
+    {
+        return this.Value switch
+        {
+            string _ => 0,
+            double _ => 1,
+            bool _ => 2,
+            IReadOnlyList<JsonElement> _ => 3,
+            IReadOnlyDictionary<string, JsonElement> _ => 4,
+            _ => -1,
+        };
+    }
+}
+
+sealed class UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValueConverter
+    : JsonConverter<UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>
+{
+    public override UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue? Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
+    {
+        var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<string>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<double>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<bool>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<List<JsonElement>>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(
+                element,
+                options
+            );
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        return new(element);
+    }
+
+    public override void Write(
+        Utf8JsonWriter writer,
+        UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue? value,
+        JsonSerializerOptions options
+    )
+    {
+        JsonSerializer.Serialize(writer, value?.Json, options);
+    }
 }
 
 /// <summary>
@@ -1607,6 +6488,9 @@ class IdentityContextFromRaw : IFromRawJson<IdentityContext>
 [JsonConverter(typeof(JsonModelConverter<UserProperties, UserPropertiesFromRaw>))]
 public sealed record class UserProperties : JsonModel
 {
+    /// <summary>
+    /// Leading and trailing whitespace is removed before validation.
+    /// </summary>
     public string? _EfTransactionID
     {
         get
@@ -1627,6 +6511,9 @@ public sealed record class UserProperties : JsonModel
         init { this._rawData.Set("ad_id", value); }
     }
 
+    /// <summary>
+    /// Leading and trailing whitespace is removed before validation.
+    /// </summary>
     public string? AdmitadUid
     {
         get
@@ -1677,6 +6564,9 @@ public sealed record class UserProperties : JsonModel
         init { this._rawData.Set("axwrt", value); }
     }
 
+    /// <summary>
+    /// Leading and trailing whitespace is removed before validation.
+    /// </summary>
     public string? BasisCid
     {
         get
@@ -1687,6 +6577,9 @@ public sealed record class UserProperties : JsonModel
         init { this._rawData.Set("basis_cid", value); }
     }
 
+    /// <summary>
+    /// Leading and trailing whitespace is removed before validation.
+    /// </summary>
     public string? BeeswaxAuctionID
     {
         get
@@ -1707,6 +6600,10 @@ public sealed record class UserProperties : JsonModel
         init { this._rawData.Set("campaign_id", value); }
     }
 
+    /// <summary>
+    /// Non-string input is converted to text before validation; clients should send
+    /// a string. Leading and trailing whitespace is removed before validation.
+    /// </summary>
     public string? City
     {
         get
@@ -1737,6 +6634,9 @@ public sealed record class UserProperties : JsonModel
         init { this._rawData.Set("clid", value); }
     }
 
+    /// <summary>
+    /// Leading and trailing whitespace is removed before validation.
+    /// </summary>
     public string? CompanyName
     {
         get
@@ -1747,22 +6647,33 @@ public sealed record class UserProperties : JsonModel
         init { this._rawData.Set("company_name", value); }
     }
 
-    public IReadOnlyDictionary<string, string?>? Consent
+    /// <summary>
+    /// Use at most 200 nonempty property keys and five object levels. Array contents
+    /// do not count toward the object-depth limit. Empty keys are removed recursively,
+    /// arrays are truncated to 250 entries, and top-level numbers outside the safe
+    /// integer range become strings. After normalization, the serialized JSON must
+    /// be shorter than 1,048,576 UTF-16 code units.
+    /// </summary>
+    public IReadOnlyDictionary<string, Consent?>? Consent
     {
         get
         {
             this._rawData.Freeze();
-            return this._rawData.GetNullableClass<FrozenDictionary<string, string?>>("consent");
+            return this._rawData.GetNullableClass<FrozenDictionary<string, Consent?>>("consent");
         }
         init
         {
-            this._rawData.Set<FrozenDictionary<string, string?>?>(
+            this._rawData.Set<FrozenDictionary<string, Consent?>?>(
                 "consent",
                 value == null ? null : FrozenDictionary.ToFrozenDictionary(value)
             );
         }
     }
 
+    /// <summary>
+    /// Non-string input is converted to text before validation; clients should send
+    /// a string. Leading and trailing whitespace is removed before validation.
+    /// </summary>
     public string? Country
     {
         get
@@ -1773,24 +6684,35 @@ public sealed record class UserProperties : JsonModel
         init { this._rawData.Set("country", value); }
     }
 
-    public IReadOnlyDictionary<string, string?>? CustomProperties
+    /// <summary>
+    /// Use at most 200 nonempty property keys and five object levels. Array contents
+    /// do not count toward the object-depth limit. Empty keys are removed recursively,
+    /// arrays are truncated to 250 entries, and top-level numbers outside the safe
+    /// integer range become strings. After normalization, the serialized JSON must
+    /// be shorter than 1,048,576 UTF-16 code units.
+    /// </summary>
+    public IReadOnlyDictionary<string, CustomProperty?>? CustomProperties
     {
         get
         {
             this._rawData.Freeze();
-            return this._rawData.GetNullableClass<FrozenDictionary<string, string?>>(
+            return this._rawData.GetNullableClass<FrozenDictionary<string, CustomProperty?>>(
                 "custom_properties"
             );
         }
         init
         {
-            this._rawData.Set<FrozenDictionary<string, string?>?>(
+            this._rawData.Set<FrozenDictionary<string, CustomProperty?>?>(
                 "custom_properties",
                 value == null ? null : FrozenDictionary.ToFrozenDictionary(value)
             );
         }
     }
 
+    /// <summary>
+    /// Non-string input is converted to text before validation; clients should send
+    /// a string. Leading and trailing whitespace is removed before validation.
+    /// </summary>
     public string? DateOfBirth
     {
         get
@@ -1811,6 +6733,10 @@ public sealed record class UserProperties : JsonModel
         init { this._rawData.Set("dclid", value); }
     }
 
+    /// <summary>
+    /// Non-string input is converted to text before validation; clients should send
+    /// a string. Leading and trailing whitespace is removed before validation.
+    /// </summary>
     public string? Email
     {
         get
@@ -1821,6 +6747,9 @@ public sealed record class UserProperties : JsonModel
         init { this._rawData.Set("email", value); }
     }
 
+    /// <summary>
+    /// Leading and trailing whitespace is removed before validation.
+    /// </summary>
     public string? Epik
     {
         get
@@ -1831,6 +6760,10 @@ public sealed record class UserProperties : JsonModel
         init { this._rawData.Set("epik", value); }
     }
 
+    /// <summary>
+    /// Non-string input is converted to text before validation; clients should send
+    /// a string. Leading and trailing whitespace is removed before validation.
+    /// </summary>
     public string? ExternalID
     {
         get
@@ -1871,6 +6804,10 @@ public sealed record class UserProperties : JsonModel
         init { this._rawData.Set("fbp", value); }
     }
 
+    /// <summary>
+    /// Non-string input is converted to text before validation; clients should send
+    /// a string. Leading and trailing whitespace is removed before validation.
+    /// </summary>
     public string? FirstName
     {
         get
@@ -1911,6 +6848,10 @@ public sealed record class UserProperties : JsonModel
         init { this._rawData.Set("gclid", value); }
     }
 
+    /// <summary>
+    /// Non-string input is converted to text before validation; clients should send
+    /// a string. Leading and trailing whitespace is removed before validation.
+    /// </summary>
     public string? Gender
     {
         get
@@ -1919,6 +6860,32 @@ public sealed record class UserProperties : JsonModel
             return this._rawData.GetNullableClass<string>("gender");
         }
         init { this._rawData.Set("gender", value); }
+    }
+
+    /// <summary>
+    /// Leading and trailing whitespace is removed before validation.
+    /// </summary>
+    public string? Graid
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("graid");
+        }
+        init { this._rawData.Set("graid", value); }
+    }
+
+    /// <summary>
+    /// Leading and trailing whitespace is removed before validation.
+    /// </summary>
+    public string? Grclid
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("grclid");
+        }
+        init { this._rawData.Set("grclid", value); }
     }
 
     public string? ImRef
@@ -1932,7 +6899,7 @@ public sealed record class UserProperties : JsonModel
     }
 
     /// <summary>
-    /// The IP address of the user
+    /// The IP address of the user Leading and trailing whitespace is removed before validation.
     /// </summary>
     public string? IP
     {
@@ -1954,16 +6921,22 @@ public sealed record class UserProperties : JsonModel
         init { this._rawData.Set("irclickid", value); }
     }
 
-    public string? IsBot
+    /// <summary>
+    /// Any JSON value: string, number, boolean, array, object, or null.
+    /// </summary>
+    public UserPropertiesIsBot? IsBot
     {
         get
         {
             this._rawData.Freeze();
-            return this._rawData.GetNullableClass<string>("is_bot");
+            return this._rawData.GetNullableClass<UserPropertiesIsBot>("is_bot");
         }
         init { this._rawData.Set("is_bot", value); }
     }
 
+    /// <summary>
+    /// Leading and trailing whitespace is removed before validation.
+    /// </summary>
     public string? JobTitle
     {
         get
@@ -1974,6 +6947,10 @@ public sealed record class UserProperties : JsonModel
         init { this._rawData.Set("job_title", value); }
     }
 
+    /// <summary>
+    /// Non-string input is converted to text before validation; clients should send
+    /// a string. Leading and trailing whitespace is removed before validation.
+    /// </summary>
     public string? LastName
     {
         get
@@ -2014,6 +6991,9 @@ public sealed record class UserProperties : JsonModel
         init { this._rawData.Set("ndclid", value); }
     }
 
+    /// <summary>
+    /// Leading and trailing whitespace is removed before validation.
+    /// </summary>
     public string? ObClickID
     {
         get
@@ -2034,12 +7014,15 @@ public sealed record class UserProperties : JsonModel
         init { this._rawData.Set("oppref", value); }
     }
 
-    public string? PhoneNumber
+    /// <summary>
+    /// Any JSON value: string, number, boolean, array, object, or null.
+    /// </summary>
+    public PhoneNumber? PhoneNumber
     {
         get
         {
             this._rawData.Freeze();
-            return this._rawData.GetNullableClass<string>("phone_number");
+            return this._rawData.GetNullableClass<PhoneNumber>("phone_number");
         }
         init { this._rawData.Set("phone_number", value); }
     }
@@ -2084,6 +7067,9 @@ public sealed record class UserProperties : JsonModel
         init { this._rawData.Set("referring_domain", value); }
     }
 
+    /// <summary>
+    /// Leading and trailing whitespace is removed before validation.
+    /// </summary>
     public string? Sacid
     {
         get
@@ -2104,6 +7090,10 @@ public sealed record class UserProperties : JsonModel
         init { this._rawData.Set("sccid", value); }
     }
 
+    /// <summary>
+    /// Non-string input is converted to text before validation; clients should send
+    /// a string.
+    /// </summary>
     public string? Sid
     {
         get
@@ -2114,6 +7104,10 @@ public sealed record class UserProperties : JsonModel
         init { this._rawData.Set("sid", value); }
     }
 
+    /// <summary>
+    /// Non-string input is converted to text before validation; clients should send
+    /// a string. Leading and trailing whitespace is removed before validation.
+    /// </summary>
     public string? State
     {
         get
@@ -2164,6 +7158,10 @@ public sealed record class UserProperties : JsonModel
         init { this._rawData.Set("user_agent_full_list", value); }
     }
 
+    /// <summary>
+    /// Non-string input is converted to text before validation; clients should send
+    /// a string.
+    /// </summary>
     public string? UtmCampaign
     {
         get
@@ -2174,6 +7172,10 @@ public sealed record class UserProperties : JsonModel
         init { this._rawData.Set("utm_campaign", value); }
     }
 
+    /// <summary>
+    /// Non-string input is converted to text before validation; clients should send
+    /// a string.
+    /// </summary>
     public string? UtmContent
     {
         get
@@ -2184,6 +7186,10 @@ public sealed record class UserProperties : JsonModel
         init { this._rawData.Set("utm_content", value); }
     }
 
+    /// <summary>
+    /// Non-string input is converted to text before validation; clients should send
+    /// a string.
+    /// </summary>
     public string? UtmMedium
     {
         get
@@ -2194,6 +7200,10 @@ public sealed record class UserProperties : JsonModel
         init { this._rawData.Set("utm_medium", value); }
     }
 
+    /// <summary>
+    /// Non-string input is converted to text before validation; clients should send
+    /// a string.
+    /// </summary>
     public string? UtmName
     {
         get
@@ -2204,6 +7214,10 @@ public sealed record class UserProperties : JsonModel
         init { this._rawData.Set("utm_name", value); }
     }
 
+    /// <summary>
+    /// Non-string input is converted to text before validation; clients should send
+    /// a string.
+    /// </summary>
     public string? UtmSource
     {
         get
@@ -2214,6 +7228,10 @@ public sealed record class UserProperties : JsonModel
         init { this._rawData.Set("utm_source", value); }
     }
 
+    /// <summary>
+    /// Non-string input is converted to text before validation; clients should send
+    /// a string.
+    /// </summary>
     public string? UtmTerm
     {
         get
@@ -2224,6 +7242,9 @@ public sealed record class UserProperties : JsonModel
         init { this._rawData.Set("utm_term", value); }
     }
 
+    /// <summary>
+    /// Leading and trailing whitespace is removed before validation.
+    /// </summary>
     public string? ViantClickID
     {
         get
@@ -2234,6 +7255,9 @@ public sealed record class UserProperties : JsonModel
         init { this._rawData.Set("viant_click_id", value); }
     }
 
+    /// <summary>
+    /// Leading and trailing whitespace is removed before validation.
+    /// </summary>
     public string? ViantImpressionID
     {
         get
@@ -2254,12 +7278,15 @@ public sealed record class UserProperties : JsonModel
         init { this._rawData.Set("wbraid", value); }
     }
 
-    public string? Zip
+    /// <summary>
+    /// Any JSON value: string, number, boolean, array, object, or null.
+    /// </summary>
+    public Zip? Zip
     {
         get
         {
             this._rawData.Freeze();
-            return this._rawData.GetNullableClass<string>("zip");
+            return this._rawData.GetNullableClass<Zip>("zip");
         }
         init { this._rawData.Set("zip", value); }
     }
@@ -2281,9 +7308,21 @@ public sealed record class UserProperties : JsonModel
         _ = this.Clickid;
         _ = this.Clid;
         _ = this.CompanyName;
-        _ = this.Consent;
+        if (this.Consent != null)
+        {
+            foreach (var item in this.Consent.Values)
+            {
+                item?.Validate();
+            }
+        }
         _ = this.Country;
-        _ = this.CustomProperties;
+        if (this.CustomProperties != null)
+        {
+            foreach (var item in this.CustomProperties.Values)
+            {
+                item?.Validate();
+            }
+        }
         _ = this.DateOfBirth;
         _ = this.Dclid;
         _ = this.Email;
@@ -2297,10 +7336,12 @@ public sealed record class UserProperties : JsonModel
         _ = this.Gbraid;
         _ = this.Gclid;
         _ = this.Gender;
+        _ = this.Graid;
+        _ = this.Grclid;
         _ = this.ImRef;
         _ = this.IP;
         _ = this.Irclickid;
-        _ = this.IsBot;
+        this.IsBot?.Validate();
         _ = this.JobTitle;
         _ = this.LastName;
         _ = this.LiFatID;
@@ -2308,7 +7349,7 @@ public sealed record class UserProperties : JsonModel
         _ = this.Ndclid;
         _ = this.ObClickID;
         _ = this.Oppref;
-        _ = this.PhoneNumber;
+        this.PhoneNumber?.Validate();
         _ = this.Qclid;
         _ = this.RdtCid;
         _ = this.Referrer;
@@ -2330,7 +7371,7 @@ public sealed record class UserProperties : JsonModel
         _ = this.ViantClickID;
         _ = this.ViantImpressionID;
         _ = this.Wbraid;
-        _ = this.Zip;
+        this.Zip?.Validate();
     }
 
     public UserProperties() { }
@@ -2366,4 +7407,10125 @@ class UserPropertiesFromRaw : IFromRawJson<UserProperties>
     /// <inheritdoc/>
     public UserProperties FromRawUnchecked(IReadOnlyDictionary<string, JsonElement> rawData) =>
         UserProperties.FromRawUnchecked(rawData);
+}
+
+[JsonConverter(typeof(ConsentConverter))]
+public record class Consent : ModelBase
+{
+    public object? Value { get; } = null;
+
+    JsonElement? _element = null;
+
+    public JsonElement Json
+    {
+        get
+        {
+            return this._element ??= JsonSerializer.SerializeToElement(
+                this.Value,
+                ModelBase.SerializerOptions
+            );
+        }
+    }
+
+    public Consent(string value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public Consent(double value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public Consent(bool value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public Consent(IReadOnlyList<ConsentJsonValue?> value, JsonElement? element = null)
+    {
+        this.Value = ImmutableArray.ToImmutableArray(value);
+        this._element = element;
+    }
+
+    public Consent(
+        IReadOnlyDictionary<string, ConsentUnionMember4Item?> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = FrozenDictionary.ToFrozenDictionary(value);
+        this._element = element;
+    }
+
+    public Consent(JsonElement element)
+    {
+        this._element = element;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="string"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickString(out var value)) {
+    ///     // `value` is of type `string`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickString([NotNullWhen(true)] out string? value)
+    {
+        value = this.Value as string;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="double"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickDouble(out var value)) {
+    ///     // `value` is of type `double`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickDouble([NotNullWhen(true)] out double? value)
+    {
+        value = this.Value as double?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="bool"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickBool(out var value)) {
+    ///     // `value` is of type `bool`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickBool([NotNullWhen(true)] out bool? value)
+    {
+        value = this.Value as bool?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="List{T}"/> where <c>T</c> is a <c>ConsentJsonValue?</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickConsentJsonValues(out var value)) {
+    ///     // `value` is of type `IReadOnlyList&lt;ConsentJsonValue?&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickConsentJsonValues(
+        [NotNullWhen(true)] out IReadOnlyList<ConsentJsonValue?>? value
+    )
+    {
+        value = this.Value as IReadOnlyList<ConsentJsonValue?>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="Dictionary{Key, Value}"/> with a <c>Key</c> of <c>string</c> and a <c>Value</c> of <c>ConsentUnionMember4Item?</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickConsentUnionMember4Items(out var value)) {
+    ///     // `value` is of type `IReadOnlyDictionary&lt;string, ConsentUnionMember4Item?&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickConsentUnionMember4Items(
+        [NotNullWhen(true)] out IReadOnlyDictionary<string, ConsentUnionMember4Item?>? value
+    )
+    {
+        value = this.Value as IReadOnlyDictionary<string, ConsentUnionMember4Item?>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Match"/>
+    /// if you need your function parameters to return something.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// instance.Switch(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;ConsentJsonValue?&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, ConsentUnionMember4Item?&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public void Switch(
+        Action<string> @string,
+        Action<double> @double,
+        Action<bool> @bool,
+        Action<IReadOnlyList<ConsentJsonValue?>> consentJsonValues,
+        Action<IReadOnlyDictionary<string, ConsentUnionMember4Item?>> consentUnionMember4Items
+    )
+    {
+        switch (this.Value)
+        {
+            case string value:
+                @string(value);
+                break;
+            case double value:
+                @double(value);
+                break;
+            case bool value:
+                @bool(value);
+                break;
+            case IReadOnlyList<ConsentJsonValue?> value:
+                consentJsonValues(value);
+                break;
+            case IReadOnlyDictionary<string, ConsentUnionMember4Item?> value:
+                consentUnionMember4Items(value);
+                break;
+            default:
+                throw new OursPrivacyInvalidDataException(
+                    "Data did not match any variant of Consent"
+                );
+        }
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with and
+    /// returns its result.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Switch"/>
+    /// if you don't need your function parameters to return a value.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// var result = instance.Match(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;ConsentJsonValue?&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, ConsentUnionMember4Item?&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public T Match<T>(
+        Func<string, T> @string,
+        Func<double, T> @double,
+        Func<bool, T> @bool,
+        Func<IReadOnlyList<ConsentJsonValue?>, T> consentJsonValues,
+        Func<IReadOnlyDictionary<string, ConsentUnionMember4Item?>, T> consentUnionMember4Items
+    )
+    {
+        return this.Value switch
+        {
+            string value => @string(value),
+            double value => @double(value),
+            bool value => @bool(value),
+            IReadOnlyList<ConsentJsonValue?> value => consentJsonValues(value),
+            IReadOnlyDictionary<string, ConsentUnionMember4Item?> value => consentUnionMember4Items(
+                value
+            ),
+            _ => throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of Consent"
+            ),
+        };
+    }
+
+    public static implicit operator Consent(string value) => new(value);
+
+    public static implicit operator Consent(double value) => new(value);
+
+    public static implicit operator Consent(bool value) => new(value);
+
+    public static implicit operator Consent(List<ConsentJsonValue?> value) =>
+        new((IReadOnlyList<ConsentJsonValue?>)value);
+
+    public static implicit operator Consent(Dictionary<string, ConsentUnionMember4Item?> value) =>
+        new((IReadOnlyDictionary<string, ConsentUnionMember4Item?>)value);
+
+    /// <summary>
+    /// Validates that the instance was constructed with a known variant and that this variant is valid
+    /// (based on its own <c>Validate</c> method).
+    ///
+    /// <para>This is useful for instances constructed from raw JSON data (e.g. deserialized from an API response).</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance does not pass validation.
+    /// </exception>
+    /// </summary>
+    public override void Validate()
+    {
+        if (this.Value == null)
+        {
+            throw new OursPrivacyInvalidDataException("Data did not match any variant of Consent");
+        }
+        this.Switch(
+            (_) => { },
+            (_) => { },
+            (_) => { },
+            (consentJsonValues) =>
+            {
+                foreach (var item in consentJsonValues)
+                {
+                    item?.Validate();
+                }
+            },
+            (consentUnionMember4Items) =>
+            {
+                foreach (var item in consentUnionMember4Items.Values)
+                {
+                    item?.Validate();
+                }
+            }
+        );
+    }
+
+    public virtual bool Equals(Consent? other) =>
+        other != null
+        && this.VariantIndex() == other.VariantIndex()
+        && JsonElement.DeepEquals(this.Json, other.Json);
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
+    public override string ToString() =>
+        JsonSerializer.Serialize(
+            FriendlyJsonPrinter.PrintValue(this.Json),
+            ModelBase.ToStringSerializerOptions
+        );
+
+    int VariantIndex()
+    {
+        return this.Value switch
+        {
+            string _ => 0,
+            double _ => 1,
+            bool _ => 2,
+            IReadOnlyList<ConsentJsonValue?> _ => 3,
+            IReadOnlyDictionary<string, ConsentUnionMember4Item?> _ => 4,
+            _ => -1,
+        };
+    }
+}
+
+sealed class ConsentConverter : JsonConverter<Consent?>
+{
+    public override Consent? Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
+    {
+        var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<string>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<double>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<bool>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<List<ConsentJsonValue?>>(
+                element,
+                options
+            );
+            if (deserialized != null)
+            {
+                foreach (var item in deserialized)
+                {
+                    item?.Validate();
+                }
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<
+                Dictionary<string, ConsentUnionMember4Item?>
+            >(element, options);
+            if (deserialized != null)
+            {
+                foreach (var item in deserialized.Values)
+                {
+                    item?.Validate();
+                }
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        return new(element);
+    }
+
+    public override void Write(Utf8JsonWriter writer, Consent? value, JsonSerializerOptions options)
+    {
+        JsonSerializer.Serialize(writer, value?.Json, options);
+    }
+}
+
+/// <summary>
+/// Any JSON value: string, number, boolean, array, object, or null.
+/// </summary>
+[JsonConverter(typeof(ConsentJsonValueConverter))]
+public record class ConsentJsonValue : ModelBase
+{
+    public object? Value { get; } = null;
+
+    JsonElement? _element = null;
+
+    public JsonElement Json
+    {
+        get
+        {
+            return this._element ??= JsonSerializer.SerializeToElement(
+                this.Value,
+                ModelBase.SerializerOptions
+            );
+        }
+    }
+
+    public ConsentJsonValue(string value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public ConsentJsonValue(double value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public ConsentJsonValue(bool value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public ConsentJsonValue(IReadOnlyList<JsonElement> value, JsonElement? element = null)
+    {
+        this.Value = ImmutableArray.ToImmutableArray(value);
+        this._element = element;
+    }
+
+    public ConsentJsonValue(
+        IReadOnlyDictionary<string, JsonElement> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = FrozenDictionary.ToFrozenDictionary(value);
+        this._element = element;
+    }
+
+    public ConsentJsonValue(JsonElement element)
+    {
+        this._element = element;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="string"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickString(out var value)) {
+    ///     // `value` is of type `string`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickString([NotNullWhen(true)] out string? value)
+    {
+        value = this.Value as string;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="double"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickDouble(out var value)) {
+    ///     // `value` is of type `double`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickDouble([NotNullWhen(true)] out double? value)
+    {
+        value = this.Value as double?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="bool"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickBool(out var value)) {
+    ///     // `value` is of type `bool`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickBool([NotNullWhen(true)] out bool? value)
+    {
+        value = this.Value as bool?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="List{T}"/> where <c>T</c> is a <c>JsonElement</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonElements(out var value)) {
+    ///     // `value` is of type `IReadOnlyList&lt;JsonElement&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonElements([NotNullWhen(true)] out IReadOnlyList<JsonElement>? value)
+    {
+        value = this.Value as IReadOnlyList<JsonElement>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="Dictionary{Key, Value}"/> with a <c>Key</c> of <c>string</c> and a <c>Value</c> of <c>JsonElement</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonElements1(out var value)) {
+    ///     // `value` is of type `IReadOnlyDictionary&lt;string, JsonElement&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonElements1(
+        [NotNullWhen(true)] out IReadOnlyDictionary<string, JsonElement>? value
+    )
+    {
+        value = this.Value as IReadOnlyDictionary<string, JsonElement>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Match"/>
+    /// if you need your function parameters to return something.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// instance.Switch(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonElement&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, JsonElement&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public void Switch(
+        Action<string> @string,
+        Action<double> @double,
+        Action<bool> @bool,
+        Action<IReadOnlyList<JsonElement>> jsonElements,
+        Action<IReadOnlyDictionary<string, JsonElement>> jsonElements1
+    )
+    {
+        switch (this.Value)
+        {
+            case string value:
+                @string(value);
+                break;
+            case double value:
+                @double(value);
+                break;
+            case bool value:
+                @bool(value);
+                break;
+            case IReadOnlyList<JsonElement> value:
+                jsonElements(value);
+                break;
+            case IReadOnlyDictionary<string, JsonElement> value:
+                jsonElements1(value);
+                break;
+            default:
+                throw new OursPrivacyInvalidDataException(
+                    "Data did not match any variant of ConsentJsonValue"
+                );
+        }
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with and
+    /// returns its result.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Switch"/>
+    /// if you don't need your function parameters to return a value.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// var result = instance.Match(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonElement&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, JsonElement&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public T Match<T>(
+        Func<string, T> @string,
+        Func<double, T> @double,
+        Func<bool, T> @bool,
+        Func<IReadOnlyList<JsonElement>, T> jsonElements,
+        Func<IReadOnlyDictionary<string, JsonElement>, T> jsonElements1
+    )
+    {
+        return this.Value switch
+        {
+            string value => @string(value),
+            double value => @double(value),
+            bool value => @bool(value),
+            IReadOnlyList<JsonElement> value => jsonElements(value),
+            IReadOnlyDictionary<string, JsonElement> value => jsonElements1(value),
+            _ => throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of ConsentJsonValue"
+            ),
+        };
+    }
+
+    public static implicit operator ConsentJsonValue(string value) => new(value);
+
+    public static implicit operator ConsentJsonValue(double value) => new(value);
+
+    public static implicit operator ConsentJsonValue(bool value) => new(value);
+
+    public static implicit operator ConsentJsonValue(List<JsonElement> value) =>
+        new((IReadOnlyList<JsonElement>)value);
+
+    public static implicit operator ConsentJsonValue(Dictionary<string, JsonElement> value) =>
+        new((IReadOnlyDictionary<string, JsonElement>)value);
+
+    /// <summary>
+    /// Validates that the instance was constructed with a known variant and that this variant is valid
+    /// (based on its own <c>Validate</c> method).
+    ///
+    /// <para>This is useful for instances constructed from raw JSON data (e.g. deserialized from an API response).</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance does not pass validation.
+    /// </exception>
+    /// </summary>
+    public override void Validate()
+    {
+        if (this.Value == null)
+        {
+            throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of ConsentJsonValue"
+            );
+        }
+    }
+
+    public virtual bool Equals(ConsentJsonValue? other) =>
+        other != null
+        && this.VariantIndex() == other.VariantIndex()
+        && JsonElement.DeepEquals(this.Json, other.Json);
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
+    public override string ToString() =>
+        JsonSerializer.Serialize(
+            FriendlyJsonPrinter.PrintValue(this.Json),
+            ModelBase.ToStringSerializerOptions
+        );
+
+    int VariantIndex()
+    {
+        return this.Value switch
+        {
+            string _ => 0,
+            double _ => 1,
+            bool _ => 2,
+            IReadOnlyList<JsonElement> _ => 3,
+            IReadOnlyDictionary<string, JsonElement> _ => 4,
+            _ => -1,
+        };
+    }
+}
+
+sealed class ConsentJsonValueConverter : JsonConverter<ConsentJsonValue?>
+{
+    public override ConsentJsonValue? Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
+    {
+        var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<string>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<double>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<bool>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<List<JsonElement>>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(
+                element,
+                options
+            );
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        return new(element);
+    }
+
+    public override void Write(
+        Utf8JsonWriter writer,
+        ConsentJsonValue? value,
+        JsonSerializerOptions options
+    )
+    {
+        JsonSerializer.Serialize(writer, value?.Json, options);
+    }
+}
+
+[JsonConverter(typeof(ConsentUnionMember4ItemConverter))]
+public record class ConsentUnionMember4Item : ModelBase
+{
+    public object? Value { get; } = null;
+
+    JsonElement? _element = null;
+
+    public JsonElement Json
+    {
+        get
+        {
+            return this._element ??= JsonSerializer.SerializeToElement(
+                this.Value,
+                ModelBase.SerializerOptions
+            );
+        }
+    }
+
+    public ConsentUnionMember4Item(string value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public ConsentUnionMember4Item(double value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public ConsentUnionMember4Item(bool value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public ConsentUnionMember4Item(
+        IReadOnlyList<ConsentUnionMember4ItemJsonValue?> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = ImmutableArray.ToImmutableArray(value);
+        this._element = element;
+    }
+
+    public ConsentUnionMember4Item(
+        IReadOnlyDictionary<string, ConsentUnionMember4ItemUnionMember4Item?> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = FrozenDictionary.ToFrozenDictionary(value);
+        this._element = element;
+    }
+
+    public ConsentUnionMember4Item(JsonElement element)
+    {
+        this._element = element;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="string"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickString(out var value)) {
+    ///     // `value` is of type `string`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickString([NotNullWhen(true)] out string? value)
+    {
+        value = this.Value as string;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="double"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickDouble(out var value)) {
+    ///     // `value` is of type `double`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickDouble([NotNullWhen(true)] out double? value)
+    {
+        value = this.Value as double?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="bool"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickBool(out var value)) {
+    ///     // `value` is of type `bool`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickBool([NotNullWhen(true)] out bool? value)
+    {
+        value = this.Value as bool?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="List{T}"/> where <c>T</c> is a <c>ConsentUnionMember4ItemJsonValue?</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickConsentUnionMember4ItemJsonValues(out var value)) {
+    ///     // `value` is of type `IReadOnlyList&lt;ConsentUnionMember4ItemJsonValue?&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickConsentUnionMember4ItemJsonValues(
+        [NotNullWhen(true)] out IReadOnlyList<ConsentUnionMember4ItemJsonValue?>? value
+    )
+    {
+        value = this.Value as IReadOnlyList<ConsentUnionMember4ItemJsonValue?>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="Dictionary{Key, Value}"/> with a <c>Key</c> of <c>string</c> and a <c>Value</c> of <c>ConsentUnionMember4ItemUnionMember4Item?</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickConsentUnionMember4ItemUnionMember4Items(out var value)) {
+    ///     // `value` is of type `IReadOnlyDictionary&lt;string, ConsentUnionMember4ItemUnionMember4Item?&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickConsentUnionMember4ItemUnionMember4Items(
+        [NotNullWhen(true)]
+            out IReadOnlyDictionary<string, ConsentUnionMember4ItemUnionMember4Item?>? value
+    )
+    {
+        value = this.Value as IReadOnlyDictionary<string, ConsentUnionMember4ItemUnionMember4Item?>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Match"/>
+    /// if you need your function parameters to return something.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// instance.Switch(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;ConsentUnionMember4ItemJsonValue?&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, ConsentUnionMember4ItemUnionMember4Item?&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public void Switch(
+        Action<string> @string,
+        Action<double> @double,
+        Action<bool> @bool,
+        Action<IReadOnlyList<ConsentUnionMember4ItemJsonValue?>> consentUnionMember4ItemJsonValues,
+        Action<
+            IReadOnlyDictionary<string, ConsentUnionMember4ItemUnionMember4Item?>
+        > consentUnionMember4ItemUnionMember4Items
+    )
+    {
+        switch (this.Value)
+        {
+            case string value:
+                @string(value);
+                break;
+            case double value:
+                @double(value);
+                break;
+            case bool value:
+                @bool(value);
+                break;
+            case IReadOnlyList<ConsentUnionMember4ItemJsonValue?> value:
+                consentUnionMember4ItemJsonValues(value);
+                break;
+            case IReadOnlyDictionary<string, ConsentUnionMember4ItemUnionMember4Item?> value:
+                consentUnionMember4ItemUnionMember4Items(value);
+                break;
+            default:
+                throw new OursPrivacyInvalidDataException(
+                    "Data did not match any variant of ConsentUnionMember4Item"
+                );
+        }
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with and
+    /// returns its result.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Switch"/>
+    /// if you don't need your function parameters to return a value.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// var result = instance.Match(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;ConsentUnionMember4ItemJsonValue?&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, ConsentUnionMember4ItemUnionMember4Item?&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public T Match<T>(
+        Func<string, T> @string,
+        Func<double, T> @double,
+        Func<bool, T> @bool,
+        Func<IReadOnlyList<ConsentUnionMember4ItemJsonValue?>, T> consentUnionMember4ItemJsonValues,
+        Func<
+            IReadOnlyDictionary<string, ConsentUnionMember4ItemUnionMember4Item?>,
+            T
+        > consentUnionMember4ItemUnionMember4Items
+    )
+    {
+        return this.Value switch
+        {
+            string value => @string(value),
+            double value => @double(value),
+            bool value => @bool(value),
+            IReadOnlyList<ConsentUnionMember4ItemJsonValue?> value =>
+                consentUnionMember4ItemJsonValues(value),
+            IReadOnlyDictionary<string, ConsentUnionMember4ItemUnionMember4Item?> value =>
+                consentUnionMember4ItemUnionMember4Items(value),
+            _ => throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of ConsentUnionMember4Item"
+            ),
+        };
+    }
+
+    public static implicit operator ConsentUnionMember4Item(string value) => new(value);
+
+    public static implicit operator ConsentUnionMember4Item(double value) => new(value);
+
+    public static implicit operator ConsentUnionMember4Item(bool value) => new(value);
+
+    public static implicit operator ConsentUnionMember4Item(
+        List<ConsentUnionMember4ItemJsonValue?> value
+    ) => new((IReadOnlyList<ConsentUnionMember4ItemJsonValue?>)value);
+
+    public static implicit operator ConsentUnionMember4Item(
+        Dictionary<string, ConsentUnionMember4ItemUnionMember4Item?> value
+    ) => new((IReadOnlyDictionary<string, ConsentUnionMember4ItemUnionMember4Item?>)value);
+
+    /// <summary>
+    /// Validates that the instance was constructed with a known variant and that this variant is valid
+    /// (based on its own <c>Validate</c> method).
+    ///
+    /// <para>This is useful for instances constructed from raw JSON data (e.g. deserialized from an API response).</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance does not pass validation.
+    /// </exception>
+    /// </summary>
+    public override void Validate()
+    {
+        if (this.Value == null)
+        {
+            throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of ConsentUnionMember4Item"
+            );
+        }
+        this.Switch(
+            (_) => { },
+            (_) => { },
+            (_) => { },
+            (consentUnionMember4ItemJsonValues) =>
+            {
+                foreach (var item in consentUnionMember4ItemJsonValues)
+                {
+                    item?.Validate();
+                }
+            },
+            (consentUnionMember4ItemUnionMember4Items) =>
+            {
+                foreach (var item in consentUnionMember4ItemUnionMember4Items.Values)
+                {
+                    item?.Validate();
+                }
+            }
+        );
+    }
+
+    public virtual bool Equals(ConsentUnionMember4Item? other) =>
+        other != null
+        && this.VariantIndex() == other.VariantIndex()
+        && JsonElement.DeepEquals(this.Json, other.Json);
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
+    public override string ToString() =>
+        JsonSerializer.Serialize(
+            FriendlyJsonPrinter.PrintValue(this.Json),
+            ModelBase.ToStringSerializerOptions
+        );
+
+    int VariantIndex()
+    {
+        return this.Value switch
+        {
+            string _ => 0,
+            double _ => 1,
+            bool _ => 2,
+            IReadOnlyList<ConsentUnionMember4ItemJsonValue?> _ => 3,
+            IReadOnlyDictionary<string, ConsentUnionMember4ItemUnionMember4Item?> _ => 4,
+            _ => -1,
+        };
+    }
+}
+
+sealed class ConsentUnionMember4ItemConverter : JsonConverter<ConsentUnionMember4Item?>
+{
+    public override ConsentUnionMember4Item? Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
+    {
+        var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<string>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<double>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<bool>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<List<ConsentUnionMember4ItemJsonValue?>>(
+                element,
+                options
+            );
+            if (deserialized != null)
+            {
+                foreach (var item in deserialized)
+                {
+                    item?.Validate();
+                }
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<
+                Dictionary<string, ConsentUnionMember4ItemUnionMember4Item?>
+            >(element, options);
+            if (deserialized != null)
+            {
+                foreach (var item in deserialized.Values)
+                {
+                    item?.Validate();
+                }
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        return new(element);
+    }
+
+    public override void Write(
+        Utf8JsonWriter writer,
+        ConsentUnionMember4Item? value,
+        JsonSerializerOptions options
+    )
+    {
+        JsonSerializer.Serialize(writer, value?.Json, options);
+    }
+}
+
+/// <summary>
+/// Any JSON value: string, number, boolean, array, object, or null.
+/// </summary>
+[JsonConverter(typeof(ConsentUnionMember4ItemJsonValueConverter))]
+public record class ConsentUnionMember4ItemJsonValue : ModelBase
+{
+    public object? Value { get; } = null;
+
+    JsonElement? _element = null;
+
+    public JsonElement Json
+    {
+        get
+        {
+            return this._element ??= JsonSerializer.SerializeToElement(
+                this.Value,
+                ModelBase.SerializerOptions
+            );
+        }
+    }
+
+    public ConsentUnionMember4ItemJsonValue(string value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public ConsentUnionMember4ItemJsonValue(double value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public ConsentUnionMember4ItemJsonValue(bool value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public ConsentUnionMember4ItemJsonValue(
+        IReadOnlyList<JsonElement> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = ImmutableArray.ToImmutableArray(value);
+        this._element = element;
+    }
+
+    public ConsentUnionMember4ItemJsonValue(
+        IReadOnlyDictionary<string, JsonElement> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = FrozenDictionary.ToFrozenDictionary(value);
+        this._element = element;
+    }
+
+    public ConsentUnionMember4ItemJsonValue(JsonElement element)
+    {
+        this._element = element;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="string"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickString(out var value)) {
+    ///     // `value` is of type `string`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickString([NotNullWhen(true)] out string? value)
+    {
+        value = this.Value as string;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="double"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickDouble(out var value)) {
+    ///     // `value` is of type `double`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickDouble([NotNullWhen(true)] out double? value)
+    {
+        value = this.Value as double?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="bool"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickBool(out var value)) {
+    ///     // `value` is of type `bool`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickBool([NotNullWhen(true)] out bool? value)
+    {
+        value = this.Value as bool?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="List{T}"/> where <c>T</c> is a <c>JsonElement</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonElements(out var value)) {
+    ///     // `value` is of type `IReadOnlyList&lt;JsonElement&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonElements([NotNullWhen(true)] out IReadOnlyList<JsonElement>? value)
+    {
+        value = this.Value as IReadOnlyList<JsonElement>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="Dictionary{Key, Value}"/> with a <c>Key</c> of <c>string</c> and a <c>Value</c> of <c>JsonElement</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonElements1(out var value)) {
+    ///     // `value` is of type `IReadOnlyDictionary&lt;string, JsonElement&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonElements1(
+        [NotNullWhen(true)] out IReadOnlyDictionary<string, JsonElement>? value
+    )
+    {
+        value = this.Value as IReadOnlyDictionary<string, JsonElement>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Match"/>
+    /// if you need your function parameters to return something.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// instance.Switch(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonElement&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, JsonElement&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public void Switch(
+        Action<string> @string,
+        Action<double> @double,
+        Action<bool> @bool,
+        Action<IReadOnlyList<JsonElement>> jsonElements,
+        Action<IReadOnlyDictionary<string, JsonElement>> jsonElements1
+    )
+    {
+        switch (this.Value)
+        {
+            case string value:
+                @string(value);
+                break;
+            case double value:
+                @double(value);
+                break;
+            case bool value:
+                @bool(value);
+                break;
+            case IReadOnlyList<JsonElement> value:
+                jsonElements(value);
+                break;
+            case IReadOnlyDictionary<string, JsonElement> value:
+                jsonElements1(value);
+                break;
+            default:
+                throw new OursPrivacyInvalidDataException(
+                    "Data did not match any variant of ConsentUnionMember4ItemJsonValue"
+                );
+        }
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with and
+    /// returns its result.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Switch"/>
+    /// if you don't need your function parameters to return a value.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// var result = instance.Match(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonElement&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, JsonElement&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public T Match<T>(
+        Func<string, T> @string,
+        Func<double, T> @double,
+        Func<bool, T> @bool,
+        Func<IReadOnlyList<JsonElement>, T> jsonElements,
+        Func<IReadOnlyDictionary<string, JsonElement>, T> jsonElements1
+    )
+    {
+        return this.Value switch
+        {
+            string value => @string(value),
+            double value => @double(value),
+            bool value => @bool(value),
+            IReadOnlyList<JsonElement> value => jsonElements(value),
+            IReadOnlyDictionary<string, JsonElement> value => jsonElements1(value),
+            _ => throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of ConsentUnionMember4ItemJsonValue"
+            ),
+        };
+    }
+
+    public static implicit operator ConsentUnionMember4ItemJsonValue(string value) => new(value);
+
+    public static implicit operator ConsentUnionMember4ItemJsonValue(double value) => new(value);
+
+    public static implicit operator ConsentUnionMember4ItemJsonValue(bool value) => new(value);
+
+    public static implicit operator ConsentUnionMember4ItemJsonValue(List<JsonElement> value) =>
+        new((IReadOnlyList<JsonElement>)value);
+
+    public static implicit operator ConsentUnionMember4ItemJsonValue(
+        Dictionary<string, JsonElement> value
+    ) => new((IReadOnlyDictionary<string, JsonElement>)value);
+
+    /// <summary>
+    /// Validates that the instance was constructed with a known variant and that this variant is valid
+    /// (based on its own <c>Validate</c> method).
+    ///
+    /// <para>This is useful for instances constructed from raw JSON data (e.g. deserialized from an API response).</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance does not pass validation.
+    /// </exception>
+    /// </summary>
+    public override void Validate()
+    {
+        if (this.Value == null)
+        {
+            throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of ConsentUnionMember4ItemJsonValue"
+            );
+        }
+    }
+
+    public virtual bool Equals(ConsentUnionMember4ItemJsonValue? other) =>
+        other != null
+        && this.VariantIndex() == other.VariantIndex()
+        && JsonElement.DeepEquals(this.Json, other.Json);
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
+    public override string ToString() =>
+        JsonSerializer.Serialize(
+            FriendlyJsonPrinter.PrintValue(this.Json),
+            ModelBase.ToStringSerializerOptions
+        );
+
+    int VariantIndex()
+    {
+        return this.Value switch
+        {
+            string _ => 0,
+            double _ => 1,
+            bool _ => 2,
+            IReadOnlyList<JsonElement> _ => 3,
+            IReadOnlyDictionary<string, JsonElement> _ => 4,
+            _ => -1,
+        };
+    }
+}
+
+sealed class ConsentUnionMember4ItemJsonValueConverter
+    : JsonConverter<ConsentUnionMember4ItemJsonValue?>
+{
+    public override ConsentUnionMember4ItemJsonValue? Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
+    {
+        var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<string>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<double>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<bool>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<List<JsonElement>>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(
+                element,
+                options
+            );
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        return new(element);
+    }
+
+    public override void Write(
+        Utf8JsonWriter writer,
+        ConsentUnionMember4ItemJsonValue? value,
+        JsonSerializerOptions options
+    )
+    {
+        JsonSerializer.Serialize(writer, value?.Json, options);
+    }
+}
+
+[JsonConverter(typeof(ConsentUnionMember4ItemUnionMember4ItemConverter))]
+public record class ConsentUnionMember4ItemUnionMember4Item : ModelBase
+{
+    public object? Value { get; } = null;
+
+    JsonElement? _element = null;
+
+    public JsonElement Json
+    {
+        get
+        {
+            return this._element ??= JsonSerializer.SerializeToElement(
+                this.Value,
+                ModelBase.SerializerOptions
+            );
+        }
+    }
+
+    public ConsentUnionMember4ItemUnionMember4Item(string value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public ConsentUnionMember4ItemUnionMember4Item(double value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public ConsentUnionMember4ItemUnionMember4Item(bool value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public ConsentUnionMember4ItemUnionMember4Item(
+        IReadOnlyList<ConsentUnionMember4ItemUnionMember4ItemJsonValue?> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = ImmutableArray.ToImmutableArray(value);
+        this._element = element;
+    }
+
+    public ConsentUnionMember4ItemUnionMember4Item(
+        IReadOnlyDictionary<string, ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item?> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = FrozenDictionary.ToFrozenDictionary(value);
+        this._element = element;
+    }
+
+    public ConsentUnionMember4ItemUnionMember4Item(JsonElement element)
+    {
+        this._element = element;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="string"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickString(out var value)) {
+    ///     // `value` is of type `string`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickString([NotNullWhen(true)] out string? value)
+    {
+        value = this.Value as string;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="double"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickDouble(out var value)) {
+    ///     // `value` is of type `double`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickDouble([NotNullWhen(true)] out double? value)
+    {
+        value = this.Value as double?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="bool"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickBool(out var value)) {
+    ///     // `value` is of type `bool`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickBool([NotNullWhen(true)] out bool? value)
+    {
+        value = this.Value as bool?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="List{T}"/> where <c>T</c> is a <c>ConsentUnionMember4ItemUnionMember4ItemJsonValue?</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickConsentUnionMember4ItemUnionMember4ItemJsonValues(out var value)) {
+    ///     // `value` is of type `IReadOnlyList&lt;ConsentUnionMember4ItemUnionMember4ItemJsonValue?&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickConsentUnionMember4ItemUnionMember4ItemJsonValues(
+        [NotNullWhen(true)]
+            out IReadOnlyList<ConsentUnionMember4ItemUnionMember4ItemJsonValue?>? value
+    )
+    {
+        value = this.Value as IReadOnlyList<ConsentUnionMember4ItemUnionMember4ItemJsonValue?>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="Dictionary{Key, Value}"/> with a <c>Key</c> of <c>string</c> and a <c>Value</c> of <c>ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item?</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickConsentUnionMember4ItemUnionMember4ItemUnionMember4Items(out var value)) {
+    ///     // `value` is of type `IReadOnlyDictionary&lt;string, ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item?&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickConsentUnionMember4ItemUnionMember4ItemUnionMember4Items(
+        [NotNullWhen(true)]
+            out IReadOnlyDictionary<
+            string,
+            ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item?
+        >? value
+    )
+    {
+        value =
+            this.Value
+            as IReadOnlyDictionary<
+                string,
+                ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            >;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Match"/>
+    /// if you need your function parameters to return something.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// instance.Switch(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;ConsentUnionMember4ItemUnionMember4ItemJsonValue?&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item?&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public void Switch(
+        Action<string> @string,
+        Action<double> @double,
+        Action<bool> @bool,
+        Action<
+            IReadOnlyList<ConsentUnionMember4ItemUnionMember4ItemJsonValue?>
+        > consentUnionMember4ItemUnionMember4ItemJsonValues,
+        Action<
+            IReadOnlyDictionary<string, ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item?>
+        > consentUnionMember4ItemUnionMember4ItemUnionMember4Items
+    )
+    {
+        switch (this.Value)
+        {
+            case string value:
+                @string(value);
+                break;
+            case double value:
+                @double(value);
+                break;
+            case bool value:
+                @bool(value);
+                break;
+            case IReadOnlyList<ConsentUnionMember4ItemUnionMember4ItemJsonValue?> value:
+                consentUnionMember4ItemUnionMember4ItemJsonValues(value);
+                break;
+            case IReadOnlyDictionary<
+                string,
+                ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            > value:
+                consentUnionMember4ItemUnionMember4ItemUnionMember4Items(value);
+                break;
+            default:
+                throw new OursPrivacyInvalidDataException(
+                    "Data did not match any variant of ConsentUnionMember4ItemUnionMember4Item"
+                );
+        }
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with and
+    /// returns its result.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Switch"/>
+    /// if you don't need your function parameters to return a value.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// var result = instance.Match(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;ConsentUnionMember4ItemUnionMember4ItemJsonValue?&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item?&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public T Match<T>(
+        Func<string, T> @string,
+        Func<double, T> @double,
+        Func<bool, T> @bool,
+        Func<
+            IReadOnlyList<ConsentUnionMember4ItemUnionMember4ItemJsonValue?>,
+            T
+        > consentUnionMember4ItemUnionMember4ItemJsonValues,
+        Func<
+            IReadOnlyDictionary<string, ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item?>,
+            T
+        > consentUnionMember4ItemUnionMember4ItemUnionMember4Items
+    )
+    {
+        return this.Value switch
+        {
+            string value => @string(value),
+            double value => @double(value),
+            bool value => @bool(value),
+            IReadOnlyList<ConsentUnionMember4ItemUnionMember4ItemJsonValue?> value =>
+                consentUnionMember4ItemUnionMember4ItemJsonValues(value),
+            IReadOnlyDictionary<
+                string,
+                ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            > value => consentUnionMember4ItemUnionMember4ItemUnionMember4Items(value),
+            _ => throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of ConsentUnionMember4ItemUnionMember4Item"
+            ),
+        };
+    }
+
+    public static implicit operator ConsentUnionMember4ItemUnionMember4Item(string value) =>
+        new(value);
+
+    public static implicit operator ConsentUnionMember4ItemUnionMember4Item(double value) =>
+        new(value);
+
+    public static implicit operator ConsentUnionMember4ItemUnionMember4Item(bool value) =>
+        new(value);
+
+    public static implicit operator ConsentUnionMember4ItemUnionMember4Item(
+        List<ConsentUnionMember4ItemUnionMember4ItemJsonValue?> value
+    ) => new((IReadOnlyList<ConsentUnionMember4ItemUnionMember4ItemJsonValue?>)value);
+
+    public static implicit operator ConsentUnionMember4ItemUnionMember4Item(
+        Dictionary<string, ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item?> value
+    ) =>
+        new(
+            (IReadOnlyDictionary<string, ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item?>)
+                value
+        );
+
+    /// <summary>
+    /// Validates that the instance was constructed with a known variant and that this variant is valid
+    /// (based on its own <c>Validate</c> method).
+    ///
+    /// <para>This is useful for instances constructed from raw JSON data (e.g. deserialized from an API response).</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance does not pass validation.
+    /// </exception>
+    /// </summary>
+    public override void Validate()
+    {
+        if (this.Value == null)
+        {
+            throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of ConsentUnionMember4ItemUnionMember4Item"
+            );
+        }
+        this.Switch(
+            (_) => { },
+            (_) => { },
+            (_) => { },
+            (consentUnionMember4ItemUnionMember4ItemJsonValues) =>
+            {
+                foreach (var item in consentUnionMember4ItemUnionMember4ItemJsonValues)
+                {
+                    item?.Validate();
+                }
+            },
+            (consentUnionMember4ItemUnionMember4ItemUnionMember4Items) =>
+            {
+                foreach (
+                    var item in consentUnionMember4ItemUnionMember4ItemUnionMember4Items.Values
+                )
+                {
+                    item?.Validate();
+                }
+            }
+        );
+    }
+
+    public virtual bool Equals(ConsentUnionMember4ItemUnionMember4Item? other) =>
+        other != null
+        && this.VariantIndex() == other.VariantIndex()
+        && JsonElement.DeepEquals(this.Json, other.Json);
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
+    public override string ToString() =>
+        JsonSerializer.Serialize(
+            FriendlyJsonPrinter.PrintValue(this.Json),
+            ModelBase.ToStringSerializerOptions
+        );
+
+    int VariantIndex()
+    {
+        return this.Value switch
+        {
+            string _ => 0,
+            double _ => 1,
+            bool _ => 2,
+            IReadOnlyList<ConsentUnionMember4ItemUnionMember4ItemJsonValue?> _ => 3,
+            IReadOnlyDictionary<
+                string,
+                ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            > _ => 4,
+            _ => -1,
+        };
+    }
+}
+
+sealed class ConsentUnionMember4ItemUnionMember4ItemConverter
+    : JsonConverter<ConsentUnionMember4ItemUnionMember4Item?>
+{
+    public override ConsentUnionMember4ItemUnionMember4Item? Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
+    {
+        var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<string>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<double>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<bool>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<
+                List<ConsentUnionMember4ItemUnionMember4ItemJsonValue?>
+            >(element, options);
+            if (deserialized != null)
+            {
+                foreach (var item in deserialized)
+                {
+                    item?.Validate();
+                }
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<
+                Dictionary<string, ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item?>
+            >(element, options);
+            if (deserialized != null)
+            {
+                foreach (var item in deserialized.Values)
+                {
+                    item?.Validate();
+                }
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        return new(element);
+    }
+
+    public override void Write(
+        Utf8JsonWriter writer,
+        ConsentUnionMember4ItemUnionMember4Item? value,
+        JsonSerializerOptions options
+    )
+    {
+        JsonSerializer.Serialize(writer, value?.Json, options);
+    }
+}
+
+/// <summary>
+/// Any JSON value: string, number, boolean, array, object, or null.
+/// </summary>
+[JsonConverter(typeof(ConsentUnionMember4ItemUnionMember4ItemJsonValueConverter))]
+public record class ConsentUnionMember4ItemUnionMember4ItemJsonValue : ModelBase
+{
+    public object? Value { get; } = null;
+
+    JsonElement? _element = null;
+
+    public JsonElement Json
+    {
+        get
+        {
+            return this._element ??= JsonSerializer.SerializeToElement(
+                this.Value,
+                ModelBase.SerializerOptions
+            );
+        }
+    }
+
+    public ConsentUnionMember4ItemUnionMember4ItemJsonValue(
+        string value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public ConsentUnionMember4ItemUnionMember4ItemJsonValue(
+        double value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public ConsentUnionMember4ItemUnionMember4ItemJsonValue(bool value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public ConsentUnionMember4ItemUnionMember4ItemJsonValue(
+        IReadOnlyList<JsonElement> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = ImmutableArray.ToImmutableArray(value);
+        this._element = element;
+    }
+
+    public ConsentUnionMember4ItemUnionMember4ItemJsonValue(
+        IReadOnlyDictionary<string, JsonElement> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = FrozenDictionary.ToFrozenDictionary(value);
+        this._element = element;
+    }
+
+    public ConsentUnionMember4ItemUnionMember4ItemJsonValue(JsonElement element)
+    {
+        this._element = element;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="string"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickString(out var value)) {
+    ///     // `value` is of type `string`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickString([NotNullWhen(true)] out string? value)
+    {
+        value = this.Value as string;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="double"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickDouble(out var value)) {
+    ///     // `value` is of type `double`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickDouble([NotNullWhen(true)] out double? value)
+    {
+        value = this.Value as double?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="bool"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickBool(out var value)) {
+    ///     // `value` is of type `bool`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickBool([NotNullWhen(true)] out bool? value)
+    {
+        value = this.Value as bool?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="List{T}"/> where <c>T</c> is a <c>JsonElement</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonElements(out var value)) {
+    ///     // `value` is of type `IReadOnlyList&lt;JsonElement&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonElements([NotNullWhen(true)] out IReadOnlyList<JsonElement>? value)
+    {
+        value = this.Value as IReadOnlyList<JsonElement>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="Dictionary{Key, Value}"/> with a <c>Key</c> of <c>string</c> and a <c>Value</c> of <c>JsonElement</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonElements1(out var value)) {
+    ///     // `value` is of type `IReadOnlyDictionary&lt;string, JsonElement&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonElements1(
+        [NotNullWhen(true)] out IReadOnlyDictionary<string, JsonElement>? value
+    )
+    {
+        value = this.Value as IReadOnlyDictionary<string, JsonElement>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Match"/>
+    /// if you need your function parameters to return something.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// instance.Switch(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonElement&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, JsonElement&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public void Switch(
+        Action<string> @string,
+        Action<double> @double,
+        Action<bool> @bool,
+        Action<IReadOnlyList<JsonElement>> jsonElements,
+        Action<IReadOnlyDictionary<string, JsonElement>> jsonElements1
+    )
+    {
+        switch (this.Value)
+        {
+            case string value:
+                @string(value);
+                break;
+            case double value:
+                @double(value);
+                break;
+            case bool value:
+                @bool(value);
+                break;
+            case IReadOnlyList<JsonElement> value:
+                jsonElements(value);
+                break;
+            case IReadOnlyDictionary<string, JsonElement> value:
+                jsonElements1(value);
+                break;
+            default:
+                throw new OursPrivacyInvalidDataException(
+                    "Data did not match any variant of ConsentUnionMember4ItemUnionMember4ItemJsonValue"
+                );
+        }
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with and
+    /// returns its result.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Switch"/>
+    /// if you don't need your function parameters to return a value.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// var result = instance.Match(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonElement&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, JsonElement&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public T Match<T>(
+        Func<string, T> @string,
+        Func<double, T> @double,
+        Func<bool, T> @bool,
+        Func<IReadOnlyList<JsonElement>, T> jsonElements,
+        Func<IReadOnlyDictionary<string, JsonElement>, T> jsonElements1
+    )
+    {
+        return this.Value switch
+        {
+            string value => @string(value),
+            double value => @double(value),
+            bool value => @bool(value),
+            IReadOnlyList<JsonElement> value => jsonElements(value),
+            IReadOnlyDictionary<string, JsonElement> value => jsonElements1(value),
+            _ => throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of ConsentUnionMember4ItemUnionMember4ItemJsonValue"
+            ),
+        };
+    }
+
+    public static implicit operator ConsentUnionMember4ItemUnionMember4ItemJsonValue(
+        string value
+    ) => new(value);
+
+    public static implicit operator ConsentUnionMember4ItemUnionMember4ItemJsonValue(
+        double value
+    ) => new(value);
+
+    public static implicit operator ConsentUnionMember4ItemUnionMember4ItemJsonValue(bool value) =>
+        new(value);
+
+    public static implicit operator ConsentUnionMember4ItemUnionMember4ItemJsonValue(
+        List<JsonElement> value
+    ) => new((IReadOnlyList<JsonElement>)value);
+
+    public static implicit operator ConsentUnionMember4ItemUnionMember4ItemJsonValue(
+        Dictionary<string, JsonElement> value
+    ) => new((IReadOnlyDictionary<string, JsonElement>)value);
+
+    /// <summary>
+    /// Validates that the instance was constructed with a known variant and that this variant is valid
+    /// (based on its own <c>Validate</c> method).
+    ///
+    /// <para>This is useful for instances constructed from raw JSON data (e.g. deserialized from an API response).</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance does not pass validation.
+    /// </exception>
+    /// </summary>
+    public override void Validate()
+    {
+        if (this.Value == null)
+        {
+            throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of ConsentUnionMember4ItemUnionMember4ItemJsonValue"
+            );
+        }
+    }
+
+    public virtual bool Equals(ConsentUnionMember4ItemUnionMember4ItemJsonValue? other) =>
+        other != null
+        && this.VariantIndex() == other.VariantIndex()
+        && JsonElement.DeepEquals(this.Json, other.Json);
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
+    public override string ToString() =>
+        JsonSerializer.Serialize(
+            FriendlyJsonPrinter.PrintValue(this.Json),
+            ModelBase.ToStringSerializerOptions
+        );
+
+    int VariantIndex()
+    {
+        return this.Value switch
+        {
+            string _ => 0,
+            double _ => 1,
+            bool _ => 2,
+            IReadOnlyList<JsonElement> _ => 3,
+            IReadOnlyDictionary<string, JsonElement> _ => 4,
+            _ => -1,
+        };
+    }
+}
+
+sealed class ConsentUnionMember4ItemUnionMember4ItemJsonValueConverter
+    : JsonConverter<ConsentUnionMember4ItemUnionMember4ItemJsonValue?>
+{
+    public override ConsentUnionMember4ItemUnionMember4ItemJsonValue? Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
+    {
+        var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<string>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<double>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<bool>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<List<JsonElement>>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(
+                element,
+                options
+            );
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        return new(element);
+    }
+
+    public override void Write(
+        Utf8JsonWriter writer,
+        ConsentUnionMember4ItemUnionMember4ItemJsonValue? value,
+        JsonSerializerOptions options
+    )
+    {
+        JsonSerializer.Serialize(writer, value?.Json, options);
+    }
+}
+
+[JsonConverter(typeof(ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemConverter))]
+public record class ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item : ModelBase
+{
+    public object? Value { get; } = null;
+
+    JsonElement? _element = null;
+
+    public JsonElement Json
+    {
+        get
+        {
+            return this._element ??= JsonSerializer.SerializeToElement(
+                this.Value,
+                ModelBase.SerializerOptions
+            );
+        }
+    }
+
+    public ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        string value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        double value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        bool value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        IReadOnlyList<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = ImmutableArray.ToImmutableArray(value);
+        this._element = element;
+    }
+
+    public ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        IReadOnlyDictionary<
+            string,
+            ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?
+        > value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = FrozenDictionary.ToFrozenDictionary(value);
+        this._element = element;
+    }
+
+    public ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item(JsonElement element)
+    {
+        this._element = element;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="string"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickString(out var value)) {
+    ///     // `value` is of type `string`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickString([NotNullWhen(true)] out string? value)
+    {
+        value = this.Value as string;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="double"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickDouble(out var value)) {
+    ///     // `value` is of type `double`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickDouble([NotNullWhen(true)] out double? value)
+    {
+        value = this.Value as double?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="bool"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickBool(out var value)) {
+    ///     // `value` is of type `bool`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickBool([NotNullWhen(true)] out bool? value)
+    {
+        value = this.Value as bool?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="List{T}"/> where <c>T</c> is a <c>ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues(out var value)) {
+    ///     // `value` is of type `IReadOnlyList&lt;ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues(
+        [NotNullWhen(true)]
+            out IReadOnlyList<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>? value
+    )
+    {
+        value =
+            this.Value
+            as IReadOnlyList<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="Dictionary{Key, Value}"/> with a <c>Key</c> of <c>string</c> and a <c>Value</c> of <c>ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Items(out var value)) {
+    ///     // `value` is of type `IReadOnlyDictionary&lt;string, ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Items(
+        [NotNullWhen(true)]
+            out IReadOnlyDictionary<
+            string,
+            ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?
+        >? value
+    )
+    {
+        value =
+            this.Value
+            as IReadOnlyDictionary<
+                string,
+                ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            >;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Match"/>
+    /// if you need your function parameters to return something.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// instance.Switch(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public void Switch(
+        Action<string> @string,
+        Action<double> @double,
+        Action<bool> @bool,
+        Action<
+            IReadOnlyList<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>
+        > consentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues,
+        Action<
+            IReadOnlyDictionary<
+                string,
+                ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            >
+        > consentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Items
+    )
+    {
+        switch (this.Value)
+        {
+            case string value:
+                @string(value);
+                break;
+            case double value:
+                @double(value);
+                break;
+            case bool value:
+                @bool(value);
+                break;
+            case IReadOnlyList<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?> value:
+                consentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues(value);
+                break;
+            case IReadOnlyDictionary<
+                string,
+                ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            > value:
+                consentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Items(value);
+                break;
+            default:
+                throw new OursPrivacyInvalidDataException(
+                    "Data did not match any variant of ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item"
+                );
+        }
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with and
+    /// returns its result.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Switch"/>
+    /// if you don't need your function parameters to return a value.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// var result = instance.Match(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public T Match<T>(
+        Func<string, T> @string,
+        Func<double, T> @double,
+        Func<bool, T> @bool,
+        Func<
+            IReadOnlyList<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>,
+            T
+        > consentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues,
+        Func<
+            IReadOnlyDictionary<
+                string,
+                ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            >,
+            T
+        > consentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Items
+    )
+    {
+        return this.Value switch
+        {
+            string value => @string(value),
+            double value => @double(value),
+            bool value => @bool(value),
+            IReadOnlyList<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?> value =>
+                consentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues(value),
+            IReadOnlyDictionary<
+                string,
+                ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            > value => consentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Items(
+                value
+            ),
+            _ => throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item"
+            ),
+        };
+    }
+
+    public static implicit operator ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        string value
+    ) => new(value);
+
+    public static implicit operator ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        double value
+    ) => new(value);
+
+    public static implicit operator ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        bool value
+    ) => new(value);
+
+    public static implicit operator ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        List<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?> value
+    ) =>
+        new(
+            (IReadOnlyList<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>)value
+        );
+
+    public static implicit operator ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        Dictionary<
+            string,
+            ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?
+        > value
+    ) =>
+        new(
+            (IReadOnlyDictionary<
+                string,
+                ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            >)
+                value
+        );
+
+    /// <summary>
+    /// Validates that the instance was constructed with a known variant and that this variant is valid
+    /// (based on its own <c>Validate</c> method).
+    ///
+    /// <para>This is useful for instances constructed from raw JSON data (e.g. deserialized from an API response).</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance does not pass validation.
+    /// </exception>
+    /// </summary>
+    public override void Validate()
+    {
+        if (this.Value == null)
+        {
+            throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item"
+            );
+        }
+        this.Switch(
+            (_) => { },
+            (_) => { },
+            (_) => { },
+            (consentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues) =>
+            {
+                foreach (
+                    var item in consentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues
+                )
+                {
+                    item?.Validate();
+                }
+            },
+            (consentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Items) =>
+            {
+                foreach (
+                    var item in consentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Items.Values
+                )
+                {
+                    item?.Validate();
+                }
+            }
+        );
+    }
+
+    public virtual bool Equals(ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item? other) =>
+        other != null
+        && this.VariantIndex() == other.VariantIndex()
+        && JsonElement.DeepEquals(this.Json, other.Json);
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
+    public override string ToString() =>
+        JsonSerializer.Serialize(
+            FriendlyJsonPrinter.PrintValue(this.Json),
+            ModelBase.ToStringSerializerOptions
+        );
+
+    int VariantIndex()
+    {
+        return this.Value switch
+        {
+            string _ => 0,
+            double _ => 1,
+            bool _ => 2,
+            IReadOnlyList<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?> _ => 3,
+            IReadOnlyDictionary<
+                string,
+                ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            > _ => 4,
+            _ => -1,
+        };
+    }
+}
+
+sealed class ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemConverter
+    : JsonConverter<ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item?>
+{
+    public override ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item? Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
+    {
+        var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<string>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<double>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<bool>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<
+                List<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>
+            >(element, options);
+            if (deserialized != null)
+            {
+                foreach (var item in deserialized)
+                {
+                    item?.Validate();
+                }
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<
+                Dictionary<
+                    string,
+                    ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?
+                >
+            >(element, options);
+            if (deserialized != null)
+            {
+                foreach (var item in deserialized.Values)
+                {
+                    item?.Validate();
+                }
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        return new(element);
+    }
+
+    public override void Write(
+        Utf8JsonWriter writer,
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item? value,
+        JsonSerializerOptions options
+    )
+    {
+        JsonSerializer.Serialize(writer, value?.Json, options);
+    }
+}
+
+/// <summary>
+/// Any JSON value: string, number, boolean, array, object, or null.
+/// </summary>
+[JsonConverter(typeof(ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValueConverter))]
+public record class ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue : ModelBase
+{
+    public object? Value { get; } = null;
+
+    JsonElement? _element = null;
+
+    public JsonElement Json
+    {
+        get
+        {
+            return this._element ??= JsonSerializer.SerializeToElement(
+                this.Value,
+                ModelBase.SerializerOptions
+            );
+        }
+    }
+
+    public ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        string value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        double value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        bool value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        IReadOnlyList<JsonElement> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = ImmutableArray.ToImmutableArray(value);
+        this._element = element;
+    }
+
+    public ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        IReadOnlyDictionary<string, JsonElement> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = FrozenDictionary.ToFrozenDictionary(value);
+        this._element = element;
+    }
+
+    public ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(JsonElement element)
+    {
+        this._element = element;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="string"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickString(out var value)) {
+    ///     // `value` is of type `string`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickString([NotNullWhen(true)] out string? value)
+    {
+        value = this.Value as string;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="double"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickDouble(out var value)) {
+    ///     // `value` is of type `double`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickDouble([NotNullWhen(true)] out double? value)
+    {
+        value = this.Value as double?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="bool"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickBool(out var value)) {
+    ///     // `value` is of type `bool`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickBool([NotNullWhen(true)] out bool? value)
+    {
+        value = this.Value as bool?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="List{T}"/> where <c>T</c> is a <c>JsonElement</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonElements(out var value)) {
+    ///     // `value` is of type `IReadOnlyList&lt;JsonElement&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonElements([NotNullWhen(true)] out IReadOnlyList<JsonElement>? value)
+    {
+        value = this.Value as IReadOnlyList<JsonElement>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="Dictionary{Key, Value}"/> with a <c>Key</c> of <c>string</c> and a <c>Value</c> of <c>JsonElement</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonElements1(out var value)) {
+    ///     // `value` is of type `IReadOnlyDictionary&lt;string, JsonElement&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonElements1(
+        [NotNullWhen(true)] out IReadOnlyDictionary<string, JsonElement>? value
+    )
+    {
+        value = this.Value as IReadOnlyDictionary<string, JsonElement>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Match"/>
+    /// if you need your function parameters to return something.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// instance.Switch(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonElement&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, JsonElement&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public void Switch(
+        Action<string> @string,
+        Action<double> @double,
+        Action<bool> @bool,
+        Action<IReadOnlyList<JsonElement>> jsonElements,
+        Action<IReadOnlyDictionary<string, JsonElement>> jsonElements1
+    )
+    {
+        switch (this.Value)
+        {
+            case string value:
+                @string(value);
+                break;
+            case double value:
+                @double(value);
+                break;
+            case bool value:
+                @bool(value);
+                break;
+            case IReadOnlyList<JsonElement> value:
+                jsonElements(value);
+                break;
+            case IReadOnlyDictionary<string, JsonElement> value:
+                jsonElements1(value);
+                break;
+            default:
+                throw new OursPrivacyInvalidDataException(
+                    "Data did not match any variant of ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue"
+                );
+        }
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with and
+    /// returns its result.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Switch"/>
+    /// if you don't need your function parameters to return a value.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// var result = instance.Match(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonElement&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, JsonElement&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public T Match<T>(
+        Func<string, T> @string,
+        Func<double, T> @double,
+        Func<bool, T> @bool,
+        Func<IReadOnlyList<JsonElement>, T> jsonElements,
+        Func<IReadOnlyDictionary<string, JsonElement>, T> jsonElements1
+    )
+    {
+        return this.Value switch
+        {
+            string value => @string(value),
+            double value => @double(value),
+            bool value => @bool(value),
+            IReadOnlyList<JsonElement> value => jsonElements(value),
+            IReadOnlyDictionary<string, JsonElement> value => jsonElements1(value),
+            _ => throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue"
+            ),
+        };
+    }
+
+    public static implicit operator ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        string value
+    ) => new(value);
+
+    public static implicit operator ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        double value
+    ) => new(value);
+
+    public static implicit operator ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        bool value
+    ) => new(value);
+
+    public static implicit operator ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        List<JsonElement> value
+    ) => new((IReadOnlyList<JsonElement>)value);
+
+    public static implicit operator ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        Dictionary<string, JsonElement> value
+    ) => new((IReadOnlyDictionary<string, JsonElement>)value);
+
+    /// <summary>
+    /// Validates that the instance was constructed with a known variant and that this variant is valid
+    /// (based on its own <c>Validate</c> method).
+    ///
+    /// <para>This is useful for instances constructed from raw JSON data (e.g. deserialized from an API response).</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance does not pass validation.
+    /// </exception>
+    /// </summary>
+    public override void Validate()
+    {
+        if (this.Value == null)
+        {
+            throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue"
+            );
+        }
+    }
+
+    public virtual bool Equals(
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue? other
+    ) =>
+        other != null
+        && this.VariantIndex() == other.VariantIndex()
+        && JsonElement.DeepEquals(this.Json, other.Json);
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
+    public override string ToString() =>
+        JsonSerializer.Serialize(
+            FriendlyJsonPrinter.PrintValue(this.Json),
+            ModelBase.ToStringSerializerOptions
+        );
+
+    int VariantIndex()
+    {
+        return this.Value switch
+        {
+            string _ => 0,
+            double _ => 1,
+            bool _ => 2,
+            IReadOnlyList<JsonElement> _ => 3,
+            IReadOnlyDictionary<string, JsonElement> _ => 4,
+            _ => -1,
+        };
+    }
+}
+
+sealed class ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValueConverter
+    : JsonConverter<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>
+{
+    public override ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue? Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
+    {
+        var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<string>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<double>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<bool>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<List<JsonElement>>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(
+                element,
+                options
+            );
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        return new(element);
+    }
+
+    public override void Write(
+        Utf8JsonWriter writer,
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue? value,
+        JsonSerializerOptions options
+    )
+    {
+        JsonSerializer.Serialize(writer, value?.Json, options);
+    }
+}
+
+[JsonConverter(
+    typeof(ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemConverter)
+)]
+public record class ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item
+    : ModelBase
+{
+    public object? Value { get; } = null;
+
+    JsonElement? _element = null;
+
+    public JsonElement Json
+    {
+        get
+        {
+            return this._element ??= JsonSerializer.SerializeToElement(
+                this.Value,
+                ModelBase.SerializerOptions
+            );
+        }
+    }
+
+    public ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        string value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        double value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        bool value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        IReadOnlyList<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = ImmutableArray.ToImmutableArray(value);
+        this._element = element;
+    }
+
+    public ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        JsonElement element
+    )
+    {
+        this._element = element;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="string"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickString(out var value)) {
+    ///     // `value` is of type `string`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickString([NotNullWhen(true)] out string? value)
+    {
+        value = this.Value as string;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="double"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickDouble(out var value)) {
+    ///     // `value` is of type `double`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickDouble([NotNullWhen(true)] out double? value)
+    {
+        value = this.Value as double?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="bool"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickBool(out var value)) {
+    ///     // `value` is of type `bool`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickBool([NotNullWhen(true)] out bool? value)
+    {
+        value = this.Value as bool?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="List{T}"/> where <c>T</c> is a <c>ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues(out var value)) {
+    ///     // `value` is of type `IReadOnlyList&lt;ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues(
+        [NotNullWhen(true)]
+            out IReadOnlyList<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>? value
+    )
+    {
+        value =
+            this.Value
+            as IReadOnlyList<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Match"/>
+    /// if you need your function parameters to return something.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// instance.Switch(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public void Switch(
+        Action<string> @string,
+        Action<double> @double,
+        Action<bool> @bool,
+        Action<
+            IReadOnlyList<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>
+        > consentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues
+    )
+    {
+        switch (this.Value)
+        {
+            case string value:
+                @string(value);
+                break;
+            case double value:
+                @double(value);
+                break;
+            case bool value:
+                @bool(value);
+                break;
+            case IReadOnlyList<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?> value:
+                consentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues(
+                    value
+                );
+                break;
+            default:
+                throw new OursPrivacyInvalidDataException(
+                    "Data did not match any variant of ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item"
+                );
+        }
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with and
+    /// returns its result.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Switch"/>
+    /// if you don't need your function parameters to return a value.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// var result = instance.Match(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public T Match<T>(
+        Func<string, T> @string,
+        Func<double, T> @double,
+        Func<bool, T> @bool,
+        Func<
+            IReadOnlyList<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>,
+            T
+        > consentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues
+    )
+    {
+        return this.Value switch
+        {
+            string value => @string(value),
+            double value => @double(value),
+            bool value => @bool(value),
+            IReadOnlyList<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?> value =>
+                consentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues(
+                    value
+                ),
+            _ => throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item"
+            ),
+        };
+    }
+
+    public static implicit operator ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        string value
+    ) => new(value);
+
+    public static implicit operator ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        double value
+    ) => new(value);
+
+    public static implicit operator ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        bool value
+    ) => new(value);
+
+    public static implicit operator ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        List<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?> value
+    ) =>
+        new(
+            (IReadOnlyList<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>)
+                value
+        );
+
+    /// <summary>
+    /// Validates that the instance was constructed with a known variant and that this variant is valid
+    /// (based on its own <c>Validate</c> method).
+    ///
+    /// <para>This is useful for instances constructed from raw JSON data (e.g. deserialized from an API response).</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance does not pass validation.
+    /// </exception>
+    /// </summary>
+    public override void Validate()
+    {
+        if (this.Value == null)
+        {
+            throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item"
+            );
+        }
+        this.Switch(
+            (_) => { },
+            (_) => { },
+            (_) => { },
+            (consentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues) =>
+            {
+                foreach (
+                    var item in consentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues
+                )
+                {
+                    item?.Validate();
+                }
+            }
+        );
+    }
+
+    public virtual bool Equals(
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item? other
+    ) =>
+        other != null
+        && this.VariantIndex() == other.VariantIndex()
+        && JsonElement.DeepEquals(this.Json, other.Json);
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
+    public override string ToString() =>
+        JsonSerializer.Serialize(
+            FriendlyJsonPrinter.PrintValue(this.Json),
+            ModelBase.ToStringSerializerOptions
+        );
+
+    int VariantIndex()
+    {
+        return this.Value switch
+        {
+            string _ => 0,
+            double _ => 1,
+            bool _ => 2,
+            IReadOnlyList<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?> _ =>
+                3,
+            _ => -1,
+        };
+    }
+}
+
+sealed class ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemConverter
+    : JsonConverter<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?>
+{
+    public override ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item? Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
+    {
+        var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<string>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<double>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<bool>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<
+                List<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>
+            >(element, options);
+            if (deserialized != null)
+            {
+                foreach (var item in deserialized)
+                {
+                    item?.Validate();
+                }
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        return new(element);
+    }
+
+    public override void Write(
+        Utf8JsonWriter writer,
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item? value,
+        JsonSerializerOptions options
+    )
+    {
+        JsonSerializer.Serialize(writer, value?.Json, options);
+    }
+}
+
+/// <summary>
+/// Any JSON value: string, number, boolean, array, object, or null.
+/// </summary>
+[JsonConverter(
+    typeof(ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValueConverter)
+)]
+public record class ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue
+    : ModelBase
+{
+    public object? Value { get; } = null;
+
+    JsonElement? _element = null;
+
+    public JsonElement Json
+    {
+        get
+        {
+            return this._element ??= JsonSerializer.SerializeToElement(
+                this.Value,
+                ModelBase.SerializerOptions
+            );
+        }
+    }
+
+    public ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        string value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        double value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        bool value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        IReadOnlyList<JsonElement> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = ImmutableArray.ToImmutableArray(value);
+        this._element = element;
+    }
+
+    public ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        IReadOnlyDictionary<string, JsonElement> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = FrozenDictionary.ToFrozenDictionary(value);
+        this._element = element;
+    }
+
+    public ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        JsonElement element
+    )
+    {
+        this._element = element;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="string"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickString(out var value)) {
+    ///     // `value` is of type `string`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickString([NotNullWhen(true)] out string? value)
+    {
+        value = this.Value as string;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="double"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickDouble(out var value)) {
+    ///     // `value` is of type `double`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickDouble([NotNullWhen(true)] out double? value)
+    {
+        value = this.Value as double?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="bool"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickBool(out var value)) {
+    ///     // `value` is of type `bool`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickBool([NotNullWhen(true)] out bool? value)
+    {
+        value = this.Value as bool?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="List{T}"/> where <c>T</c> is a <c>JsonElement</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonElements(out var value)) {
+    ///     // `value` is of type `IReadOnlyList&lt;JsonElement&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonElements([NotNullWhen(true)] out IReadOnlyList<JsonElement>? value)
+    {
+        value = this.Value as IReadOnlyList<JsonElement>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="Dictionary{Key, Value}"/> with a <c>Key</c> of <c>string</c> and a <c>Value</c> of <c>JsonElement</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonElements1(out var value)) {
+    ///     // `value` is of type `IReadOnlyDictionary&lt;string, JsonElement&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonElements1(
+        [NotNullWhen(true)] out IReadOnlyDictionary<string, JsonElement>? value
+    )
+    {
+        value = this.Value as IReadOnlyDictionary<string, JsonElement>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Match"/>
+    /// if you need your function parameters to return something.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// instance.Switch(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonElement&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, JsonElement&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public void Switch(
+        Action<string> @string,
+        Action<double> @double,
+        Action<bool> @bool,
+        Action<IReadOnlyList<JsonElement>> jsonElements,
+        Action<IReadOnlyDictionary<string, JsonElement>> jsonElements1
+    )
+    {
+        switch (this.Value)
+        {
+            case string value:
+                @string(value);
+                break;
+            case double value:
+                @double(value);
+                break;
+            case bool value:
+                @bool(value);
+                break;
+            case IReadOnlyList<JsonElement> value:
+                jsonElements(value);
+                break;
+            case IReadOnlyDictionary<string, JsonElement> value:
+                jsonElements1(value);
+                break;
+            default:
+                throw new OursPrivacyInvalidDataException(
+                    "Data did not match any variant of ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue"
+                );
+        }
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with and
+    /// returns its result.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Switch"/>
+    /// if you don't need your function parameters to return a value.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// var result = instance.Match(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonElement&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, JsonElement&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public T Match<T>(
+        Func<string, T> @string,
+        Func<double, T> @double,
+        Func<bool, T> @bool,
+        Func<IReadOnlyList<JsonElement>, T> jsonElements,
+        Func<IReadOnlyDictionary<string, JsonElement>, T> jsonElements1
+    )
+    {
+        return this.Value switch
+        {
+            string value => @string(value),
+            double value => @double(value),
+            bool value => @bool(value),
+            IReadOnlyList<JsonElement> value => jsonElements(value),
+            IReadOnlyDictionary<string, JsonElement> value => jsonElements1(value),
+            _ => throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue"
+            ),
+        };
+    }
+
+    public static implicit operator ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        string value
+    ) => new(value);
+
+    public static implicit operator ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        double value
+    ) => new(value);
+
+    public static implicit operator ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        bool value
+    ) => new(value);
+
+    public static implicit operator ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        List<JsonElement> value
+    ) => new((IReadOnlyList<JsonElement>)value);
+
+    public static implicit operator ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        Dictionary<string, JsonElement> value
+    ) => new((IReadOnlyDictionary<string, JsonElement>)value);
+
+    /// <summary>
+    /// Validates that the instance was constructed with a known variant and that this variant is valid
+    /// (based on its own <c>Validate</c> method).
+    ///
+    /// <para>This is useful for instances constructed from raw JSON data (e.g. deserialized from an API response).</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance does not pass validation.
+    /// </exception>
+    /// </summary>
+    public override void Validate()
+    {
+        if (this.Value == null)
+        {
+            throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue"
+            );
+        }
+    }
+
+    public virtual bool Equals(
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue? other
+    ) =>
+        other != null
+        && this.VariantIndex() == other.VariantIndex()
+        && JsonElement.DeepEquals(this.Json, other.Json);
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
+    public override string ToString() =>
+        JsonSerializer.Serialize(
+            FriendlyJsonPrinter.PrintValue(this.Json),
+            ModelBase.ToStringSerializerOptions
+        );
+
+    int VariantIndex()
+    {
+        return this.Value switch
+        {
+            string _ => 0,
+            double _ => 1,
+            bool _ => 2,
+            IReadOnlyList<JsonElement> _ => 3,
+            IReadOnlyDictionary<string, JsonElement> _ => 4,
+            _ => -1,
+        };
+    }
+}
+
+sealed class ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValueConverter
+    : JsonConverter<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>
+{
+    public override ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue? Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
+    {
+        var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<string>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<double>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<bool>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<List<JsonElement>>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(
+                element,
+                options
+            );
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        return new(element);
+    }
+
+    public override void Write(
+        Utf8JsonWriter writer,
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue? value,
+        JsonSerializerOptions options
+    )
+    {
+        JsonSerializer.Serialize(writer, value?.Json, options);
+    }
+}
+
+[JsonConverter(typeof(CustomPropertyConverter))]
+public record class CustomProperty : ModelBase
+{
+    public object? Value { get; } = null;
+
+    JsonElement? _element = null;
+
+    public JsonElement Json
+    {
+        get
+        {
+            return this._element ??= JsonSerializer.SerializeToElement(
+                this.Value,
+                ModelBase.SerializerOptions
+            );
+        }
+    }
+
+    public CustomProperty(string value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public CustomProperty(double value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public CustomProperty(bool value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public CustomProperty(
+        IReadOnlyList<CustomPropertyJsonValue?> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = ImmutableArray.ToImmutableArray(value);
+        this._element = element;
+    }
+
+    public CustomProperty(
+        IReadOnlyDictionary<string, CustomPropertyUnionMember4Item?> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = FrozenDictionary.ToFrozenDictionary(value);
+        this._element = element;
+    }
+
+    public CustomProperty(JsonElement element)
+    {
+        this._element = element;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="string"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickString(out var value)) {
+    ///     // `value` is of type `string`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickString([NotNullWhen(true)] out string? value)
+    {
+        value = this.Value as string;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="double"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickDouble(out var value)) {
+    ///     // `value` is of type `double`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickDouble([NotNullWhen(true)] out double? value)
+    {
+        value = this.Value as double?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="bool"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickBool(out var value)) {
+    ///     // `value` is of type `bool`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickBool([NotNullWhen(true)] out bool? value)
+    {
+        value = this.Value as bool?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="List{T}"/> where <c>T</c> is a <c>CustomPropertyJsonValue?</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickCustomPropertyJsonValues(out var value)) {
+    ///     // `value` is of type `IReadOnlyList&lt;CustomPropertyJsonValue?&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickCustomPropertyJsonValues(
+        [NotNullWhen(true)] out IReadOnlyList<CustomPropertyJsonValue?>? value
+    )
+    {
+        value = this.Value as IReadOnlyList<CustomPropertyJsonValue?>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="Dictionary{Key, Value}"/> with a <c>Key</c> of <c>string</c> and a <c>Value</c> of <c>CustomPropertyUnionMember4Item?</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickCustomPropertyUnionMember4Items(out var value)) {
+    ///     // `value` is of type `IReadOnlyDictionary&lt;string, CustomPropertyUnionMember4Item?&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickCustomPropertyUnionMember4Items(
+        [NotNullWhen(true)] out IReadOnlyDictionary<string, CustomPropertyUnionMember4Item?>? value
+    )
+    {
+        value = this.Value as IReadOnlyDictionary<string, CustomPropertyUnionMember4Item?>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Match"/>
+    /// if you need your function parameters to return something.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// instance.Switch(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;CustomPropertyJsonValue?&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, CustomPropertyUnionMember4Item?&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public void Switch(
+        Action<string> @string,
+        Action<double> @double,
+        Action<bool> @bool,
+        Action<IReadOnlyList<CustomPropertyJsonValue?>> customPropertyJsonValues,
+        Action<
+            IReadOnlyDictionary<string, CustomPropertyUnionMember4Item?>
+        > customPropertyUnionMember4Items
+    )
+    {
+        switch (this.Value)
+        {
+            case string value:
+                @string(value);
+                break;
+            case double value:
+                @double(value);
+                break;
+            case bool value:
+                @bool(value);
+                break;
+            case IReadOnlyList<CustomPropertyJsonValue?> value:
+                customPropertyJsonValues(value);
+                break;
+            case IReadOnlyDictionary<string, CustomPropertyUnionMember4Item?> value:
+                customPropertyUnionMember4Items(value);
+                break;
+            default:
+                throw new OursPrivacyInvalidDataException(
+                    "Data did not match any variant of CustomProperty"
+                );
+        }
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with and
+    /// returns its result.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Switch"/>
+    /// if you don't need your function parameters to return a value.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// var result = instance.Match(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;CustomPropertyJsonValue?&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, CustomPropertyUnionMember4Item?&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public T Match<T>(
+        Func<string, T> @string,
+        Func<double, T> @double,
+        Func<bool, T> @bool,
+        Func<IReadOnlyList<CustomPropertyJsonValue?>, T> customPropertyJsonValues,
+        Func<
+            IReadOnlyDictionary<string, CustomPropertyUnionMember4Item?>,
+            T
+        > customPropertyUnionMember4Items
+    )
+    {
+        return this.Value switch
+        {
+            string value => @string(value),
+            double value => @double(value),
+            bool value => @bool(value),
+            IReadOnlyList<CustomPropertyJsonValue?> value => customPropertyJsonValues(value),
+            IReadOnlyDictionary<string, CustomPropertyUnionMember4Item?> value =>
+                customPropertyUnionMember4Items(value),
+            _ => throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of CustomProperty"
+            ),
+        };
+    }
+
+    public static implicit operator CustomProperty(string value) => new(value);
+
+    public static implicit operator CustomProperty(double value) => new(value);
+
+    public static implicit operator CustomProperty(bool value) => new(value);
+
+    public static implicit operator CustomProperty(List<CustomPropertyJsonValue?> value) =>
+        new((IReadOnlyList<CustomPropertyJsonValue?>)value);
+
+    public static implicit operator CustomProperty(
+        Dictionary<string, CustomPropertyUnionMember4Item?> value
+    ) => new((IReadOnlyDictionary<string, CustomPropertyUnionMember4Item?>)value);
+
+    /// <summary>
+    /// Validates that the instance was constructed with a known variant and that this variant is valid
+    /// (based on its own <c>Validate</c> method).
+    ///
+    /// <para>This is useful for instances constructed from raw JSON data (e.g. deserialized from an API response).</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance does not pass validation.
+    /// </exception>
+    /// </summary>
+    public override void Validate()
+    {
+        if (this.Value == null)
+        {
+            throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of CustomProperty"
+            );
+        }
+        this.Switch(
+            (_) => { },
+            (_) => { },
+            (_) => { },
+            (customPropertyJsonValues) =>
+            {
+                foreach (var item in customPropertyJsonValues)
+                {
+                    item?.Validate();
+                }
+            },
+            (customPropertyUnionMember4Items) =>
+            {
+                foreach (var item in customPropertyUnionMember4Items.Values)
+                {
+                    item?.Validate();
+                }
+            }
+        );
+    }
+
+    public virtual bool Equals(CustomProperty? other) =>
+        other != null
+        && this.VariantIndex() == other.VariantIndex()
+        && JsonElement.DeepEquals(this.Json, other.Json);
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
+    public override string ToString() =>
+        JsonSerializer.Serialize(
+            FriendlyJsonPrinter.PrintValue(this.Json),
+            ModelBase.ToStringSerializerOptions
+        );
+
+    int VariantIndex()
+    {
+        return this.Value switch
+        {
+            string _ => 0,
+            double _ => 1,
+            bool _ => 2,
+            IReadOnlyList<CustomPropertyJsonValue?> _ => 3,
+            IReadOnlyDictionary<string, CustomPropertyUnionMember4Item?> _ => 4,
+            _ => -1,
+        };
+    }
+}
+
+sealed class CustomPropertyConverter : JsonConverter<CustomProperty?>
+{
+    public override CustomProperty? Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
+    {
+        var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<string>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<double>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<bool>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<List<CustomPropertyJsonValue?>>(
+                element,
+                options
+            );
+            if (deserialized != null)
+            {
+                foreach (var item in deserialized)
+                {
+                    item?.Validate();
+                }
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<
+                Dictionary<string, CustomPropertyUnionMember4Item?>
+            >(element, options);
+            if (deserialized != null)
+            {
+                foreach (var item in deserialized.Values)
+                {
+                    item?.Validate();
+                }
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        return new(element);
+    }
+
+    public override void Write(
+        Utf8JsonWriter writer,
+        CustomProperty? value,
+        JsonSerializerOptions options
+    )
+    {
+        JsonSerializer.Serialize(writer, value?.Json, options);
+    }
+}
+
+/// <summary>
+/// Any JSON value: string, number, boolean, array, object, or null.
+/// </summary>
+[JsonConverter(typeof(CustomPropertyJsonValueConverter))]
+public record class CustomPropertyJsonValue : ModelBase
+{
+    public object? Value { get; } = null;
+
+    JsonElement? _element = null;
+
+    public JsonElement Json
+    {
+        get
+        {
+            return this._element ??= JsonSerializer.SerializeToElement(
+                this.Value,
+                ModelBase.SerializerOptions
+            );
+        }
+    }
+
+    public CustomPropertyJsonValue(string value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public CustomPropertyJsonValue(double value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public CustomPropertyJsonValue(bool value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public CustomPropertyJsonValue(IReadOnlyList<JsonElement> value, JsonElement? element = null)
+    {
+        this.Value = ImmutableArray.ToImmutableArray(value);
+        this._element = element;
+    }
+
+    public CustomPropertyJsonValue(
+        IReadOnlyDictionary<string, JsonElement> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = FrozenDictionary.ToFrozenDictionary(value);
+        this._element = element;
+    }
+
+    public CustomPropertyJsonValue(JsonElement element)
+    {
+        this._element = element;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="string"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickString(out var value)) {
+    ///     // `value` is of type `string`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickString([NotNullWhen(true)] out string? value)
+    {
+        value = this.Value as string;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="double"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickDouble(out var value)) {
+    ///     // `value` is of type `double`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickDouble([NotNullWhen(true)] out double? value)
+    {
+        value = this.Value as double?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="bool"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickBool(out var value)) {
+    ///     // `value` is of type `bool`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickBool([NotNullWhen(true)] out bool? value)
+    {
+        value = this.Value as bool?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="List{T}"/> where <c>T</c> is a <c>JsonElement</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonElements(out var value)) {
+    ///     // `value` is of type `IReadOnlyList&lt;JsonElement&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonElements([NotNullWhen(true)] out IReadOnlyList<JsonElement>? value)
+    {
+        value = this.Value as IReadOnlyList<JsonElement>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="Dictionary{Key, Value}"/> with a <c>Key</c> of <c>string</c> and a <c>Value</c> of <c>JsonElement</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonElements1(out var value)) {
+    ///     // `value` is of type `IReadOnlyDictionary&lt;string, JsonElement&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonElements1(
+        [NotNullWhen(true)] out IReadOnlyDictionary<string, JsonElement>? value
+    )
+    {
+        value = this.Value as IReadOnlyDictionary<string, JsonElement>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Match"/>
+    /// if you need your function parameters to return something.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// instance.Switch(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonElement&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, JsonElement&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public void Switch(
+        Action<string> @string,
+        Action<double> @double,
+        Action<bool> @bool,
+        Action<IReadOnlyList<JsonElement>> jsonElements,
+        Action<IReadOnlyDictionary<string, JsonElement>> jsonElements1
+    )
+    {
+        switch (this.Value)
+        {
+            case string value:
+                @string(value);
+                break;
+            case double value:
+                @double(value);
+                break;
+            case bool value:
+                @bool(value);
+                break;
+            case IReadOnlyList<JsonElement> value:
+                jsonElements(value);
+                break;
+            case IReadOnlyDictionary<string, JsonElement> value:
+                jsonElements1(value);
+                break;
+            default:
+                throw new OursPrivacyInvalidDataException(
+                    "Data did not match any variant of CustomPropertyJsonValue"
+                );
+        }
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with and
+    /// returns its result.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Switch"/>
+    /// if you don't need your function parameters to return a value.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// var result = instance.Match(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonElement&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, JsonElement&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public T Match<T>(
+        Func<string, T> @string,
+        Func<double, T> @double,
+        Func<bool, T> @bool,
+        Func<IReadOnlyList<JsonElement>, T> jsonElements,
+        Func<IReadOnlyDictionary<string, JsonElement>, T> jsonElements1
+    )
+    {
+        return this.Value switch
+        {
+            string value => @string(value),
+            double value => @double(value),
+            bool value => @bool(value),
+            IReadOnlyList<JsonElement> value => jsonElements(value),
+            IReadOnlyDictionary<string, JsonElement> value => jsonElements1(value),
+            _ => throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of CustomPropertyJsonValue"
+            ),
+        };
+    }
+
+    public static implicit operator CustomPropertyJsonValue(string value) => new(value);
+
+    public static implicit operator CustomPropertyJsonValue(double value) => new(value);
+
+    public static implicit operator CustomPropertyJsonValue(bool value) => new(value);
+
+    public static implicit operator CustomPropertyJsonValue(List<JsonElement> value) =>
+        new((IReadOnlyList<JsonElement>)value);
+
+    public static implicit operator CustomPropertyJsonValue(
+        Dictionary<string, JsonElement> value
+    ) => new((IReadOnlyDictionary<string, JsonElement>)value);
+
+    /// <summary>
+    /// Validates that the instance was constructed with a known variant and that this variant is valid
+    /// (based on its own <c>Validate</c> method).
+    ///
+    /// <para>This is useful for instances constructed from raw JSON data (e.g. deserialized from an API response).</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance does not pass validation.
+    /// </exception>
+    /// </summary>
+    public override void Validate()
+    {
+        if (this.Value == null)
+        {
+            throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of CustomPropertyJsonValue"
+            );
+        }
+    }
+
+    public virtual bool Equals(CustomPropertyJsonValue? other) =>
+        other != null
+        && this.VariantIndex() == other.VariantIndex()
+        && JsonElement.DeepEquals(this.Json, other.Json);
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
+    public override string ToString() =>
+        JsonSerializer.Serialize(
+            FriendlyJsonPrinter.PrintValue(this.Json),
+            ModelBase.ToStringSerializerOptions
+        );
+
+    int VariantIndex()
+    {
+        return this.Value switch
+        {
+            string _ => 0,
+            double _ => 1,
+            bool _ => 2,
+            IReadOnlyList<JsonElement> _ => 3,
+            IReadOnlyDictionary<string, JsonElement> _ => 4,
+            _ => -1,
+        };
+    }
+}
+
+sealed class CustomPropertyJsonValueConverter : JsonConverter<CustomPropertyJsonValue?>
+{
+    public override CustomPropertyJsonValue? Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
+    {
+        var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<string>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<double>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<bool>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<List<JsonElement>>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(
+                element,
+                options
+            );
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        return new(element);
+    }
+
+    public override void Write(
+        Utf8JsonWriter writer,
+        CustomPropertyJsonValue? value,
+        JsonSerializerOptions options
+    )
+    {
+        JsonSerializer.Serialize(writer, value?.Json, options);
+    }
+}
+
+[JsonConverter(typeof(CustomPropertyUnionMember4ItemConverter))]
+public record class CustomPropertyUnionMember4Item : ModelBase
+{
+    public object? Value { get; } = null;
+
+    JsonElement? _element = null;
+
+    public JsonElement Json
+    {
+        get
+        {
+            return this._element ??= JsonSerializer.SerializeToElement(
+                this.Value,
+                ModelBase.SerializerOptions
+            );
+        }
+    }
+
+    public CustomPropertyUnionMember4Item(string value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4Item(double value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4Item(bool value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4Item(
+        IReadOnlyList<CustomPropertyUnionMember4ItemJsonValue?> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = ImmutableArray.ToImmutableArray(value);
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4Item(
+        IReadOnlyDictionary<string, CustomPropertyUnionMember4ItemUnionMember4Item?> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = FrozenDictionary.ToFrozenDictionary(value);
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4Item(JsonElement element)
+    {
+        this._element = element;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="string"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickString(out var value)) {
+    ///     // `value` is of type `string`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickString([NotNullWhen(true)] out string? value)
+    {
+        value = this.Value as string;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="double"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickDouble(out var value)) {
+    ///     // `value` is of type `double`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickDouble([NotNullWhen(true)] out double? value)
+    {
+        value = this.Value as double?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="bool"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickBool(out var value)) {
+    ///     // `value` is of type `bool`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickBool([NotNullWhen(true)] out bool? value)
+    {
+        value = this.Value as bool?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="List{T}"/> where <c>T</c> is a <c>CustomPropertyUnionMember4ItemJsonValue?</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickCustomPropertyUnionMember4ItemJsonValues(out var value)) {
+    ///     // `value` is of type `IReadOnlyList&lt;CustomPropertyUnionMember4ItemJsonValue?&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickCustomPropertyUnionMember4ItemJsonValues(
+        [NotNullWhen(true)] out IReadOnlyList<CustomPropertyUnionMember4ItemJsonValue?>? value
+    )
+    {
+        value = this.Value as IReadOnlyList<CustomPropertyUnionMember4ItemJsonValue?>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="Dictionary{Key, Value}"/> with a <c>Key</c> of <c>string</c> and a <c>Value</c> of <c>CustomPropertyUnionMember4ItemUnionMember4Item?</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickCustomPropertyUnionMember4ItemUnionMember4Items(out var value)) {
+    ///     // `value` is of type `IReadOnlyDictionary&lt;string, CustomPropertyUnionMember4ItemUnionMember4Item?&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickCustomPropertyUnionMember4ItemUnionMember4Items(
+        [NotNullWhen(true)]
+            out IReadOnlyDictionary<string, CustomPropertyUnionMember4ItemUnionMember4Item?>? value
+    )
+    {
+        value =
+            this.Value
+            as IReadOnlyDictionary<string, CustomPropertyUnionMember4ItemUnionMember4Item?>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Match"/>
+    /// if you need your function parameters to return something.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// instance.Switch(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;CustomPropertyUnionMember4ItemJsonValue?&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, CustomPropertyUnionMember4ItemUnionMember4Item?&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public void Switch(
+        Action<string> @string,
+        Action<double> @double,
+        Action<bool> @bool,
+        Action<
+            IReadOnlyList<CustomPropertyUnionMember4ItemJsonValue?>
+        > customPropertyUnionMember4ItemJsonValues,
+        Action<
+            IReadOnlyDictionary<string, CustomPropertyUnionMember4ItemUnionMember4Item?>
+        > customPropertyUnionMember4ItemUnionMember4Items
+    )
+    {
+        switch (this.Value)
+        {
+            case string value:
+                @string(value);
+                break;
+            case double value:
+                @double(value);
+                break;
+            case bool value:
+                @bool(value);
+                break;
+            case IReadOnlyList<CustomPropertyUnionMember4ItemJsonValue?> value:
+                customPropertyUnionMember4ItemJsonValues(value);
+                break;
+            case IReadOnlyDictionary<string, CustomPropertyUnionMember4ItemUnionMember4Item?> value:
+                customPropertyUnionMember4ItemUnionMember4Items(value);
+                break;
+            default:
+                throw new OursPrivacyInvalidDataException(
+                    "Data did not match any variant of CustomPropertyUnionMember4Item"
+                );
+        }
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with and
+    /// returns its result.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Switch"/>
+    /// if you don't need your function parameters to return a value.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// var result = instance.Match(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;CustomPropertyUnionMember4ItemJsonValue?&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, CustomPropertyUnionMember4ItemUnionMember4Item?&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public T Match<T>(
+        Func<string, T> @string,
+        Func<double, T> @double,
+        Func<bool, T> @bool,
+        Func<
+            IReadOnlyList<CustomPropertyUnionMember4ItemJsonValue?>,
+            T
+        > customPropertyUnionMember4ItemJsonValues,
+        Func<
+            IReadOnlyDictionary<string, CustomPropertyUnionMember4ItemUnionMember4Item?>,
+            T
+        > customPropertyUnionMember4ItemUnionMember4Items
+    )
+    {
+        return this.Value switch
+        {
+            string value => @string(value),
+            double value => @double(value),
+            bool value => @bool(value),
+            IReadOnlyList<CustomPropertyUnionMember4ItemJsonValue?> value =>
+                customPropertyUnionMember4ItemJsonValues(value),
+            IReadOnlyDictionary<string, CustomPropertyUnionMember4ItemUnionMember4Item?> value =>
+                customPropertyUnionMember4ItemUnionMember4Items(value),
+            _ => throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of CustomPropertyUnionMember4Item"
+            ),
+        };
+    }
+
+    public static implicit operator CustomPropertyUnionMember4Item(string value) => new(value);
+
+    public static implicit operator CustomPropertyUnionMember4Item(double value) => new(value);
+
+    public static implicit operator CustomPropertyUnionMember4Item(bool value) => new(value);
+
+    public static implicit operator CustomPropertyUnionMember4Item(
+        List<CustomPropertyUnionMember4ItemJsonValue?> value
+    ) => new((IReadOnlyList<CustomPropertyUnionMember4ItemJsonValue?>)value);
+
+    public static implicit operator CustomPropertyUnionMember4Item(
+        Dictionary<string, CustomPropertyUnionMember4ItemUnionMember4Item?> value
+    ) => new((IReadOnlyDictionary<string, CustomPropertyUnionMember4ItemUnionMember4Item?>)value);
+
+    /// <summary>
+    /// Validates that the instance was constructed with a known variant and that this variant is valid
+    /// (based on its own <c>Validate</c> method).
+    ///
+    /// <para>This is useful for instances constructed from raw JSON data (e.g. deserialized from an API response).</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance does not pass validation.
+    /// </exception>
+    /// </summary>
+    public override void Validate()
+    {
+        if (this.Value == null)
+        {
+            throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of CustomPropertyUnionMember4Item"
+            );
+        }
+        this.Switch(
+            (_) => { },
+            (_) => { },
+            (_) => { },
+            (customPropertyUnionMember4ItemJsonValues) =>
+            {
+                foreach (var item in customPropertyUnionMember4ItemJsonValues)
+                {
+                    item?.Validate();
+                }
+            },
+            (customPropertyUnionMember4ItemUnionMember4Items) =>
+            {
+                foreach (var item in customPropertyUnionMember4ItemUnionMember4Items.Values)
+                {
+                    item?.Validate();
+                }
+            }
+        );
+    }
+
+    public virtual bool Equals(CustomPropertyUnionMember4Item? other) =>
+        other != null
+        && this.VariantIndex() == other.VariantIndex()
+        && JsonElement.DeepEquals(this.Json, other.Json);
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
+    public override string ToString() =>
+        JsonSerializer.Serialize(
+            FriendlyJsonPrinter.PrintValue(this.Json),
+            ModelBase.ToStringSerializerOptions
+        );
+
+    int VariantIndex()
+    {
+        return this.Value switch
+        {
+            string _ => 0,
+            double _ => 1,
+            bool _ => 2,
+            IReadOnlyList<CustomPropertyUnionMember4ItemJsonValue?> _ => 3,
+            IReadOnlyDictionary<string, CustomPropertyUnionMember4ItemUnionMember4Item?> _ => 4,
+            _ => -1,
+        };
+    }
+}
+
+sealed class CustomPropertyUnionMember4ItemConverter
+    : JsonConverter<CustomPropertyUnionMember4Item?>
+{
+    public override CustomPropertyUnionMember4Item? Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
+    {
+        var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<string>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<double>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<bool>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<
+                List<CustomPropertyUnionMember4ItemJsonValue?>
+            >(element, options);
+            if (deserialized != null)
+            {
+                foreach (var item in deserialized)
+                {
+                    item?.Validate();
+                }
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<
+                Dictionary<string, CustomPropertyUnionMember4ItemUnionMember4Item?>
+            >(element, options);
+            if (deserialized != null)
+            {
+                foreach (var item in deserialized.Values)
+                {
+                    item?.Validate();
+                }
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        return new(element);
+    }
+
+    public override void Write(
+        Utf8JsonWriter writer,
+        CustomPropertyUnionMember4Item? value,
+        JsonSerializerOptions options
+    )
+    {
+        JsonSerializer.Serialize(writer, value?.Json, options);
+    }
+}
+
+/// <summary>
+/// Any JSON value: string, number, boolean, array, object, or null.
+/// </summary>
+[JsonConverter(typeof(CustomPropertyUnionMember4ItemJsonValueConverter))]
+public record class CustomPropertyUnionMember4ItemJsonValue : ModelBase
+{
+    public object? Value { get; } = null;
+
+    JsonElement? _element = null;
+
+    public JsonElement Json
+    {
+        get
+        {
+            return this._element ??= JsonSerializer.SerializeToElement(
+                this.Value,
+                ModelBase.SerializerOptions
+            );
+        }
+    }
+
+    public CustomPropertyUnionMember4ItemJsonValue(string value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4ItemJsonValue(double value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4ItemJsonValue(bool value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4ItemJsonValue(
+        IReadOnlyList<JsonElement> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = ImmutableArray.ToImmutableArray(value);
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4ItemJsonValue(
+        IReadOnlyDictionary<string, JsonElement> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = FrozenDictionary.ToFrozenDictionary(value);
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4ItemJsonValue(JsonElement element)
+    {
+        this._element = element;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="string"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickString(out var value)) {
+    ///     // `value` is of type `string`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickString([NotNullWhen(true)] out string? value)
+    {
+        value = this.Value as string;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="double"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickDouble(out var value)) {
+    ///     // `value` is of type `double`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickDouble([NotNullWhen(true)] out double? value)
+    {
+        value = this.Value as double?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="bool"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickBool(out var value)) {
+    ///     // `value` is of type `bool`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickBool([NotNullWhen(true)] out bool? value)
+    {
+        value = this.Value as bool?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="List{T}"/> where <c>T</c> is a <c>JsonElement</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonElements(out var value)) {
+    ///     // `value` is of type `IReadOnlyList&lt;JsonElement&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonElements([NotNullWhen(true)] out IReadOnlyList<JsonElement>? value)
+    {
+        value = this.Value as IReadOnlyList<JsonElement>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="Dictionary{Key, Value}"/> with a <c>Key</c> of <c>string</c> and a <c>Value</c> of <c>JsonElement</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonElements1(out var value)) {
+    ///     // `value` is of type `IReadOnlyDictionary&lt;string, JsonElement&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonElements1(
+        [NotNullWhen(true)] out IReadOnlyDictionary<string, JsonElement>? value
+    )
+    {
+        value = this.Value as IReadOnlyDictionary<string, JsonElement>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Match"/>
+    /// if you need your function parameters to return something.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// instance.Switch(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonElement&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, JsonElement&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public void Switch(
+        Action<string> @string,
+        Action<double> @double,
+        Action<bool> @bool,
+        Action<IReadOnlyList<JsonElement>> jsonElements,
+        Action<IReadOnlyDictionary<string, JsonElement>> jsonElements1
+    )
+    {
+        switch (this.Value)
+        {
+            case string value:
+                @string(value);
+                break;
+            case double value:
+                @double(value);
+                break;
+            case bool value:
+                @bool(value);
+                break;
+            case IReadOnlyList<JsonElement> value:
+                jsonElements(value);
+                break;
+            case IReadOnlyDictionary<string, JsonElement> value:
+                jsonElements1(value);
+                break;
+            default:
+                throw new OursPrivacyInvalidDataException(
+                    "Data did not match any variant of CustomPropertyUnionMember4ItemJsonValue"
+                );
+        }
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with and
+    /// returns its result.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Switch"/>
+    /// if you don't need your function parameters to return a value.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// var result = instance.Match(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonElement&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, JsonElement&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public T Match<T>(
+        Func<string, T> @string,
+        Func<double, T> @double,
+        Func<bool, T> @bool,
+        Func<IReadOnlyList<JsonElement>, T> jsonElements,
+        Func<IReadOnlyDictionary<string, JsonElement>, T> jsonElements1
+    )
+    {
+        return this.Value switch
+        {
+            string value => @string(value),
+            double value => @double(value),
+            bool value => @bool(value),
+            IReadOnlyList<JsonElement> value => jsonElements(value),
+            IReadOnlyDictionary<string, JsonElement> value => jsonElements1(value),
+            _ => throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of CustomPropertyUnionMember4ItemJsonValue"
+            ),
+        };
+    }
+
+    public static implicit operator CustomPropertyUnionMember4ItemJsonValue(string value) =>
+        new(value);
+
+    public static implicit operator CustomPropertyUnionMember4ItemJsonValue(double value) =>
+        new(value);
+
+    public static implicit operator CustomPropertyUnionMember4ItemJsonValue(bool value) =>
+        new(value);
+
+    public static implicit operator CustomPropertyUnionMember4ItemJsonValue(
+        List<JsonElement> value
+    ) => new((IReadOnlyList<JsonElement>)value);
+
+    public static implicit operator CustomPropertyUnionMember4ItemJsonValue(
+        Dictionary<string, JsonElement> value
+    ) => new((IReadOnlyDictionary<string, JsonElement>)value);
+
+    /// <summary>
+    /// Validates that the instance was constructed with a known variant and that this variant is valid
+    /// (based on its own <c>Validate</c> method).
+    ///
+    /// <para>This is useful for instances constructed from raw JSON data (e.g. deserialized from an API response).</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance does not pass validation.
+    /// </exception>
+    /// </summary>
+    public override void Validate()
+    {
+        if (this.Value == null)
+        {
+            throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of CustomPropertyUnionMember4ItemJsonValue"
+            );
+        }
+    }
+
+    public virtual bool Equals(CustomPropertyUnionMember4ItemJsonValue? other) =>
+        other != null
+        && this.VariantIndex() == other.VariantIndex()
+        && JsonElement.DeepEquals(this.Json, other.Json);
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
+    public override string ToString() =>
+        JsonSerializer.Serialize(
+            FriendlyJsonPrinter.PrintValue(this.Json),
+            ModelBase.ToStringSerializerOptions
+        );
+
+    int VariantIndex()
+    {
+        return this.Value switch
+        {
+            string _ => 0,
+            double _ => 1,
+            bool _ => 2,
+            IReadOnlyList<JsonElement> _ => 3,
+            IReadOnlyDictionary<string, JsonElement> _ => 4,
+            _ => -1,
+        };
+    }
+}
+
+sealed class CustomPropertyUnionMember4ItemJsonValueConverter
+    : JsonConverter<CustomPropertyUnionMember4ItemJsonValue?>
+{
+    public override CustomPropertyUnionMember4ItemJsonValue? Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
+    {
+        var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<string>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<double>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<bool>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<List<JsonElement>>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(
+                element,
+                options
+            );
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        return new(element);
+    }
+
+    public override void Write(
+        Utf8JsonWriter writer,
+        CustomPropertyUnionMember4ItemJsonValue? value,
+        JsonSerializerOptions options
+    )
+    {
+        JsonSerializer.Serialize(writer, value?.Json, options);
+    }
+}
+
+[JsonConverter(typeof(CustomPropertyUnionMember4ItemUnionMember4ItemConverter))]
+public record class CustomPropertyUnionMember4ItemUnionMember4Item : ModelBase
+{
+    public object? Value { get; } = null;
+
+    JsonElement? _element = null;
+
+    public JsonElement Json
+    {
+        get
+        {
+            return this._element ??= JsonSerializer.SerializeToElement(
+                this.Value,
+                ModelBase.SerializerOptions
+            );
+        }
+    }
+
+    public CustomPropertyUnionMember4ItemUnionMember4Item(string value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4ItemUnionMember4Item(double value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4ItemUnionMember4Item(bool value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4ItemUnionMember4Item(
+        IReadOnlyList<CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue?> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = ImmutableArray.ToImmutableArray(value);
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4ItemUnionMember4Item(
+        IReadOnlyDictionary<
+            string,
+            CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item?
+        > value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = FrozenDictionary.ToFrozenDictionary(value);
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4ItemUnionMember4Item(JsonElement element)
+    {
+        this._element = element;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="string"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickString(out var value)) {
+    ///     // `value` is of type `string`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickString([NotNullWhen(true)] out string? value)
+    {
+        value = this.Value as string;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="double"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickDouble(out var value)) {
+    ///     // `value` is of type `double`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickDouble([NotNullWhen(true)] out double? value)
+    {
+        value = this.Value as double?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="bool"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickBool(out var value)) {
+    ///     // `value` is of type `bool`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickBool([NotNullWhen(true)] out bool? value)
+    {
+        value = this.Value as bool?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="List{T}"/> where <c>T</c> is a <c>CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue?</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickCustomPropertyUnionMember4ItemUnionMember4ItemJsonValues(out var value)) {
+    ///     // `value` is of type `IReadOnlyList&lt;CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue?&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickCustomPropertyUnionMember4ItemUnionMember4ItemJsonValues(
+        [NotNullWhen(true)]
+            out IReadOnlyList<CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue?>? value
+    )
+    {
+        value =
+            this.Value as IReadOnlyList<CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue?>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="Dictionary{Key, Value}"/> with a <c>Key</c> of <c>string</c> and a <c>Value</c> of <c>CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item?</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickCustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Items(out var value)) {
+    ///     // `value` is of type `IReadOnlyDictionary&lt;string, CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item?&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickCustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Items(
+        [NotNullWhen(true)]
+            out IReadOnlyDictionary<
+            string,
+            CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item?
+        >? value
+    )
+    {
+        value =
+            this.Value
+            as IReadOnlyDictionary<
+                string,
+                CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            >;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Match"/>
+    /// if you need your function parameters to return something.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// instance.Switch(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue?&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item?&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public void Switch(
+        Action<string> @string,
+        Action<double> @double,
+        Action<bool> @bool,
+        Action<
+            IReadOnlyList<CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue?>
+        > customPropertyUnionMember4ItemUnionMember4ItemJsonValues,
+        Action<
+            IReadOnlyDictionary<
+                string,
+                CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            >
+        > customPropertyUnionMember4ItemUnionMember4ItemUnionMember4Items
+    )
+    {
+        switch (this.Value)
+        {
+            case string value:
+                @string(value);
+                break;
+            case double value:
+                @double(value);
+                break;
+            case bool value:
+                @bool(value);
+                break;
+            case IReadOnlyList<CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue?> value:
+                customPropertyUnionMember4ItemUnionMember4ItemJsonValues(value);
+                break;
+            case IReadOnlyDictionary<
+                string,
+                CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            > value:
+                customPropertyUnionMember4ItemUnionMember4ItemUnionMember4Items(value);
+                break;
+            default:
+                throw new OursPrivacyInvalidDataException(
+                    "Data did not match any variant of CustomPropertyUnionMember4ItemUnionMember4Item"
+                );
+        }
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with and
+    /// returns its result.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Switch"/>
+    /// if you don't need your function parameters to return a value.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// var result = instance.Match(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue?&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item?&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public T Match<T>(
+        Func<string, T> @string,
+        Func<double, T> @double,
+        Func<bool, T> @bool,
+        Func<
+            IReadOnlyList<CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue?>,
+            T
+        > customPropertyUnionMember4ItemUnionMember4ItemJsonValues,
+        Func<
+            IReadOnlyDictionary<
+                string,
+                CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            >,
+            T
+        > customPropertyUnionMember4ItemUnionMember4ItemUnionMember4Items
+    )
+    {
+        return this.Value switch
+        {
+            string value => @string(value),
+            double value => @double(value),
+            bool value => @bool(value),
+            IReadOnlyList<CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue?> value =>
+                customPropertyUnionMember4ItemUnionMember4ItemJsonValues(value),
+            IReadOnlyDictionary<
+                string,
+                CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            > value => customPropertyUnionMember4ItemUnionMember4ItemUnionMember4Items(value),
+            _ => throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of CustomPropertyUnionMember4ItemUnionMember4Item"
+            ),
+        };
+    }
+
+    public static implicit operator CustomPropertyUnionMember4ItemUnionMember4Item(string value) =>
+        new(value);
+
+    public static implicit operator CustomPropertyUnionMember4ItemUnionMember4Item(double value) =>
+        new(value);
+
+    public static implicit operator CustomPropertyUnionMember4ItemUnionMember4Item(bool value) =>
+        new(value);
+
+    public static implicit operator CustomPropertyUnionMember4ItemUnionMember4Item(
+        List<CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue?> value
+    ) => new((IReadOnlyList<CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue?>)value);
+
+    public static implicit operator CustomPropertyUnionMember4ItemUnionMember4Item(
+        Dictionary<string, CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item?> value
+    ) =>
+        new(
+            (IReadOnlyDictionary<
+                string,
+                CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            >)
+                value
+        );
+
+    /// <summary>
+    /// Validates that the instance was constructed with a known variant and that this variant is valid
+    /// (based on its own <c>Validate</c> method).
+    ///
+    /// <para>This is useful for instances constructed from raw JSON data (e.g. deserialized from an API response).</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance does not pass validation.
+    /// </exception>
+    /// </summary>
+    public override void Validate()
+    {
+        if (this.Value == null)
+        {
+            throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of CustomPropertyUnionMember4ItemUnionMember4Item"
+            );
+        }
+        this.Switch(
+            (_) => { },
+            (_) => { },
+            (_) => { },
+            (customPropertyUnionMember4ItemUnionMember4ItemJsonValues) =>
+            {
+                foreach (var item in customPropertyUnionMember4ItemUnionMember4ItemJsonValues)
+                {
+                    item?.Validate();
+                }
+            },
+            (customPropertyUnionMember4ItemUnionMember4ItemUnionMember4Items) =>
+            {
+                foreach (
+                    var item in customPropertyUnionMember4ItemUnionMember4ItemUnionMember4Items.Values
+                )
+                {
+                    item?.Validate();
+                }
+            }
+        );
+    }
+
+    public virtual bool Equals(CustomPropertyUnionMember4ItemUnionMember4Item? other) =>
+        other != null
+        && this.VariantIndex() == other.VariantIndex()
+        && JsonElement.DeepEquals(this.Json, other.Json);
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
+    public override string ToString() =>
+        JsonSerializer.Serialize(
+            FriendlyJsonPrinter.PrintValue(this.Json),
+            ModelBase.ToStringSerializerOptions
+        );
+
+    int VariantIndex()
+    {
+        return this.Value switch
+        {
+            string _ => 0,
+            double _ => 1,
+            bool _ => 2,
+            IReadOnlyList<CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue?> _ => 3,
+            IReadOnlyDictionary<
+                string,
+                CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            > _ => 4,
+            _ => -1,
+        };
+    }
+}
+
+sealed class CustomPropertyUnionMember4ItemUnionMember4ItemConverter
+    : JsonConverter<CustomPropertyUnionMember4ItemUnionMember4Item?>
+{
+    public override CustomPropertyUnionMember4ItemUnionMember4Item? Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
+    {
+        var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<string>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<double>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<bool>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<
+                List<CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue?>
+            >(element, options);
+            if (deserialized != null)
+            {
+                foreach (var item in deserialized)
+                {
+                    item?.Validate();
+                }
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<
+                Dictionary<string, CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item?>
+            >(element, options);
+            if (deserialized != null)
+            {
+                foreach (var item in deserialized.Values)
+                {
+                    item?.Validate();
+                }
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        return new(element);
+    }
+
+    public override void Write(
+        Utf8JsonWriter writer,
+        CustomPropertyUnionMember4ItemUnionMember4Item? value,
+        JsonSerializerOptions options
+    )
+    {
+        JsonSerializer.Serialize(writer, value?.Json, options);
+    }
+}
+
+/// <summary>
+/// Any JSON value: string, number, boolean, array, object, or null.
+/// </summary>
+[JsonConverter(typeof(CustomPropertyUnionMember4ItemUnionMember4ItemJsonValueConverter))]
+public record class CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue : ModelBase
+{
+    public object? Value { get; } = null;
+
+    JsonElement? _element = null;
+
+    public JsonElement Json
+    {
+        get
+        {
+            return this._element ??= JsonSerializer.SerializeToElement(
+                this.Value,
+                ModelBase.SerializerOptions
+            );
+        }
+    }
+
+    public CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue(
+        string value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue(
+        double value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue(
+        bool value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue(
+        IReadOnlyList<JsonElement> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = ImmutableArray.ToImmutableArray(value);
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue(
+        IReadOnlyDictionary<string, JsonElement> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = FrozenDictionary.ToFrozenDictionary(value);
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue(JsonElement element)
+    {
+        this._element = element;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="string"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickString(out var value)) {
+    ///     // `value` is of type `string`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickString([NotNullWhen(true)] out string? value)
+    {
+        value = this.Value as string;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="double"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickDouble(out var value)) {
+    ///     // `value` is of type `double`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickDouble([NotNullWhen(true)] out double? value)
+    {
+        value = this.Value as double?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="bool"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickBool(out var value)) {
+    ///     // `value` is of type `bool`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickBool([NotNullWhen(true)] out bool? value)
+    {
+        value = this.Value as bool?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="List{T}"/> where <c>T</c> is a <c>JsonElement</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonElements(out var value)) {
+    ///     // `value` is of type `IReadOnlyList&lt;JsonElement&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonElements([NotNullWhen(true)] out IReadOnlyList<JsonElement>? value)
+    {
+        value = this.Value as IReadOnlyList<JsonElement>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="Dictionary{Key, Value}"/> with a <c>Key</c> of <c>string</c> and a <c>Value</c> of <c>JsonElement</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonElements1(out var value)) {
+    ///     // `value` is of type `IReadOnlyDictionary&lt;string, JsonElement&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonElements1(
+        [NotNullWhen(true)] out IReadOnlyDictionary<string, JsonElement>? value
+    )
+    {
+        value = this.Value as IReadOnlyDictionary<string, JsonElement>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Match"/>
+    /// if you need your function parameters to return something.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// instance.Switch(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonElement&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, JsonElement&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public void Switch(
+        Action<string> @string,
+        Action<double> @double,
+        Action<bool> @bool,
+        Action<IReadOnlyList<JsonElement>> jsonElements,
+        Action<IReadOnlyDictionary<string, JsonElement>> jsonElements1
+    )
+    {
+        switch (this.Value)
+        {
+            case string value:
+                @string(value);
+                break;
+            case double value:
+                @double(value);
+                break;
+            case bool value:
+                @bool(value);
+                break;
+            case IReadOnlyList<JsonElement> value:
+                jsonElements(value);
+                break;
+            case IReadOnlyDictionary<string, JsonElement> value:
+                jsonElements1(value);
+                break;
+            default:
+                throw new OursPrivacyInvalidDataException(
+                    "Data did not match any variant of CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue"
+                );
+        }
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with and
+    /// returns its result.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Switch"/>
+    /// if you don't need your function parameters to return a value.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// var result = instance.Match(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonElement&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, JsonElement&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public T Match<T>(
+        Func<string, T> @string,
+        Func<double, T> @double,
+        Func<bool, T> @bool,
+        Func<IReadOnlyList<JsonElement>, T> jsonElements,
+        Func<IReadOnlyDictionary<string, JsonElement>, T> jsonElements1
+    )
+    {
+        return this.Value switch
+        {
+            string value => @string(value),
+            double value => @double(value),
+            bool value => @bool(value),
+            IReadOnlyList<JsonElement> value => jsonElements(value),
+            IReadOnlyDictionary<string, JsonElement> value => jsonElements1(value),
+            _ => throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue"
+            ),
+        };
+    }
+
+    public static implicit operator CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue(
+        string value
+    ) => new(value);
+
+    public static implicit operator CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue(
+        double value
+    ) => new(value);
+
+    public static implicit operator CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue(
+        bool value
+    ) => new(value);
+
+    public static implicit operator CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue(
+        List<JsonElement> value
+    ) => new((IReadOnlyList<JsonElement>)value);
+
+    public static implicit operator CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue(
+        Dictionary<string, JsonElement> value
+    ) => new((IReadOnlyDictionary<string, JsonElement>)value);
+
+    /// <summary>
+    /// Validates that the instance was constructed with a known variant and that this variant is valid
+    /// (based on its own <c>Validate</c> method).
+    ///
+    /// <para>This is useful for instances constructed from raw JSON data (e.g. deserialized from an API response).</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance does not pass validation.
+    /// </exception>
+    /// </summary>
+    public override void Validate()
+    {
+        if (this.Value == null)
+        {
+            throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue"
+            );
+        }
+    }
+
+    public virtual bool Equals(CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue? other) =>
+        other != null
+        && this.VariantIndex() == other.VariantIndex()
+        && JsonElement.DeepEquals(this.Json, other.Json);
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
+    public override string ToString() =>
+        JsonSerializer.Serialize(
+            FriendlyJsonPrinter.PrintValue(this.Json),
+            ModelBase.ToStringSerializerOptions
+        );
+
+    int VariantIndex()
+    {
+        return this.Value switch
+        {
+            string _ => 0,
+            double _ => 1,
+            bool _ => 2,
+            IReadOnlyList<JsonElement> _ => 3,
+            IReadOnlyDictionary<string, JsonElement> _ => 4,
+            _ => -1,
+        };
+    }
+}
+
+sealed class CustomPropertyUnionMember4ItemUnionMember4ItemJsonValueConverter
+    : JsonConverter<CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue?>
+{
+    public override CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue? Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
+    {
+        var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<string>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<double>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<bool>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<List<JsonElement>>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(
+                element,
+                options
+            );
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        return new(element);
+    }
+
+    public override void Write(
+        Utf8JsonWriter writer,
+        CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue? value,
+        JsonSerializerOptions options
+    )
+    {
+        JsonSerializer.Serialize(writer, value?.Json, options);
+    }
+}
+
+[JsonConverter(typeof(CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemConverter))]
+public record class CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item : ModelBase
+{
+    public object? Value { get; } = null;
+
+    JsonElement? _element = null;
+
+    public JsonElement Json
+    {
+        get
+        {
+            return this._element ??= JsonSerializer.SerializeToElement(
+                this.Value,
+                ModelBase.SerializerOptions
+            );
+        }
+    }
+
+    public CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        string value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        double value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        bool value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        IReadOnlyList<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = ImmutableArray.ToImmutableArray(value);
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        IReadOnlyDictionary<
+            string,
+            CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?
+        > value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = FrozenDictionary.ToFrozenDictionary(value);
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item(JsonElement element)
+    {
+        this._element = element;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="string"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickString(out var value)) {
+    ///     // `value` is of type `string`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickString([NotNullWhen(true)] out string? value)
+    {
+        value = this.Value as string;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="double"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickDouble(out var value)) {
+    ///     // `value` is of type `double`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickDouble([NotNullWhen(true)] out double? value)
+    {
+        value = this.Value as double?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="bool"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickBool(out var value)) {
+    ///     // `value` is of type `bool`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickBool([NotNullWhen(true)] out bool? value)
+    {
+        value = this.Value as bool?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="List{T}"/> where <c>T</c> is a <c>CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickCustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues(out var value)) {
+    ///     // `value` is of type `IReadOnlyList&lt;CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickCustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues(
+        [NotNullWhen(true)]
+            out IReadOnlyList<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>? value
+    )
+    {
+        value =
+            this.Value
+            as IReadOnlyList<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="Dictionary{Key, Value}"/> with a <c>Key</c> of <c>string</c> and a <c>Value</c> of <c>CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickCustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Items(out var value)) {
+    ///     // `value` is of type `IReadOnlyDictionary&lt;string, CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickCustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Items(
+        [NotNullWhen(true)]
+            out IReadOnlyDictionary<
+            string,
+            CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?
+        >? value
+    )
+    {
+        value =
+            this.Value
+            as IReadOnlyDictionary<
+                string,
+                CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            >;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Match"/>
+    /// if you need your function parameters to return something.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// instance.Switch(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public void Switch(
+        Action<string> @string,
+        Action<double> @double,
+        Action<bool> @bool,
+        Action<
+            IReadOnlyList<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>
+        > customPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues,
+        Action<
+            IReadOnlyDictionary<
+                string,
+                CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            >
+        > customPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Items
+    )
+    {
+        switch (this.Value)
+        {
+            case string value:
+                @string(value);
+                break;
+            case double value:
+                @double(value);
+                break;
+            case bool value:
+                @bool(value);
+                break;
+            case IReadOnlyList<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?> value:
+                customPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues(value);
+                break;
+            case IReadOnlyDictionary<
+                string,
+                CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            > value:
+                customPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Items(
+                    value
+                );
+                break;
+            default:
+                throw new OursPrivacyInvalidDataException(
+                    "Data did not match any variant of CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item"
+                );
+        }
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with and
+    /// returns its result.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Switch"/>
+    /// if you don't need your function parameters to return a value.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// var result = instance.Match(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public T Match<T>(
+        Func<string, T> @string,
+        Func<double, T> @double,
+        Func<bool, T> @bool,
+        Func<
+            IReadOnlyList<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>,
+            T
+        > customPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues,
+        Func<
+            IReadOnlyDictionary<
+                string,
+                CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            >,
+            T
+        > customPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Items
+    )
+    {
+        return this.Value switch
+        {
+            string value => @string(value),
+            double value => @double(value),
+            bool value => @bool(value),
+            IReadOnlyList<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?> value =>
+                customPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues(value),
+            IReadOnlyDictionary<
+                string,
+                CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            > value =>
+                customPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Items(
+                    value
+                ),
+            _ => throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item"
+            ),
+        };
+    }
+
+    public static implicit operator CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        string value
+    ) => new(value);
+
+    public static implicit operator CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        double value
+    ) => new(value);
+
+    public static implicit operator CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        bool value
+    ) => new(value);
+
+    public static implicit operator CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        List<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?> value
+    ) =>
+        new(
+            (IReadOnlyList<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>)
+                value
+        );
+
+    public static implicit operator CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        Dictionary<
+            string,
+            CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?
+        > value
+    ) =>
+        new(
+            (IReadOnlyDictionary<
+                string,
+                CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            >)
+                value
+        );
+
+    /// <summary>
+    /// Validates that the instance was constructed with a known variant and that this variant is valid
+    /// (based on its own <c>Validate</c> method).
+    ///
+    /// <para>This is useful for instances constructed from raw JSON data (e.g. deserialized from an API response).</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance does not pass validation.
+    /// </exception>
+    /// </summary>
+    public override void Validate()
+    {
+        if (this.Value == null)
+        {
+            throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item"
+            );
+        }
+        this.Switch(
+            (_) => { },
+            (_) => { },
+            (_) => { },
+            (customPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues) =>
+            {
+                foreach (
+                    var item in customPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues
+                )
+                {
+                    item?.Validate();
+                }
+            },
+            (customPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Items) =>
+            {
+                foreach (
+                    var item in customPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Items.Values
+                )
+                {
+                    item?.Validate();
+                }
+            }
+        );
+    }
+
+    public virtual bool Equals(
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item? other
+    ) =>
+        other != null
+        && this.VariantIndex() == other.VariantIndex()
+        && JsonElement.DeepEquals(this.Json, other.Json);
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
+    public override string ToString() =>
+        JsonSerializer.Serialize(
+            FriendlyJsonPrinter.PrintValue(this.Json),
+            ModelBase.ToStringSerializerOptions
+        );
+
+    int VariantIndex()
+    {
+        return this.Value switch
+        {
+            string _ => 0,
+            double _ => 1,
+            bool _ => 2,
+            IReadOnlyList<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?> _ =>
+                3,
+            IReadOnlyDictionary<
+                string,
+                CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            > _ => 4,
+            _ => -1,
+        };
+    }
+}
+
+sealed class CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemConverter
+    : JsonConverter<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item?>
+{
+    public override CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item? Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
+    {
+        var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<string>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<double>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<bool>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<
+                List<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>
+            >(element, options);
+            if (deserialized != null)
+            {
+                foreach (var item in deserialized)
+                {
+                    item?.Validate();
+                }
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<
+                Dictionary<
+                    string,
+                    CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?
+                >
+            >(element, options);
+            if (deserialized != null)
+            {
+                foreach (var item in deserialized.Values)
+                {
+                    item?.Validate();
+                }
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        return new(element);
+    }
+
+    public override void Write(
+        Utf8JsonWriter writer,
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item? value,
+        JsonSerializerOptions options
+    )
+    {
+        JsonSerializer.Serialize(writer, value?.Json, options);
+    }
+}
+
+/// <summary>
+/// Any JSON value: string, number, boolean, array, object, or null.
+/// </summary>
+[JsonConverter(
+    typeof(CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValueConverter)
+)]
+public record class CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue
+    : ModelBase
+{
+    public object? Value { get; } = null;
+
+    JsonElement? _element = null;
+
+    public JsonElement Json
+    {
+        get
+        {
+            return this._element ??= JsonSerializer.SerializeToElement(
+                this.Value,
+                ModelBase.SerializerOptions
+            );
+        }
+    }
+
+    public CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        string value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        double value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        bool value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        IReadOnlyList<JsonElement> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = ImmutableArray.ToImmutableArray(value);
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        IReadOnlyDictionary<string, JsonElement> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = FrozenDictionary.ToFrozenDictionary(value);
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        JsonElement element
+    )
+    {
+        this._element = element;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="string"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickString(out var value)) {
+    ///     // `value` is of type `string`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickString([NotNullWhen(true)] out string? value)
+    {
+        value = this.Value as string;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="double"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickDouble(out var value)) {
+    ///     // `value` is of type `double`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickDouble([NotNullWhen(true)] out double? value)
+    {
+        value = this.Value as double?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="bool"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickBool(out var value)) {
+    ///     // `value` is of type `bool`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickBool([NotNullWhen(true)] out bool? value)
+    {
+        value = this.Value as bool?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="List{T}"/> where <c>T</c> is a <c>JsonElement</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonElements(out var value)) {
+    ///     // `value` is of type `IReadOnlyList&lt;JsonElement&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonElements([NotNullWhen(true)] out IReadOnlyList<JsonElement>? value)
+    {
+        value = this.Value as IReadOnlyList<JsonElement>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="Dictionary{Key, Value}"/> with a <c>Key</c> of <c>string</c> and a <c>Value</c> of <c>JsonElement</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonElements1(out var value)) {
+    ///     // `value` is of type `IReadOnlyDictionary&lt;string, JsonElement&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonElements1(
+        [NotNullWhen(true)] out IReadOnlyDictionary<string, JsonElement>? value
+    )
+    {
+        value = this.Value as IReadOnlyDictionary<string, JsonElement>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Match"/>
+    /// if you need your function parameters to return something.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// instance.Switch(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonElement&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, JsonElement&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public void Switch(
+        Action<string> @string,
+        Action<double> @double,
+        Action<bool> @bool,
+        Action<IReadOnlyList<JsonElement>> jsonElements,
+        Action<IReadOnlyDictionary<string, JsonElement>> jsonElements1
+    )
+    {
+        switch (this.Value)
+        {
+            case string value:
+                @string(value);
+                break;
+            case double value:
+                @double(value);
+                break;
+            case bool value:
+                @bool(value);
+                break;
+            case IReadOnlyList<JsonElement> value:
+                jsonElements(value);
+                break;
+            case IReadOnlyDictionary<string, JsonElement> value:
+                jsonElements1(value);
+                break;
+            default:
+                throw new OursPrivacyInvalidDataException(
+                    "Data did not match any variant of CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue"
+                );
+        }
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with and
+    /// returns its result.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Switch"/>
+    /// if you don't need your function parameters to return a value.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// var result = instance.Match(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonElement&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, JsonElement&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public T Match<T>(
+        Func<string, T> @string,
+        Func<double, T> @double,
+        Func<bool, T> @bool,
+        Func<IReadOnlyList<JsonElement>, T> jsonElements,
+        Func<IReadOnlyDictionary<string, JsonElement>, T> jsonElements1
+    )
+    {
+        return this.Value switch
+        {
+            string value => @string(value),
+            double value => @double(value),
+            bool value => @bool(value),
+            IReadOnlyList<JsonElement> value => jsonElements(value),
+            IReadOnlyDictionary<string, JsonElement> value => jsonElements1(value),
+            _ => throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue"
+            ),
+        };
+    }
+
+    public static implicit operator CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        string value
+    ) => new(value);
+
+    public static implicit operator CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        double value
+    ) => new(value);
+
+    public static implicit operator CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        bool value
+    ) => new(value);
+
+    public static implicit operator CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        List<JsonElement> value
+    ) => new((IReadOnlyList<JsonElement>)value);
+
+    public static implicit operator CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        Dictionary<string, JsonElement> value
+    ) => new((IReadOnlyDictionary<string, JsonElement>)value);
+
+    /// <summary>
+    /// Validates that the instance was constructed with a known variant and that this variant is valid
+    /// (based on its own <c>Validate</c> method).
+    ///
+    /// <para>This is useful for instances constructed from raw JSON data (e.g. deserialized from an API response).</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance does not pass validation.
+    /// </exception>
+    /// </summary>
+    public override void Validate()
+    {
+        if (this.Value == null)
+        {
+            throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue"
+            );
+        }
+    }
+
+    public virtual bool Equals(
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue? other
+    ) =>
+        other != null
+        && this.VariantIndex() == other.VariantIndex()
+        && JsonElement.DeepEquals(this.Json, other.Json);
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
+    public override string ToString() =>
+        JsonSerializer.Serialize(
+            FriendlyJsonPrinter.PrintValue(this.Json),
+            ModelBase.ToStringSerializerOptions
+        );
+
+    int VariantIndex()
+    {
+        return this.Value switch
+        {
+            string _ => 0,
+            double _ => 1,
+            bool _ => 2,
+            IReadOnlyList<JsonElement> _ => 3,
+            IReadOnlyDictionary<string, JsonElement> _ => 4,
+            _ => -1,
+        };
+    }
+}
+
+sealed class CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValueConverter
+    : JsonConverter<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>
+{
+    public override CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue? Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
+    {
+        var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<string>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<double>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<bool>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<List<JsonElement>>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(
+                element,
+                options
+            );
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        return new(element);
+    }
+
+    public override void Write(
+        Utf8JsonWriter writer,
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue? value,
+        JsonSerializerOptions options
+    )
+    {
+        JsonSerializer.Serialize(writer, value?.Json, options);
+    }
+}
+
+[JsonConverter(
+    typeof(CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemConverter)
+)]
+public record class CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item
+    : ModelBase
+{
+    public object? Value { get; } = null;
+
+    JsonElement? _element = null;
+
+    public JsonElement Json
+    {
+        get
+        {
+            return this._element ??= JsonSerializer.SerializeToElement(
+                this.Value,
+                ModelBase.SerializerOptions
+            );
+        }
+    }
+
+    public CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        string value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        double value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        bool value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        IReadOnlyList<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = ImmutableArray.ToImmutableArray(value);
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        JsonElement element
+    )
+    {
+        this._element = element;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="string"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickString(out var value)) {
+    ///     // `value` is of type `string`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickString([NotNullWhen(true)] out string? value)
+    {
+        value = this.Value as string;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="double"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickDouble(out var value)) {
+    ///     // `value` is of type `double`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickDouble([NotNullWhen(true)] out double? value)
+    {
+        value = this.Value as double?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="bool"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickBool(out var value)) {
+    ///     // `value` is of type `bool`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickBool([NotNullWhen(true)] out bool? value)
+    {
+        value = this.Value as bool?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="List{T}"/> where <c>T</c> is a <c>CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickCustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues(out var value)) {
+    ///     // `value` is of type `IReadOnlyList&lt;CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickCustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues(
+        [NotNullWhen(true)]
+            out IReadOnlyList<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>? value
+    )
+    {
+        value =
+            this.Value
+            as IReadOnlyList<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Match"/>
+    /// if you need your function parameters to return something.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// instance.Switch(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public void Switch(
+        Action<string> @string,
+        Action<double> @double,
+        Action<bool> @bool,
+        Action<
+            IReadOnlyList<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>
+        > customPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues
+    )
+    {
+        switch (this.Value)
+        {
+            case string value:
+                @string(value);
+                break;
+            case double value:
+                @double(value);
+                break;
+            case bool value:
+                @bool(value);
+                break;
+            case IReadOnlyList<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?> value:
+                customPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues(
+                    value
+                );
+                break;
+            default:
+                throw new OursPrivacyInvalidDataException(
+                    "Data did not match any variant of CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item"
+                );
+        }
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with and
+    /// returns its result.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Switch"/>
+    /// if you don't need your function parameters to return a value.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// var result = instance.Match(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public T Match<T>(
+        Func<string, T> @string,
+        Func<double, T> @double,
+        Func<bool, T> @bool,
+        Func<
+            IReadOnlyList<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>,
+            T
+        > customPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues
+    )
+    {
+        return this.Value switch
+        {
+            string value => @string(value),
+            double value => @double(value),
+            bool value => @bool(value),
+            IReadOnlyList<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?> value =>
+                customPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues(
+                    value
+                ),
+            _ => throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item"
+            ),
+        };
+    }
+
+    public static implicit operator CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        string value
+    ) => new(value);
+
+    public static implicit operator CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        double value
+    ) => new(value);
+
+    public static implicit operator CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        bool value
+    ) => new(value);
+
+    public static implicit operator CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item(
+        List<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?> value
+    ) =>
+        new(
+            (IReadOnlyList<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>)
+                value
+        );
+
+    /// <summary>
+    /// Validates that the instance was constructed with a known variant and that this variant is valid
+    /// (based on its own <c>Validate</c> method).
+    ///
+    /// <para>This is useful for instances constructed from raw JSON data (e.g. deserialized from an API response).</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance does not pass validation.
+    /// </exception>
+    /// </summary>
+    public override void Validate()
+    {
+        if (this.Value == null)
+        {
+            throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item"
+            );
+        }
+        this.Switch(
+            (_) => { },
+            (_) => { },
+            (_) => { },
+            (
+                customPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues
+            ) =>
+            {
+                foreach (
+                    var item in customPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValues
+                )
+                {
+                    item?.Validate();
+                }
+            }
+        );
+    }
+
+    public virtual bool Equals(
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item? other
+    ) =>
+        other != null
+        && this.VariantIndex() == other.VariantIndex()
+        && JsonElement.DeepEquals(this.Json, other.Json);
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
+    public override string ToString() =>
+        JsonSerializer.Serialize(
+            FriendlyJsonPrinter.PrintValue(this.Json),
+            ModelBase.ToStringSerializerOptions
+        );
+
+    int VariantIndex()
+    {
+        return this.Value switch
+        {
+            string _ => 0,
+            double _ => 1,
+            bool _ => 2,
+            IReadOnlyList<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?> _ =>
+                3,
+            _ => -1,
+        };
+    }
+}
+
+sealed class CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemConverter
+    : JsonConverter<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?>
+{
+    public override CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item? Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
+    {
+        var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<string>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<double>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<bool>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<
+                List<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>
+            >(element, options);
+            if (deserialized != null)
+            {
+                foreach (var item in deserialized)
+                {
+                    item?.Validate();
+                }
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        return new(element);
+    }
+
+    public override void Write(
+        Utf8JsonWriter writer,
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item? value,
+        JsonSerializerOptions options
+    )
+    {
+        JsonSerializer.Serialize(writer, value?.Json, options);
+    }
+}
+
+/// <summary>
+/// Any JSON value: string, number, boolean, array, object, or null.
+/// </summary>
+[JsonConverter(
+    typeof(CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValueConverter)
+)]
+public record class CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue
+    : ModelBase
+{
+    public object? Value { get; } = null;
+
+    JsonElement? _element = null;
+
+    public JsonElement Json
+    {
+        get
+        {
+            return this._element ??= JsonSerializer.SerializeToElement(
+                this.Value,
+                ModelBase.SerializerOptions
+            );
+        }
+    }
+
+    public CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        string value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        double value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        bool value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        IReadOnlyList<JsonElement> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = ImmutableArray.ToImmutableArray(value);
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        IReadOnlyDictionary<string, JsonElement> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = FrozenDictionary.ToFrozenDictionary(value);
+        this._element = element;
+    }
+
+    public CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        JsonElement element
+    )
+    {
+        this._element = element;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="string"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickString(out var value)) {
+    ///     // `value` is of type `string`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickString([NotNullWhen(true)] out string? value)
+    {
+        value = this.Value as string;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="double"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickDouble(out var value)) {
+    ///     // `value` is of type `double`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickDouble([NotNullWhen(true)] out double? value)
+    {
+        value = this.Value as double?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="bool"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickBool(out var value)) {
+    ///     // `value` is of type `bool`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickBool([NotNullWhen(true)] out bool? value)
+    {
+        value = this.Value as bool?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="List{T}"/> where <c>T</c> is a <c>JsonElement</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonElements(out var value)) {
+    ///     // `value` is of type `IReadOnlyList&lt;JsonElement&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonElements([NotNullWhen(true)] out IReadOnlyList<JsonElement>? value)
+    {
+        value = this.Value as IReadOnlyList<JsonElement>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="Dictionary{Key, Value}"/> with a <c>Key</c> of <c>string</c> and a <c>Value</c> of <c>JsonElement</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonElements1(out var value)) {
+    ///     // `value` is of type `IReadOnlyDictionary&lt;string, JsonElement&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonElements1(
+        [NotNullWhen(true)] out IReadOnlyDictionary<string, JsonElement>? value
+    )
+    {
+        value = this.Value as IReadOnlyDictionary<string, JsonElement>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Match"/>
+    /// if you need your function parameters to return something.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// instance.Switch(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonElement&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, JsonElement&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public void Switch(
+        Action<string> @string,
+        Action<double> @double,
+        Action<bool> @bool,
+        Action<IReadOnlyList<JsonElement>> jsonElements,
+        Action<IReadOnlyDictionary<string, JsonElement>> jsonElements1
+    )
+    {
+        switch (this.Value)
+        {
+            case string value:
+                @string(value);
+                break;
+            case double value:
+                @double(value);
+                break;
+            case bool value:
+                @bool(value);
+                break;
+            case IReadOnlyList<JsonElement> value:
+                jsonElements(value);
+                break;
+            case IReadOnlyDictionary<string, JsonElement> value:
+                jsonElements1(value);
+                break;
+            default:
+                throw new OursPrivacyInvalidDataException(
+                    "Data did not match any variant of CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue"
+                );
+        }
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with and
+    /// returns its result.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Switch"/>
+    /// if you don't need your function parameters to return a value.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// var result = instance.Match(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonElement&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, JsonElement&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public T Match<T>(
+        Func<string, T> @string,
+        Func<double, T> @double,
+        Func<bool, T> @bool,
+        Func<IReadOnlyList<JsonElement>, T> jsonElements,
+        Func<IReadOnlyDictionary<string, JsonElement>, T> jsonElements1
+    )
+    {
+        return this.Value switch
+        {
+            string value => @string(value),
+            double value => @double(value),
+            bool value => @bool(value),
+            IReadOnlyList<JsonElement> value => jsonElements(value),
+            IReadOnlyDictionary<string, JsonElement> value => jsonElements1(value),
+            _ => throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue"
+            ),
+        };
+    }
+
+    public static implicit operator CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        string value
+    ) => new(value);
+
+    public static implicit operator CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        double value
+    ) => new(value);
+
+    public static implicit operator CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        bool value
+    ) => new(value);
+
+    public static implicit operator CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        List<JsonElement> value
+    ) => new((IReadOnlyList<JsonElement>)value);
+
+    public static implicit operator CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+        Dictionary<string, JsonElement> value
+    ) => new((IReadOnlyDictionary<string, JsonElement>)value);
+
+    /// <summary>
+    /// Validates that the instance was constructed with a known variant and that this variant is valid
+    /// (based on its own <c>Validate</c> method).
+    ///
+    /// <para>This is useful for instances constructed from raw JSON data (e.g. deserialized from an API response).</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance does not pass validation.
+    /// </exception>
+    /// </summary>
+    public override void Validate()
+    {
+        if (this.Value == null)
+        {
+            throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue"
+            );
+        }
+    }
+
+    public virtual bool Equals(
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue? other
+    ) =>
+        other != null
+        && this.VariantIndex() == other.VariantIndex()
+        && JsonElement.DeepEquals(this.Json, other.Json);
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
+    public override string ToString() =>
+        JsonSerializer.Serialize(
+            FriendlyJsonPrinter.PrintValue(this.Json),
+            ModelBase.ToStringSerializerOptions
+        );
+
+    int VariantIndex()
+    {
+        return this.Value switch
+        {
+            string _ => 0,
+            double _ => 1,
+            bool _ => 2,
+            IReadOnlyList<JsonElement> _ => 3,
+            IReadOnlyDictionary<string, JsonElement> _ => 4,
+            _ => -1,
+        };
+    }
+}
+
+sealed class CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValueConverter
+    : JsonConverter<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue?>
+{
+    public override CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue? Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
+    {
+        var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<string>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<double>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<bool>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<List<JsonElement>>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(
+                element,
+                options
+            );
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        return new(element);
+    }
+
+    public override void Write(
+        Utf8JsonWriter writer,
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue? value,
+        JsonSerializerOptions options
+    )
+    {
+        JsonSerializer.Serialize(writer, value?.Json, options);
+    }
+}
+
+/// <summary>
+/// Any JSON value: string, number, boolean, array, object, or null.
+/// </summary>
+[JsonConverter(typeof(UserPropertiesIsBotConverter))]
+public record class UserPropertiesIsBot : ModelBase
+{
+    public object? Value { get; } = null;
+
+    JsonElement? _element = null;
+
+    public JsonElement Json
+    {
+        get
+        {
+            return this._element ??= JsonSerializer.SerializeToElement(
+                this.Value,
+                ModelBase.SerializerOptions
+            );
+        }
+    }
+
+    public UserPropertiesIsBot(string value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public UserPropertiesIsBot(double value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public UserPropertiesIsBot(bool value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public UserPropertiesIsBot(IReadOnlyList<JsonElement> value, JsonElement? element = null)
+    {
+        this.Value = ImmutableArray.ToImmutableArray(value);
+        this._element = element;
+    }
+
+    public UserPropertiesIsBot(
+        IReadOnlyDictionary<string, JsonElement> value,
+        JsonElement? element = null
+    )
+    {
+        this.Value = FrozenDictionary.ToFrozenDictionary(value);
+        this._element = element;
+    }
+
+    public UserPropertiesIsBot(JsonElement element)
+    {
+        this._element = element;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="string"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickString(out var value)) {
+    ///     // `value` is of type `string`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickString([NotNullWhen(true)] out string? value)
+    {
+        value = this.Value as string;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="double"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickDouble(out var value)) {
+    ///     // `value` is of type `double`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickDouble([NotNullWhen(true)] out double? value)
+    {
+        value = this.Value as double?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="bool"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickBool(out var value)) {
+    ///     // `value` is of type `bool`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickBool([NotNullWhen(true)] out bool? value)
+    {
+        value = this.Value as bool?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="List{T}"/> where <c>T</c> is a <c>JsonElement</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonElements(out var value)) {
+    ///     // `value` is of type `IReadOnlyList&lt;JsonElement&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonElements([NotNullWhen(true)] out IReadOnlyList<JsonElement>? value)
+    {
+        value = this.Value as IReadOnlyList<JsonElement>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="Dictionary{Key, Value}"/> with a <c>Key</c> of <c>string</c> and a <c>Value</c> of <c>JsonElement</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonElements1(out var value)) {
+    ///     // `value` is of type `IReadOnlyDictionary&lt;string, JsonElement&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonElements1(
+        [NotNullWhen(true)] out IReadOnlyDictionary<string, JsonElement>? value
+    )
+    {
+        value = this.Value as IReadOnlyDictionary<string, JsonElement>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Match"/>
+    /// if you need your function parameters to return something.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// instance.Switch(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonElement&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, JsonElement&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public void Switch(
+        Action<string> @string,
+        Action<double> @double,
+        Action<bool> @bool,
+        Action<IReadOnlyList<JsonElement>> jsonElements,
+        Action<IReadOnlyDictionary<string, JsonElement>> jsonElements1
+    )
+    {
+        switch (this.Value)
+        {
+            case string value:
+                @string(value);
+                break;
+            case double value:
+                @double(value);
+                break;
+            case bool value:
+                @bool(value);
+                break;
+            case IReadOnlyList<JsonElement> value:
+                jsonElements(value);
+                break;
+            case IReadOnlyDictionary<string, JsonElement> value:
+                jsonElements1(value);
+                break;
+            default:
+                throw new OursPrivacyInvalidDataException(
+                    "Data did not match any variant of UserPropertiesIsBot"
+                );
+        }
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with and
+    /// returns its result.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Switch"/>
+    /// if you don't need your function parameters to return a value.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// var result = instance.Match(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonElement&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, JsonElement&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public T Match<T>(
+        Func<string, T> @string,
+        Func<double, T> @double,
+        Func<bool, T> @bool,
+        Func<IReadOnlyList<JsonElement>, T> jsonElements,
+        Func<IReadOnlyDictionary<string, JsonElement>, T> jsonElements1
+    )
+    {
+        return this.Value switch
+        {
+            string value => @string(value),
+            double value => @double(value),
+            bool value => @bool(value),
+            IReadOnlyList<JsonElement> value => jsonElements(value),
+            IReadOnlyDictionary<string, JsonElement> value => jsonElements1(value),
+            _ => throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of UserPropertiesIsBot"
+            ),
+        };
+    }
+
+    public static implicit operator UserPropertiesIsBot(string value) => new(value);
+
+    public static implicit operator UserPropertiesIsBot(double value) => new(value);
+
+    public static implicit operator UserPropertiesIsBot(bool value) => new(value);
+
+    public static implicit operator UserPropertiesIsBot(List<JsonElement> value) =>
+        new((IReadOnlyList<JsonElement>)value);
+
+    public static implicit operator UserPropertiesIsBot(Dictionary<string, JsonElement> value) =>
+        new((IReadOnlyDictionary<string, JsonElement>)value);
+
+    /// <summary>
+    /// Validates that the instance was constructed with a known variant and that this variant is valid
+    /// (based on its own <c>Validate</c> method).
+    ///
+    /// <para>This is useful for instances constructed from raw JSON data (e.g. deserialized from an API response).</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance does not pass validation.
+    /// </exception>
+    /// </summary>
+    public override void Validate()
+    {
+        if (this.Value == null)
+        {
+            throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of UserPropertiesIsBot"
+            );
+        }
+    }
+
+    public virtual bool Equals(UserPropertiesIsBot? other) =>
+        other != null
+        && this.VariantIndex() == other.VariantIndex()
+        && JsonElement.DeepEquals(this.Json, other.Json);
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
+    public override string ToString() =>
+        JsonSerializer.Serialize(
+            FriendlyJsonPrinter.PrintValue(this.Json),
+            ModelBase.ToStringSerializerOptions
+        );
+
+    int VariantIndex()
+    {
+        return this.Value switch
+        {
+            string _ => 0,
+            double _ => 1,
+            bool _ => 2,
+            IReadOnlyList<JsonElement> _ => 3,
+            IReadOnlyDictionary<string, JsonElement> _ => 4,
+            _ => -1,
+        };
+    }
+}
+
+sealed class UserPropertiesIsBotConverter : JsonConverter<UserPropertiesIsBot?>
+{
+    public override UserPropertiesIsBot? Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
+    {
+        var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<string>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<double>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<bool>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<List<JsonElement>>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(
+                element,
+                options
+            );
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        return new(element);
+    }
+
+    public override void Write(
+        Utf8JsonWriter writer,
+        UserPropertiesIsBot? value,
+        JsonSerializerOptions options
+    )
+    {
+        JsonSerializer.Serialize(writer, value?.Json, options);
+    }
+}
+
+/// <summary>
+/// Any JSON value: string, number, boolean, array, object, or null.
+/// </summary>
+[JsonConverter(typeof(PhoneNumberConverter))]
+public record class PhoneNumber : ModelBase
+{
+    public object? Value { get; } = null;
+
+    JsonElement? _element = null;
+
+    public JsonElement Json
+    {
+        get
+        {
+            return this._element ??= JsonSerializer.SerializeToElement(
+                this.Value,
+                ModelBase.SerializerOptions
+            );
+        }
+    }
+
+    public PhoneNumber(string value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public PhoneNumber(double value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public PhoneNumber(bool value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public PhoneNumber(IReadOnlyList<JsonElement> value, JsonElement? element = null)
+    {
+        this.Value = ImmutableArray.ToImmutableArray(value);
+        this._element = element;
+    }
+
+    public PhoneNumber(IReadOnlyDictionary<string, JsonElement> value, JsonElement? element = null)
+    {
+        this.Value = FrozenDictionary.ToFrozenDictionary(value);
+        this._element = element;
+    }
+
+    public PhoneNumber(JsonElement element)
+    {
+        this._element = element;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="string"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickString(out var value)) {
+    ///     // `value` is of type `string`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickString([NotNullWhen(true)] out string? value)
+    {
+        value = this.Value as string;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="double"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickDouble(out var value)) {
+    ///     // `value` is of type `double`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickDouble([NotNullWhen(true)] out double? value)
+    {
+        value = this.Value as double?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="bool"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickBool(out var value)) {
+    ///     // `value` is of type `bool`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickBool([NotNullWhen(true)] out bool? value)
+    {
+        value = this.Value as bool?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="List{T}"/> where <c>T</c> is a <c>JsonElement</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonElements(out var value)) {
+    ///     // `value` is of type `IReadOnlyList&lt;JsonElement&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonElements([NotNullWhen(true)] out IReadOnlyList<JsonElement>? value)
+    {
+        value = this.Value as IReadOnlyList<JsonElement>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="Dictionary{Key, Value}"/> with a <c>Key</c> of <c>string</c> and a <c>Value</c> of <c>JsonElement</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonElements1(out var value)) {
+    ///     // `value` is of type `IReadOnlyDictionary&lt;string, JsonElement&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonElements1(
+        [NotNullWhen(true)] out IReadOnlyDictionary<string, JsonElement>? value
+    )
+    {
+        value = this.Value as IReadOnlyDictionary<string, JsonElement>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Match"/>
+    /// if you need your function parameters to return something.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// instance.Switch(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonElement&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, JsonElement&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public void Switch(
+        Action<string> @string,
+        Action<double> @double,
+        Action<bool> @bool,
+        Action<IReadOnlyList<JsonElement>> jsonElements,
+        Action<IReadOnlyDictionary<string, JsonElement>> jsonElements1
+    )
+    {
+        switch (this.Value)
+        {
+            case string value:
+                @string(value);
+                break;
+            case double value:
+                @double(value);
+                break;
+            case bool value:
+                @bool(value);
+                break;
+            case IReadOnlyList<JsonElement> value:
+                jsonElements(value);
+                break;
+            case IReadOnlyDictionary<string, JsonElement> value:
+                jsonElements1(value);
+                break;
+            default:
+                throw new OursPrivacyInvalidDataException(
+                    "Data did not match any variant of PhoneNumber"
+                );
+        }
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with and
+    /// returns its result.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Switch"/>
+    /// if you don't need your function parameters to return a value.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// var result = instance.Match(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonElement&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, JsonElement&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public T Match<T>(
+        Func<string, T> @string,
+        Func<double, T> @double,
+        Func<bool, T> @bool,
+        Func<IReadOnlyList<JsonElement>, T> jsonElements,
+        Func<IReadOnlyDictionary<string, JsonElement>, T> jsonElements1
+    )
+    {
+        return this.Value switch
+        {
+            string value => @string(value),
+            double value => @double(value),
+            bool value => @bool(value),
+            IReadOnlyList<JsonElement> value => jsonElements(value),
+            IReadOnlyDictionary<string, JsonElement> value => jsonElements1(value),
+            _ => throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of PhoneNumber"
+            ),
+        };
+    }
+
+    public static implicit operator PhoneNumber(string value) => new(value);
+
+    public static implicit operator PhoneNumber(double value) => new(value);
+
+    public static implicit operator PhoneNumber(bool value) => new(value);
+
+    public static implicit operator PhoneNumber(List<JsonElement> value) =>
+        new((IReadOnlyList<JsonElement>)value);
+
+    public static implicit operator PhoneNumber(Dictionary<string, JsonElement> value) =>
+        new((IReadOnlyDictionary<string, JsonElement>)value);
+
+    /// <summary>
+    /// Validates that the instance was constructed with a known variant and that this variant is valid
+    /// (based on its own <c>Validate</c> method).
+    ///
+    /// <para>This is useful for instances constructed from raw JSON data (e.g. deserialized from an API response).</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance does not pass validation.
+    /// </exception>
+    /// </summary>
+    public override void Validate()
+    {
+        if (this.Value == null)
+        {
+            throw new OursPrivacyInvalidDataException(
+                "Data did not match any variant of PhoneNumber"
+            );
+        }
+    }
+
+    public virtual bool Equals(PhoneNumber? other) =>
+        other != null
+        && this.VariantIndex() == other.VariantIndex()
+        && JsonElement.DeepEquals(this.Json, other.Json);
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
+    public override string ToString() =>
+        JsonSerializer.Serialize(
+            FriendlyJsonPrinter.PrintValue(this.Json),
+            ModelBase.ToStringSerializerOptions
+        );
+
+    int VariantIndex()
+    {
+        return this.Value switch
+        {
+            string _ => 0,
+            double _ => 1,
+            bool _ => 2,
+            IReadOnlyList<JsonElement> _ => 3,
+            IReadOnlyDictionary<string, JsonElement> _ => 4,
+            _ => -1,
+        };
+    }
+}
+
+sealed class PhoneNumberConverter : JsonConverter<PhoneNumber?>
+{
+    public override PhoneNumber? Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
+    {
+        var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<string>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<double>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<bool>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<List<JsonElement>>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(
+                element,
+                options
+            );
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        return new(element);
+    }
+
+    public override void Write(
+        Utf8JsonWriter writer,
+        PhoneNumber? value,
+        JsonSerializerOptions options
+    )
+    {
+        JsonSerializer.Serialize(writer, value?.Json, options);
+    }
+}
+
+/// <summary>
+/// Any JSON value: string, number, boolean, array, object, or null.
+/// </summary>
+[JsonConverter(typeof(ZipConverter))]
+public record class Zip : ModelBase
+{
+    public object? Value { get; } = null;
+
+    JsonElement? _element = null;
+
+    public JsonElement Json
+    {
+        get
+        {
+            return this._element ??= JsonSerializer.SerializeToElement(
+                this.Value,
+                ModelBase.SerializerOptions
+            );
+        }
+    }
+
+    public Zip(string value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public Zip(double value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public Zip(bool value, JsonElement? element = null)
+    {
+        this.Value = value;
+        this._element = element;
+    }
+
+    public Zip(IReadOnlyList<JsonElement> value, JsonElement? element = null)
+    {
+        this.Value = ImmutableArray.ToImmutableArray(value);
+        this._element = element;
+    }
+
+    public Zip(IReadOnlyDictionary<string, JsonElement> value, JsonElement? element = null)
+    {
+        this.Value = FrozenDictionary.ToFrozenDictionary(value);
+        this._element = element;
+    }
+
+    public Zip(JsonElement element)
+    {
+        this._element = element;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="string"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickString(out var value)) {
+    ///     // `value` is of type `string`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickString([NotNullWhen(true)] out string? value)
+    {
+        value = this.Value as string;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="double"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickDouble(out var value)) {
+    ///     // `value` is of type `double`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickDouble([NotNullWhen(true)] out double? value)
+    {
+        value = this.Value as double?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="bool"/>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickBool(out var value)) {
+    ///     // `value` is of type `bool`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickBool([NotNullWhen(true)] out bool? value)
+    {
+        value = this.Value as bool?;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="List{T}"/> where <c>T</c> is a <c>JsonElement</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonElements(out var value)) {
+    ///     // `value` is of type `IReadOnlyList&lt;JsonElement&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonElements([NotNullWhen(true)] out IReadOnlyList<JsonElement>? value)
+    {
+        value = this.Value as IReadOnlyList<JsonElement>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Returns true and sets the <c>out</c> parameter if the instance was constructed with a variant of
+    /// type <see cref="Dictionary{Key, Value}"/> with a <c>Key</c> of <c>string</c> and a <c>Value</c> of <c>JsonElement</c>.
+    ///
+    /// <para>Consider using <see cref="Switch"/> or <see cref="Match"/> if you need to handle every variant.</para>
+    ///
+    /// <example>
+    /// <code>
+    /// if (instance.TryPickJsonElements1(out var value)) {
+    ///     // `value` is of type `IReadOnlyDictionary&lt;string, JsonElement&gt;`
+    ///     Console.WriteLine(value);
+    /// }
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool TryPickJsonElements1(
+        [NotNullWhen(true)] out IReadOnlyDictionary<string, JsonElement>? value
+    )
+    {
+        value = this.Value as IReadOnlyDictionary<string, JsonElement>;
+        return value != null;
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Match"/>
+    /// if you need your function parameters to return something.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// instance.Switch(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonElement&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, JsonElement&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public void Switch(
+        Action<string> @string,
+        Action<double> @double,
+        Action<bool> @bool,
+        Action<IReadOnlyList<JsonElement>> jsonElements,
+        Action<IReadOnlyDictionary<string, JsonElement>> jsonElements1
+    )
+    {
+        switch (this.Value)
+        {
+            case string value:
+                @string(value);
+                break;
+            case double value:
+                @double(value);
+                break;
+            case bool value:
+                @bool(value);
+                break;
+            case IReadOnlyList<JsonElement> value:
+                jsonElements(value);
+                break;
+            case IReadOnlyDictionary<string, JsonElement> value:
+                jsonElements1(value);
+                break;
+            default:
+                throw new OursPrivacyInvalidDataException("Data did not match any variant of Zip");
+        }
+    }
+
+    /// <summary>
+    /// Calls the function parameter corresponding to the variant the instance was constructed with and
+    /// returns its result.
+    ///
+    /// <para>Use the <c>TryPick</c> method(s) if you don't need to handle every variant, or <see cref="Switch"/>
+    /// if you don't need your function parameters to return a value.</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance was constructed with an unknown variant (e.g. deserialized from raw data
+    /// that doesn't match any variant's expected shape).
+    /// </exception>
+    ///
+    /// <example>
+    /// <code>
+    /// var result = instance.Match(
+    ///     (string value) =&gt; {...},
+    ///     (double value) =&gt; {...},
+    ///     (bool value) =&gt; {...},
+    ///     (IReadOnlyList&lt;JsonElement&gt; value) =&gt; {...},
+    ///     (IReadOnlyDictionary&lt;string, JsonElement&gt; value) =&gt; {...}
+    /// );
+    /// </code>
+    /// </example>
+    /// </summary>
+    public T Match<T>(
+        Func<string, T> @string,
+        Func<double, T> @double,
+        Func<bool, T> @bool,
+        Func<IReadOnlyList<JsonElement>, T> jsonElements,
+        Func<IReadOnlyDictionary<string, JsonElement>, T> jsonElements1
+    )
+    {
+        return this.Value switch
+        {
+            string value => @string(value),
+            double value => @double(value),
+            bool value => @bool(value),
+            IReadOnlyList<JsonElement> value => jsonElements(value),
+            IReadOnlyDictionary<string, JsonElement> value => jsonElements1(value),
+            _ => throw new OursPrivacyInvalidDataException("Data did not match any variant of Zip"),
+        };
+    }
+
+    public static implicit operator Zip(string value) => new(value);
+
+    public static implicit operator Zip(double value) => new(value);
+
+    public static implicit operator Zip(bool value) => new(value);
+
+    public static implicit operator Zip(List<JsonElement> value) =>
+        new((IReadOnlyList<JsonElement>)value);
+
+    public static implicit operator Zip(Dictionary<string, JsonElement> value) =>
+        new((IReadOnlyDictionary<string, JsonElement>)value);
+
+    /// <summary>
+    /// Validates that the instance was constructed with a known variant and that this variant is valid
+    /// (based on its own <c>Validate</c> method).
+    ///
+    /// <para>This is useful for instances constructed from raw JSON data (e.g. deserialized from an API response).</para>
+    ///
+    /// <exception cref="OursPrivacyInvalidDataException">
+    /// Thrown when the instance does not pass validation.
+    /// </exception>
+    /// </summary>
+    public override void Validate()
+    {
+        if (this.Value == null)
+        {
+            throw new OursPrivacyInvalidDataException("Data did not match any variant of Zip");
+        }
+    }
+
+    public virtual bool Equals(Zip? other) =>
+        other != null
+        && this.VariantIndex() == other.VariantIndex()
+        && JsonElement.DeepEquals(this.Json, other.Json);
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+
+    public override string ToString() =>
+        JsonSerializer.Serialize(
+            FriendlyJsonPrinter.PrintValue(this.Json),
+            ModelBase.ToStringSerializerOptions
+        );
+
+    int VariantIndex()
+    {
+        return this.Value switch
+        {
+            string _ => 0,
+            double _ => 1,
+            bool _ => 2,
+            IReadOnlyList<JsonElement> _ => 3,
+            IReadOnlyDictionary<string, JsonElement> _ => 4,
+            _ => -1,
+        };
+    }
+}
+
+sealed class ZipConverter : JsonConverter<Zip?>
+{
+    public override Zip? Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options
+    )
+    {
+        var element = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<string>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<double>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            return new(JsonSerializer.Deserialize<bool>(element, options), element);
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<List<JsonElement>>(element, options);
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        try
+        {
+            var deserialized = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(
+                element,
+                options
+            );
+            if (deserialized != null)
+            {
+                return new(deserialized, element);
+            }
+        }
+        catch (Exception e) when (e is JsonException || e is OursPrivacyInvalidDataException)
+        {
+            // ignore
+        }
+
+        return new(element);
+    }
+
+    public override void Write(Utf8JsonWriter writer, Zip? value, JsonSerializerOptions options)
+    {
+        JsonSerializer.Serialize(writer, value?.Json, options);
+    }
 }

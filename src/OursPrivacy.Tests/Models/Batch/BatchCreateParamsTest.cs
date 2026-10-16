@@ -13,13 +13,13 @@ public class BatchCreateParamsTest : TestBase
     {
         var parameters = new BatchCreateParams
         {
-            Token = "x",
+            Token = "P",
             Events =
             [
                 new()
                 {
-                    DistinctID = "x",
-                    EventValue = "x",
+                    DistinctID = "P",
+                    EventValue = "P",
                     DefaultProperties = new()
                     {
                         _EfTransactionID = "_ef_transaction_id",
@@ -56,12 +56,14 @@ public class BatchCreateParamsTest : TestBase
                         GadSource = "gad_source",
                         Gbraid = "gbraid",
                         Gclid = "gclid",
+                        Graid = "graid",
+                        Grclid = "grclid",
                         Host = "host",
                         Iframe = true,
                         ImRef = "im_ref",
                         IP = "ip",
                         Irclickid = "irclickid",
-                        IsBot = "is_bot",
+                        IsBot = "string",
                         LiFatID = "li_fat_id",
                         Msclkid = "msclkid",
                         Ndclid = "ndclid",
@@ -101,12 +103,15 @@ public class BatchCreateParamsTest : TestBase
                         Wbraid = "wbraid",
                         Webview = true,
                     },
-                    Email = "x",
-                    EventProperties = new Dictionary<string, string?>() { { "foo", "string" } },
-                    ExternalID = "x",
+                    Email = "P",
+                    EventProperties = new Dictionary<string, EventProperty?>()
+                    {
+                        { "foo", "string" },
+                    },
+                    ExternalID = "P",
                     IdentityContext = new() { IP = "ip", UserAgent = "userAgent" },
                     Time = 0,
-                    UserID = "x",
+                    UserID = "P",
                     UserProperties = new()
                     {
                         _EfTransactionID = "_ef_transaction_id",
@@ -123,9 +128,9 @@ public class BatchCreateParamsTest : TestBase
                         Clickid = "clickid",
                         Clid = "clid",
                         CompanyName = "company_name",
-                        Consent = new Dictionary<string, string?>() { { "foo", "string" } },
+                        Consent = new Dictionary<string, Consent?>() { { "foo", "string" } },
                         Country = "country",
-                        CustomProperties = new Dictionary<string, string?>()
+                        CustomProperties = new Dictionary<string, CustomProperty?>()
                         {
                             { "foo", "string" },
                         },
@@ -142,10 +147,12 @@ public class BatchCreateParamsTest : TestBase
                         Gbraid = "gbraid",
                         Gclid = "gclid",
                         Gender = "gender",
+                        Graid = "graid",
+                        Grclid = "grclid",
                         ImRef = "im_ref",
                         IP = "ip",
                         Irclickid = "irclickid",
-                        IsBot = "is_bot",
+                        IsBot = "string",
                         JobTitle = "job_title",
                         LastName = "last_name",
                         LiFatID = "li_fat_id",
@@ -153,7 +160,7 @@ public class BatchCreateParamsTest : TestBase
                         Ndclid = "ndclid",
                         ObClickID = "ob_click_id",
                         Oppref = "oppref",
-                        PhoneNumber = "phone_number",
+                        PhoneNumber = "string",
                         Qclid = "qclid",
                         RdtCid = "rdt_cid",
                         Referrer = "referrer",
@@ -175,19 +182,19 @@ public class BatchCreateParamsTest : TestBase
                         ViantClickID = "viant_click_id",
                         ViantImpressionID = "viant_impression_id",
                         Wbraid = "wbraid",
-                        Zip = "zip",
+                        Zip = "string",
                     },
                 },
             ],
         };
 
-        string expectedToken = "x";
+        string expectedToken = "P";
         List<Event> expectedEvents =
         [
             new()
             {
-                DistinctID = "x",
-                EventValue = "x",
+                DistinctID = "P",
+                EventValue = "P",
                 DefaultProperties = new()
                 {
                     _EfTransactionID = "_ef_transaction_id",
@@ -224,12 +231,14 @@ public class BatchCreateParamsTest : TestBase
                     GadSource = "gad_source",
                     Gbraid = "gbraid",
                     Gclid = "gclid",
+                    Graid = "graid",
+                    Grclid = "grclid",
                     Host = "host",
                     Iframe = true,
                     ImRef = "im_ref",
                     IP = "ip",
                     Irclickid = "irclickid",
-                    IsBot = "is_bot",
+                    IsBot = "string",
                     LiFatID = "li_fat_id",
                     Msclkid = "msclkid",
                     Ndclid = "ndclid",
@@ -269,12 +278,12 @@ public class BatchCreateParamsTest : TestBase
                     Wbraid = "wbraid",
                     Webview = true,
                 },
-                Email = "x",
-                EventProperties = new Dictionary<string, string?>() { { "foo", "string" } },
-                ExternalID = "x",
+                Email = "P",
+                EventProperties = new Dictionary<string, EventProperty?>() { { "foo", "string" } },
+                ExternalID = "P",
                 IdentityContext = new() { IP = "ip", UserAgent = "userAgent" },
                 Time = 0,
-                UserID = "x",
+                UserID = "P",
                 UserProperties = new()
                 {
                     _EfTransactionID = "_ef_transaction_id",
@@ -291,9 +300,12 @@ public class BatchCreateParamsTest : TestBase
                     Clickid = "clickid",
                     Clid = "clid",
                     CompanyName = "company_name",
-                    Consent = new Dictionary<string, string?>() { { "foo", "string" } },
+                    Consent = new Dictionary<string, Consent?>() { { "foo", "string" } },
                     Country = "country",
-                    CustomProperties = new Dictionary<string, string?>() { { "foo", "string" } },
+                    CustomProperties = new Dictionary<string, CustomProperty?>()
+                    {
+                        { "foo", "string" },
+                    },
                     DateOfBirth = "date_of_birth",
                     Dclid = "dclid",
                     Email = "email",
@@ -307,10 +319,12 @@ public class BatchCreateParamsTest : TestBase
                     Gbraid = "gbraid",
                     Gclid = "gclid",
                     Gender = "gender",
+                    Graid = "graid",
+                    Grclid = "grclid",
                     ImRef = "im_ref",
                     IP = "ip",
                     Irclickid = "irclickid",
-                    IsBot = "is_bot",
+                    IsBot = "string",
                     JobTitle = "job_title",
                     LastName = "last_name",
                     LiFatID = "li_fat_id",
@@ -318,7 +332,7 @@ public class BatchCreateParamsTest : TestBase
                     Ndclid = "ndclid",
                     ObClickID = "ob_click_id",
                     Oppref = "oppref",
-                    PhoneNumber = "phone_number",
+                    PhoneNumber = "string",
                     Qclid = "qclid",
                     RdtCid = "rdt_cid",
                     Referrer = "referrer",
@@ -340,7 +354,7 @@ public class BatchCreateParamsTest : TestBase
                     ViantClickID = "viant_click_id",
                     ViantImpressionID = "viant_impression_id",
                     Wbraid = "wbraid",
-                    Zip = "zip",
+                    Zip = "string",
                 },
             },
         ];
@@ -358,13 +372,13 @@ public class BatchCreateParamsTest : TestBase
     {
         BatchCreateParams parameters = new()
         {
-            Token = "x",
+            Token = "P",
             Events =
             [
                 new()
                 {
-                    DistinctID = "x",
-                    EventValue = "x",
+                    DistinctID = "P",
+                    EventValue = "P",
                     DefaultProperties = new()
                     {
                         _EfTransactionID = "_ef_transaction_id",
@@ -401,12 +415,14 @@ public class BatchCreateParamsTest : TestBase
                         GadSource = "gad_source",
                         Gbraid = "gbraid",
                         Gclid = "gclid",
+                        Graid = "graid",
+                        Grclid = "grclid",
                         Host = "host",
                         Iframe = true,
                         ImRef = "im_ref",
                         IP = "ip",
                         Irclickid = "irclickid",
-                        IsBot = "is_bot",
+                        IsBot = "string",
                         LiFatID = "li_fat_id",
                         Msclkid = "msclkid",
                         Ndclid = "ndclid",
@@ -446,12 +462,15 @@ public class BatchCreateParamsTest : TestBase
                         Wbraid = "wbraid",
                         Webview = true,
                     },
-                    Email = "x",
-                    EventProperties = new Dictionary<string, string?>() { { "foo", "string" } },
-                    ExternalID = "x",
+                    Email = "P",
+                    EventProperties = new Dictionary<string, EventProperty?>()
+                    {
+                        { "foo", "string" },
+                    },
+                    ExternalID = "P",
                     IdentityContext = new() { IP = "ip", UserAgent = "userAgent" },
                     Time = 0,
-                    UserID = "x",
+                    UserID = "P",
                     UserProperties = new()
                     {
                         _EfTransactionID = "_ef_transaction_id",
@@ -468,9 +487,9 @@ public class BatchCreateParamsTest : TestBase
                         Clickid = "clickid",
                         Clid = "clid",
                         CompanyName = "company_name",
-                        Consent = new Dictionary<string, string?>() { { "foo", "string" } },
+                        Consent = new Dictionary<string, Consent?>() { { "foo", "string" } },
                         Country = "country",
-                        CustomProperties = new Dictionary<string, string?>()
+                        CustomProperties = new Dictionary<string, CustomProperty?>()
                         {
                             { "foo", "string" },
                         },
@@ -487,10 +506,12 @@ public class BatchCreateParamsTest : TestBase
                         Gbraid = "gbraid",
                         Gclid = "gclid",
                         Gender = "gender",
+                        Graid = "graid",
+                        Grclid = "grclid",
                         ImRef = "im_ref",
                         IP = "ip",
                         Irclickid = "irclickid",
-                        IsBot = "is_bot",
+                        IsBot = "string",
                         JobTitle = "job_title",
                         LastName = "last_name",
                         LiFatID = "li_fat_id",
@@ -498,7 +519,7 @@ public class BatchCreateParamsTest : TestBase
                         Ndclid = "ndclid",
                         ObClickID = "ob_click_id",
                         Oppref = "oppref",
-                        PhoneNumber = "phone_number",
+                        PhoneNumber = "string",
                         Qclid = "qclid",
                         RdtCid = "rdt_cid",
                         Referrer = "referrer",
@@ -520,7 +541,7 @@ public class BatchCreateParamsTest : TestBase
                         ViantClickID = "viant_click_id",
                         ViantImpressionID = "viant_impression_id",
                         Wbraid = "wbraid",
-                        Zip = "zip",
+                        Zip = "string",
                     },
                 },
             ],
@@ -536,13 +557,13 @@ public class BatchCreateParamsTest : TestBase
     {
         var parameters = new BatchCreateParams
         {
-            Token = "x",
+            Token = "P",
             Events =
             [
                 new()
                 {
-                    DistinctID = "x",
-                    EventValue = "x",
+                    DistinctID = "P",
+                    EventValue = "P",
                     DefaultProperties = new()
                     {
                         _EfTransactionID = "_ef_transaction_id",
@@ -579,12 +600,14 @@ public class BatchCreateParamsTest : TestBase
                         GadSource = "gad_source",
                         Gbraid = "gbraid",
                         Gclid = "gclid",
+                        Graid = "graid",
+                        Grclid = "grclid",
                         Host = "host",
                         Iframe = true,
                         ImRef = "im_ref",
                         IP = "ip",
                         Irclickid = "irclickid",
-                        IsBot = "is_bot",
+                        IsBot = "string",
                         LiFatID = "li_fat_id",
                         Msclkid = "msclkid",
                         Ndclid = "ndclid",
@@ -624,12 +647,15 @@ public class BatchCreateParamsTest : TestBase
                         Wbraid = "wbraid",
                         Webview = true,
                     },
-                    Email = "x",
-                    EventProperties = new Dictionary<string, string?>() { { "foo", "string" } },
-                    ExternalID = "x",
+                    Email = "P",
+                    EventProperties = new Dictionary<string, EventProperty?>()
+                    {
+                        { "foo", "string" },
+                    },
+                    ExternalID = "P",
                     IdentityContext = new() { IP = "ip", UserAgent = "userAgent" },
                     Time = 0,
-                    UserID = "x",
+                    UserID = "P",
                     UserProperties = new()
                     {
                         _EfTransactionID = "_ef_transaction_id",
@@ -646,9 +672,9 @@ public class BatchCreateParamsTest : TestBase
                         Clickid = "clickid",
                         Clid = "clid",
                         CompanyName = "company_name",
-                        Consent = new Dictionary<string, string?>() { { "foo", "string" } },
+                        Consent = new Dictionary<string, Consent?>() { { "foo", "string" } },
                         Country = "country",
-                        CustomProperties = new Dictionary<string, string?>()
+                        CustomProperties = new Dictionary<string, CustomProperty?>()
                         {
                             { "foo", "string" },
                         },
@@ -665,10 +691,12 @@ public class BatchCreateParamsTest : TestBase
                         Gbraid = "gbraid",
                         Gclid = "gclid",
                         Gender = "gender",
+                        Graid = "graid",
+                        Grclid = "grclid",
                         ImRef = "im_ref",
                         IP = "ip",
                         Irclickid = "irclickid",
-                        IsBot = "is_bot",
+                        IsBot = "string",
                         JobTitle = "job_title",
                         LastName = "last_name",
                         LiFatID = "li_fat_id",
@@ -676,7 +704,7 @@ public class BatchCreateParamsTest : TestBase
                         Ndclid = "ndclid",
                         ObClickID = "ob_click_id",
                         Oppref = "oppref",
-                        PhoneNumber = "phone_number",
+                        PhoneNumber = "string",
                         Qclid = "qclid",
                         RdtCid = "rdt_cid",
                         Referrer = "referrer",
@@ -698,7 +726,7 @@ public class BatchCreateParamsTest : TestBase
                         ViantClickID = "viant_click_id",
                         ViantImpressionID = "viant_impression_id",
                         Wbraid = "wbraid",
-                        Zip = "zip",
+                        Zip = "string",
                     },
                 },
             ],
@@ -717,8 +745,8 @@ public class EventTest : TestBase
     {
         var model = new Event
         {
-            DistinctID = "x",
-            EventValue = "x",
+            DistinctID = "P",
+            EventValue = "P",
             DefaultProperties = new()
             {
                 _EfTransactionID = "_ef_transaction_id",
@@ -755,12 +783,14 @@ public class EventTest : TestBase
                 GadSource = "gad_source",
                 Gbraid = "gbraid",
                 Gclid = "gclid",
+                Graid = "graid",
+                Grclid = "grclid",
                 Host = "host",
                 Iframe = true,
                 ImRef = "im_ref",
                 IP = "ip",
                 Irclickid = "irclickid",
-                IsBot = "is_bot",
+                IsBot = "string",
                 LiFatID = "li_fat_id",
                 Msclkid = "msclkid",
                 Ndclid = "ndclid",
@@ -800,12 +830,12 @@ public class EventTest : TestBase
                 Wbraid = "wbraid",
                 Webview = true,
             },
-            Email = "x",
-            EventProperties = new Dictionary<string, string?>() { { "foo", "string" } },
-            ExternalID = "x",
+            Email = "P",
+            EventProperties = new Dictionary<string, EventProperty?>() { { "foo", "string" } },
+            ExternalID = "P",
             IdentityContext = new() { IP = "ip", UserAgent = "userAgent" },
             Time = 0,
-            UserID = "x",
+            UserID = "P",
             UserProperties = new()
             {
                 _EfTransactionID = "_ef_transaction_id",
@@ -822,9 +852,12 @@ public class EventTest : TestBase
                 Clickid = "clickid",
                 Clid = "clid",
                 CompanyName = "company_name",
-                Consent = new Dictionary<string, string?>() { { "foo", "string" } },
+                Consent = new Dictionary<string, Consent?>() { { "foo", "string" } },
                 Country = "country",
-                CustomProperties = new Dictionary<string, string?>() { { "foo", "string" } },
+                CustomProperties = new Dictionary<string, CustomProperty?>()
+                {
+                    { "foo", "string" },
+                },
                 DateOfBirth = "date_of_birth",
                 Dclid = "dclid",
                 Email = "email",
@@ -838,10 +871,12 @@ public class EventTest : TestBase
                 Gbraid = "gbraid",
                 Gclid = "gclid",
                 Gender = "gender",
+                Graid = "graid",
+                Grclid = "grclid",
                 ImRef = "im_ref",
                 IP = "ip",
                 Irclickid = "irclickid",
-                IsBot = "is_bot",
+                IsBot = "string",
                 JobTitle = "job_title",
                 LastName = "last_name",
                 LiFatID = "li_fat_id",
@@ -849,7 +884,7 @@ public class EventTest : TestBase
                 Ndclid = "ndclid",
                 ObClickID = "ob_click_id",
                 Oppref = "oppref",
-                PhoneNumber = "phone_number",
+                PhoneNumber = "string",
                 Qclid = "qclid",
                 RdtCid = "rdt_cid",
                 Referrer = "referrer",
@@ -871,12 +906,12 @@ public class EventTest : TestBase
                 ViantClickID = "viant_click_id",
                 ViantImpressionID = "viant_impression_id",
                 Wbraid = "wbraid",
-                Zip = "zip",
+                Zip = "string",
             },
         };
 
-        string expectedDistinctID = "x";
-        string expectedEventValue = "x";
+        string expectedDistinctID = "P";
+        string expectedEventValue = "P";
         DefaultProperties expectedDefaultProperties = new()
         {
             _EfTransactionID = "_ef_transaction_id",
@@ -913,12 +948,14 @@ public class EventTest : TestBase
             GadSource = "gad_source",
             Gbraid = "gbraid",
             Gclid = "gclid",
+            Graid = "graid",
+            Grclid = "grclid",
             Host = "host",
             Iframe = true,
             ImRef = "im_ref",
             IP = "ip",
             Irclickid = "irclickid",
-            IsBot = "is_bot",
+            IsBot = "string",
             LiFatID = "li_fat_id",
             Msclkid = "msclkid",
             Ndclid = "ndclid",
@@ -958,12 +995,12 @@ public class EventTest : TestBase
             Wbraid = "wbraid",
             Webview = true,
         };
-        string expectedEmail = "x";
-        Dictionary<string, string?> expectedEventProperties = new() { { "foo", "string" } };
-        string expectedExternalID = "x";
+        string expectedEmail = "P";
+        Dictionary<string, EventProperty?> expectedEventProperties = new() { { "foo", "string" } };
+        string expectedExternalID = "P";
         IdentityContext expectedIdentityContext = new() { IP = "ip", UserAgent = "userAgent" };
         double expectedTime = 0;
-        string expectedUserID = "x";
+        string expectedUserID = "P";
         UserProperties expectedUserProperties = new()
         {
             _EfTransactionID = "_ef_transaction_id",
@@ -980,9 +1017,9 @@ public class EventTest : TestBase
             Clickid = "clickid",
             Clid = "clid",
             CompanyName = "company_name",
-            Consent = new Dictionary<string, string?>() { { "foo", "string" } },
+            Consent = new Dictionary<string, Consent?>() { { "foo", "string" } },
             Country = "country",
-            CustomProperties = new Dictionary<string, string?>() { { "foo", "string" } },
+            CustomProperties = new Dictionary<string, CustomProperty?>() { { "foo", "string" } },
             DateOfBirth = "date_of_birth",
             Dclid = "dclid",
             Email = "email",
@@ -996,10 +1033,12 @@ public class EventTest : TestBase
             Gbraid = "gbraid",
             Gclid = "gclid",
             Gender = "gender",
+            Graid = "graid",
+            Grclid = "grclid",
             ImRef = "im_ref",
             IP = "ip",
             Irclickid = "irclickid",
-            IsBot = "is_bot",
+            IsBot = "string",
             JobTitle = "job_title",
             LastName = "last_name",
             LiFatID = "li_fat_id",
@@ -1007,7 +1046,7 @@ public class EventTest : TestBase
             Ndclid = "ndclid",
             ObClickID = "ob_click_id",
             Oppref = "oppref",
-            PhoneNumber = "phone_number",
+            PhoneNumber = "string",
             Qclid = "qclid",
             RdtCid = "rdt_cid",
             Referrer = "referrer",
@@ -1029,7 +1068,7 @@ public class EventTest : TestBase
             ViantClickID = "viant_click_id",
             ViantImpressionID = "viant_impression_id",
             Wbraid = "wbraid",
-            Zip = "zip",
+            Zip = "string",
         };
 
         Assert.Equal(expectedDistinctID, model.DistinctID);
@@ -1056,8 +1095,8 @@ public class EventTest : TestBase
     {
         var model = new Event
         {
-            DistinctID = "x",
-            EventValue = "x",
+            DistinctID = "P",
+            EventValue = "P",
             DefaultProperties = new()
             {
                 _EfTransactionID = "_ef_transaction_id",
@@ -1094,12 +1133,14 @@ public class EventTest : TestBase
                 GadSource = "gad_source",
                 Gbraid = "gbraid",
                 Gclid = "gclid",
+                Graid = "graid",
+                Grclid = "grclid",
                 Host = "host",
                 Iframe = true,
                 ImRef = "im_ref",
                 IP = "ip",
                 Irclickid = "irclickid",
-                IsBot = "is_bot",
+                IsBot = "string",
                 LiFatID = "li_fat_id",
                 Msclkid = "msclkid",
                 Ndclid = "ndclid",
@@ -1139,12 +1180,12 @@ public class EventTest : TestBase
                 Wbraid = "wbraid",
                 Webview = true,
             },
-            Email = "x",
-            EventProperties = new Dictionary<string, string?>() { { "foo", "string" } },
-            ExternalID = "x",
+            Email = "P",
+            EventProperties = new Dictionary<string, EventProperty?>() { { "foo", "string" } },
+            ExternalID = "P",
             IdentityContext = new() { IP = "ip", UserAgent = "userAgent" },
             Time = 0,
-            UserID = "x",
+            UserID = "P",
             UserProperties = new()
             {
                 _EfTransactionID = "_ef_transaction_id",
@@ -1161,9 +1202,12 @@ public class EventTest : TestBase
                 Clickid = "clickid",
                 Clid = "clid",
                 CompanyName = "company_name",
-                Consent = new Dictionary<string, string?>() { { "foo", "string" } },
+                Consent = new Dictionary<string, Consent?>() { { "foo", "string" } },
                 Country = "country",
-                CustomProperties = new Dictionary<string, string?>() { { "foo", "string" } },
+                CustomProperties = new Dictionary<string, CustomProperty?>()
+                {
+                    { "foo", "string" },
+                },
                 DateOfBirth = "date_of_birth",
                 Dclid = "dclid",
                 Email = "email",
@@ -1177,10 +1221,12 @@ public class EventTest : TestBase
                 Gbraid = "gbraid",
                 Gclid = "gclid",
                 Gender = "gender",
+                Graid = "graid",
+                Grclid = "grclid",
                 ImRef = "im_ref",
                 IP = "ip",
                 Irclickid = "irclickid",
-                IsBot = "is_bot",
+                IsBot = "string",
                 JobTitle = "job_title",
                 LastName = "last_name",
                 LiFatID = "li_fat_id",
@@ -1188,7 +1234,7 @@ public class EventTest : TestBase
                 Ndclid = "ndclid",
                 ObClickID = "ob_click_id",
                 Oppref = "oppref",
-                PhoneNumber = "phone_number",
+                PhoneNumber = "string",
                 Qclid = "qclid",
                 RdtCid = "rdt_cid",
                 Referrer = "referrer",
@@ -1210,7 +1256,7 @@ public class EventTest : TestBase
                 ViantClickID = "viant_click_id",
                 ViantImpressionID = "viant_impression_id",
                 Wbraid = "wbraid",
-                Zip = "zip",
+                Zip = "string",
             },
         };
 
@@ -1225,8 +1271,8 @@ public class EventTest : TestBase
     {
         var model = new Event
         {
-            DistinctID = "x",
-            EventValue = "x",
+            DistinctID = "P",
+            EventValue = "P",
             DefaultProperties = new()
             {
                 _EfTransactionID = "_ef_transaction_id",
@@ -1263,12 +1309,14 @@ public class EventTest : TestBase
                 GadSource = "gad_source",
                 Gbraid = "gbraid",
                 Gclid = "gclid",
+                Graid = "graid",
+                Grclid = "grclid",
                 Host = "host",
                 Iframe = true,
                 ImRef = "im_ref",
                 IP = "ip",
                 Irclickid = "irclickid",
-                IsBot = "is_bot",
+                IsBot = "string",
                 LiFatID = "li_fat_id",
                 Msclkid = "msclkid",
                 Ndclid = "ndclid",
@@ -1308,12 +1356,12 @@ public class EventTest : TestBase
                 Wbraid = "wbraid",
                 Webview = true,
             },
-            Email = "x",
-            EventProperties = new Dictionary<string, string?>() { { "foo", "string" } },
-            ExternalID = "x",
+            Email = "P",
+            EventProperties = new Dictionary<string, EventProperty?>() { { "foo", "string" } },
+            ExternalID = "P",
             IdentityContext = new() { IP = "ip", UserAgent = "userAgent" },
             Time = 0,
-            UserID = "x",
+            UserID = "P",
             UserProperties = new()
             {
                 _EfTransactionID = "_ef_transaction_id",
@@ -1330,9 +1378,12 @@ public class EventTest : TestBase
                 Clickid = "clickid",
                 Clid = "clid",
                 CompanyName = "company_name",
-                Consent = new Dictionary<string, string?>() { { "foo", "string" } },
+                Consent = new Dictionary<string, Consent?>() { { "foo", "string" } },
                 Country = "country",
-                CustomProperties = new Dictionary<string, string?>() { { "foo", "string" } },
+                CustomProperties = new Dictionary<string, CustomProperty?>()
+                {
+                    { "foo", "string" },
+                },
                 DateOfBirth = "date_of_birth",
                 Dclid = "dclid",
                 Email = "email",
@@ -1346,10 +1397,12 @@ public class EventTest : TestBase
                 Gbraid = "gbraid",
                 Gclid = "gclid",
                 Gender = "gender",
+                Graid = "graid",
+                Grclid = "grclid",
                 ImRef = "im_ref",
                 IP = "ip",
                 Irclickid = "irclickid",
-                IsBot = "is_bot",
+                IsBot = "string",
                 JobTitle = "job_title",
                 LastName = "last_name",
                 LiFatID = "li_fat_id",
@@ -1357,7 +1410,7 @@ public class EventTest : TestBase
                 Ndclid = "ndclid",
                 ObClickID = "ob_click_id",
                 Oppref = "oppref",
-                PhoneNumber = "phone_number",
+                PhoneNumber = "string",
                 Qclid = "qclid",
                 RdtCid = "rdt_cid",
                 Referrer = "referrer",
@@ -1379,7 +1432,7 @@ public class EventTest : TestBase
                 ViantClickID = "viant_click_id",
                 ViantImpressionID = "viant_impression_id",
                 Wbraid = "wbraid",
-                Zip = "zip",
+                Zip = "string",
             },
         };
 
@@ -1387,8 +1440,8 @@ public class EventTest : TestBase
         var deserialized = JsonSerializer.Deserialize<Event>(element, ModelBase.SerializerOptions);
         Assert.NotNull(deserialized);
 
-        string expectedDistinctID = "x";
-        string expectedEventValue = "x";
+        string expectedDistinctID = "P";
+        string expectedEventValue = "P";
         DefaultProperties expectedDefaultProperties = new()
         {
             _EfTransactionID = "_ef_transaction_id",
@@ -1425,12 +1478,14 @@ public class EventTest : TestBase
             GadSource = "gad_source",
             Gbraid = "gbraid",
             Gclid = "gclid",
+            Graid = "graid",
+            Grclid = "grclid",
             Host = "host",
             Iframe = true,
             ImRef = "im_ref",
             IP = "ip",
             Irclickid = "irclickid",
-            IsBot = "is_bot",
+            IsBot = "string",
             LiFatID = "li_fat_id",
             Msclkid = "msclkid",
             Ndclid = "ndclid",
@@ -1470,12 +1525,12 @@ public class EventTest : TestBase
             Wbraid = "wbraid",
             Webview = true,
         };
-        string expectedEmail = "x";
-        Dictionary<string, string?> expectedEventProperties = new() { { "foo", "string" } };
-        string expectedExternalID = "x";
+        string expectedEmail = "P";
+        Dictionary<string, EventProperty?> expectedEventProperties = new() { { "foo", "string" } };
+        string expectedExternalID = "P";
         IdentityContext expectedIdentityContext = new() { IP = "ip", UserAgent = "userAgent" };
         double expectedTime = 0;
-        string expectedUserID = "x";
+        string expectedUserID = "P";
         UserProperties expectedUserProperties = new()
         {
             _EfTransactionID = "_ef_transaction_id",
@@ -1492,9 +1547,9 @@ public class EventTest : TestBase
             Clickid = "clickid",
             Clid = "clid",
             CompanyName = "company_name",
-            Consent = new Dictionary<string, string?>() { { "foo", "string" } },
+            Consent = new Dictionary<string, Consent?>() { { "foo", "string" } },
             Country = "country",
-            CustomProperties = new Dictionary<string, string?>() { { "foo", "string" } },
+            CustomProperties = new Dictionary<string, CustomProperty?>() { { "foo", "string" } },
             DateOfBirth = "date_of_birth",
             Dclid = "dclid",
             Email = "email",
@@ -1508,10 +1563,12 @@ public class EventTest : TestBase
             Gbraid = "gbraid",
             Gclid = "gclid",
             Gender = "gender",
+            Graid = "graid",
+            Grclid = "grclid",
             ImRef = "im_ref",
             IP = "ip",
             Irclickid = "irclickid",
-            IsBot = "is_bot",
+            IsBot = "string",
             JobTitle = "job_title",
             LastName = "last_name",
             LiFatID = "li_fat_id",
@@ -1519,7 +1576,7 @@ public class EventTest : TestBase
             Ndclid = "ndclid",
             ObClickID = "ob_click_id",
             Oppref = "oppref",
-            PhoneNumber = "phone_number",
+            PhoneNumber = "string",
             Qclid = "qclid",
             RdtCid = "rdt_cid",
             Referrer = "referrer",
@@ -1541,7 +1598,7 @@ public class EventTest : TestBase
             ViantClickID = "viant_click_id",
             ViantImpressionID = "viant_impression_id",
             Wbraid = "wbraid",
-            Zip = "zip",
+            Zip = "string",
         };
 
         Assert.Equal(expectedDistinctID, deserialized.DistinctID);
@@ -1568,8 +1625,8 @@ public class EventTest : TestBase
     {
         var model = new Event
         {
-            DistinctID = "x",
-            EventValue = "x",
+            DistinctID = "P",
+            EventValue = "P",
             DefaultProperties = new()
             {
                 _EfTransactionID = "_ef_transaction_id",
@@ -1606,12 +1663,14 @@ public class EventTest : TestBase
                 GadSource = "gad_source",
                 Gbraid = "gbraid",
                 Gclid = "gclid",
+                Graid = "graid",
+                Grclid = "grclid",
                 Host = "host",
                 Iframe = true,
                 ImRef = "im_ref",
                 IP = "ip",
                 Irclickid = "irclickid",
-                IsBot = "is_bot",
+                IsBot = "string",
                 LiFatID = "li_fat_id",
                 Msclkid = "msclkid",
                 Ndclid = "ndclid",
@@ -1651,12 +1710,12 @@ public class EventTest : TestBase
                 Wbraid = "wbraid",
                 Webview = true,
             },
-            Email = "x",
-            EventProperties = new Dictionary<string, string?>() { { "foo", "string" } },
-            ExternalID = "x",
+            Email = "P",
+            EventProperties = new Dictionary<string, EventProperty?>() { { "foo", "string" } },
+            ExternalID = "P",
             IdentityContext = new() { IP = "ip", UserAgent = "userAgent" },
             Time = 0,
-            UserID = "x",
+            UserID = "P",
             UserProperties = new()
             {
                 _EfTransactionID = "_ef_transaction_id",
@@ -1673,9 +1732,12 @@ public class EventTest : TestBase
                 Clickid = "clickid",
                 Clid = "clid",
                 CompanyName = "company_name",
-                Consent = new Dictionary<string, string?>() { { "foo", "string" } },
+                Consent = new Dictionary<string, Consent?>() { { "foo", "string" } },
                 Country = "country",
-                CustomProperties = new Dictionary<string, string?>() { { "foo", "string" } },
+                CustomProperties = new Dictionary<string, CustomProperty?>()
+                {
+                    { "foo", "string" },
+                },
                 DateOfBirth = "date_of_birth",
                 Dclid = "dclid",
                 Email = "email",
@@ -1689,10 +1751,12 @@ public class EventTest : TestBase
                 Gbraid = "gbraid",
                 Gclid = "gclid",
                 Gender = "gender",
+                Graid = "graid",
+                Grclid = "grclid",
                 ImRef = "im_ref",
                 IP = "ip",
                 Irclickid = "irclickid",
-                IsBot = "is_bot",
+                IsBot = "string",
                 JobTitle = "job_title",
                 LastName = "last_name",
                 LiFatID = "li_fat_id",
@@ -1700,7 +1764,7 @@ public class EventTest : TestBase
                 Ndclid = "ndclid",
                 ObClickID = "ob_click_id",
                 Oppref = "oppref",
-                PhoneNumber = "phone_number",
+                PhoneNumber = "string",
                 Qclid = "qclid",
                 RdtCid = "rdt_cid",
                 Referrer = "referrer",
@@ -1722,7 +1786,7 @@ public class EventTest : TestBase
                 ViantClickID = "viant_click_id",
                 ViantImpressionID = "viant_impression_id",
                 Wbraid = "wbraid",
-                Zip = "zip",
+                Zip = "string",
             },
         };
 
@@ -1732,7 +1796,7 @@ public class EventTest : TestBase
     [Fact]
     public void OptionalNullablePropertiesUnsetAreNotSet_Works()
     {
-        var model = new Event { DistinctID = "x", EventValue = "x" };
+        var model = new Event { DistinctID = "P", EventValue = "P" };
 
         Assert.Null(model.DefaultProperties);
         Assert.False(model.RawData.ContainsKey("defaultProperties"));
@@ -1755,7 +1819,7 @@ public class EventTest : TestBase
     [Fact]
     public void OptionalNullablePropertiesUnsetValidation_Works()
     {
-        var model = new Event { DistinctID = "x", EventValue = "x" };
+        var model = new Event { DistinctID = "P", EventValue = "P" };
 
         model.Validate();
     }
@@ -1765,8 +1829,8 @@ public class EventTest : TestBase
     {
         var model = new Event
         {
-            DistinctID = "x",
-            EventValue = "x",
+            DistinctID = "P",
+            EventValue = "P",
 
             DefaultProperties = null,
             Email = null,
@@ -1801,8 +1865,8 @@ public class EventTest : TestBase
     {
         var model = new Event
         {
-            DistinctID = "x",
-            EventValue = "x",
+            DistinctID = "P",
+            EventValue = "P",
 
             DefaultProperties = null,
             Email = null,
@@ -1822,8 +1886,8 @@ public class EventTest : TestBase
     {
         var model = new Event
         {
-            DistinctID = "x",
-            EventValue = "x",
+            DistinctID = "P",
+            EventValue = "P",
             DefaultProperties = new()
             {
                 _EfTransactionID = "_ef_transaction_id",
@@ -1860,12 +1924,14 @@ public class EventTest : TestBase
                 GadSource = "gad_source",
                 Gbraid = "gbraid",
                 Gclid = "gclid",
+                Graid = "graid",
+                Grclid = "grclid",
                 Host = "host",
                 Iframe = true,
                 ImRef = "im_ref",
                 IP = "ip",
                 Irclickid = "irclickid",
-                IsBot = "is_bot",
+                IsBot = "string",
                 LiFatID = "li_fat_id",
                 Msclkid = "msclkid",
                 Ndclid = "ndclid",
@@ -1905,12 +1971,12 @@ public class EventTest : TestBase
                 Wbraid = "wbraid",
                 Webview = true,
             },
-            Email = "x",
-            EventProperties = new Dictionary<string, string?>() { { "foo", "string" } },
-            ExternalID = "x",
+            Email = "P",
+            EventProperties = new Dictionary<string, EventProperty?>() { { "foo", "string" } },
+            ExternalID = "P",
             IdentityContext = new() { IP = "ip", UserAgent = "userAgent" },
             Time = 0,
-            UserID = "x",
+            UserID = "P",
             UserProperties = new()
             {
                 _EfTransactionID = "_ef_transaction_id",
@@ -1927,9 +1993,12 @@ public class EventTest : TestBase
                 Clickid = "clickid",
                 Clid = "clid",
                 CompanyName = "company_name",
-                Consent = new Dictionary<string, string?>() { { "foo", "string" } },
+                Consent = new Dictionary<string, Consent?>() { { "foo", "string" } },
                 Country = "country",
-                CustomProperties = new Dictionary<string, string?>() { { "foo", "string" } },
+                CustomProperties = new Dictionary<string, CustomProperty?>()
+                {
+                    { "foo", "string" },
+                },
                 DateOfBirth = "date_of_birth",
                 Dclid = "dclid",
                 Email = "email",
@@ -1943,10 +2012,12 @@ public class EventTest : TestBase
                 Gbraid = "gbraid",
                 Gclid = "gclid",
                 Gender = "gender",
+                Graid = "graid",
+                Grclid = "grclid",
                 ImRef = "im_ref",
                 IP = "ip",
                 Irclickid = "irclickid",
-                IsBot = "is_bot",
+                IsBot = "string",
                 JobTitle = "job_title",
                 LastName = "last_name",
                 LiFatID = "li_fat_id",
@@ -1954,7 +2025,7 @@ public class EventTest : TestBase
                 Ndclid = "ndclid",
                 ObClickID = "ob_click_id",
                 Oppref = "oppref",
-                PhoneNumber = "phone_number",
+                PhoneNumber = "string",
                 Qclid = "qclid",
                 RdtCid = "rdt_cid",
                 Referrer = "referrer",
@@ -1976,7 +2047,7 @@ public class EventTest : TestBase
                 ViantClickID = "viant_click_id",
                 ViantImpressionID = "viant_impression_id",
                 Wbraid = "wbraid",
-                Zip = "zip",
+                Zip = "string",
             },
         };
 
@@ -2027,12 +2098,14 @@ public class DefaultPropertiesTest : TestBase
             GadSource = "gad_source",
             Gbraid = "gbraid",
             Gclid = "gclid",
+            Graid = "graid",
+            Grclid = "grclid",
             Host = "host",
             Iframe = true,
             ImRef = "im_ref",
             IP = "ip",
             Irclickid = "irclickid",
-            IsBot = "is_bot",
+            IsBot = "string",
             LiFatID = "li_fat_id",
             Msclkid = "msclkid",
             Ndclid = "ndclid",
@@ -2107,12 +2180,14 @@ public class DefaultPropertiesTest : TestBase
         string expectedGadSource = "gad_source";
         string expectedGbraid = "gbraid";
         string expectedGclid = "gclid";
+        string expectedGraid = "graid";
+        string expectedGrclid = "grclid";
         string expectedHost = "host";
         bool expectedIframe = true;
         string expectedImRef = "im_ref";
         string expectedIP = "ip";
         string expectedIrclickid = "irclickid";
-        string expectedIsBot = "is_bot";
+        IsBot expectedIsBot = "string";
         string expectedLiFatID = "li_fat_id";
         string expectedMsclkid = "msclkid";
         string expectedNdclid = "ndclid";
@@ -2186,6 +2261,8 @@ public class DefaultPropertiesTest : TestBase
         Assert.Equal(expectedGadSource, model.GadSource);
         Assert.Equal(expectedGbraid, model.Gbraid);
         Assert.Equal(expectedGclid, model.Gclid);
+        Assert.Equal(expectedGraid, model.Graid);
+        Assert.Equal(expectedGrclid, model.Grclid);
         Assert.Equal(expectedHost, model.Host);
         Assert.Equal(expectedIframe, model.Iframe);
         Assert.Equal(expectedImRef, model.ImRef);
@@ -2271,12 +2348,14 @@ public class DefaultPropertiesTest : TestBase
             GadSource = "gad_source",
             Gbraid = "gbraid",
             Gclid = "gclid",
+            Graid = "graid",
+            Grclid = "grclid",
             Host = "host",
             Iframe = true,
             ImRef = "im_ref",
             IP = "ip",
             Irclickid = "irclickid",
-            IsBot = "is_bot",
+            IsBot = "string",
             LiFatID = "li_fat_id",
             Msclkid = "msclkid",
             Ndclid = "ndclid",
@@ -2365,12 +2444,14 @@ public class DefaultPropertiesTest : TestBase
             GadSource = "gad_source",
             Gbraid = "gbraid",
             Gclid = "gclid",
+            Graid = "graid",
+            Grclid = "grclid",
             Host = "host",
             Iframe = true,
             ImRef = "im_ref",
             IP = "ip",
             Irclickid = "irclickid",
-            IsBot = "is_bot",
+            IsBot = "string",
             LiFatID = "li_fat_id",
             Msclkid = "msclkid",
             Ndclid = "ndclid",
@@ -2452,12 +2533,14 @@ public class DefaultPropertiesTest : TestBase
         string expectedGadSource = "gad_source";
         string expectedGbraid = "gbraid";
         string expectedGclid = "gclid";
+        string expectedGraid = "graid";
+        string expectedGrclid = "grclid";
         string expectedHost = "host";
         bool expectedIframe = true;
         string expectedImRef = "im_ref";
         string expectedIP = "ip";
         string expectedIrclickid = "irclickid";
-        string expectedIsBot = "is_bot";
+        IsBot expectedIsBot = "string";
         string expectedLiFatID = "li_fat_id";
         string expectedMsclkid = "msclkid";
         string expectedNdclid = "ndclid";
@@ -2531,6 +2614,8 @@ public class DefaultPropertiesTest : TestBase
         Assert.Equal(expectedGadSource, deserialized.GadSource);
         Assert.Equal(expectedGbraid, deserialized.Gbraid);
         Assert.Equal(expectedGclid, deserialized.Gclid);
+        Assert.Equal(expectedGraid, deserialized.Graid);
+        Assert.Equal(expectedGrclid, deserialized.Grclid);
         Assert.Equal(expectedHost, deserialized.Host);
         Assert.Equal(expectedIframe, deserialized.Iframe);
         Assert.Equal(expectedImRef, deserialized.ImRef);
@@ -2616,12 +2701,14 @@ public class DefaultPropertiesTest : TestBase
             GadSource = "gad_source",
             Gbraid = "gbraid",
             Gclid = "gclid",
+            Graid = "graid",
+            Grclid = "grclid",
             Host = "host",
             Iframe = true,
             ImRef = "im_ref",
             IP = "ip",
             Irclickid = "irclickid",
-            IsBot = "is_bot",
+            IsBot = "string",
             LiFatID = "li_fat_id",
             Msclkid = "msclkid",
             Ndclid = "ndclid",
@@ -2738,6 +2825,10 @@ public class DefaultPropertiesTest : TestBase
         Assert.False(model.RawData.ContainsKey("gbraid"));
         Assert.Null(model.Gclid);
         Assert.False(model.RawData.ContainsKey("gclid"));
+        Assert.Null(model.Graid);
+        Assert.False(model.RawData.ContainsKey("graid"));
+        Assert.Null(model.Grclid);
+        Assert.False(model.RawData.ContainsKey("grclid"));
         Assert.Null(model.Host);
         Assert.False(model.RawData.ContainsKey("host"));
         Assert.Null(model.Iframe);
@@ -2875,6 +2966,8 @@ public class DefaultPropertiesTest : TestBase
             GadSource = null,
             Gbraid = null,
             Gclid = null,
+            Graid = null,
+            Grclid = null,
             Host = null,
             Iframe = null,
             ImRef = null,
@@ -2989,6 +3082,10 @@ public class DefaultPropertiesTest : TestBase
         Assert.True(model.RawData.ContainsKey("gbraid"));
         Assert.Null(model.Gclid);
         Assert.True(model.RawData.ContainsKey("gclid"));
+        Assert.Null(model.Graid);
+        Assert.True(model.RawData.ContainsKey("graid"));
+        Assert.Null(model.Grclid);
+        Assert.True(model.RawData.ContainsKey("grclid"));
         Assert.Null(model.Host);
         Assert.True(model.RawData.ContainsKey("host"));
         Assert.Null(model.Iframe);
@@ -3118,6 +3215,8 @@ public class DefaultPropertiesTest : TestBase
             GadSource = null,
             Gbraid = null,
             Gclid = null,
+            Graid = null,
+            Grclid = null,
             Host = null,
             Iframe = null,
             ImRef = null,
@@ -3206,12 +3305,14 @@ public class DefaultPropertiesTest : TestBase
             GadSource = "gad_source",
             Gbraid = "gbraid",
             Gclid = "gclid",
+            Graid = "graid",
+            Grclid = "grclid",
             Host = "host",
             Iframe = true,
             ImRef = "im_ref",
             IP = "ip",
             Irclickid = "irclickid",
-            IsBot = "is_bot",
+            IsBot = "string",
             LiFatID = "li_fat_id",
             Msclkid = "msclkid",
             Ndclid = "ndclid",
@@ -3255,6 +3356,1190 @@ public class DefaultPropertiesTest : TestBase
         DefaultProperties copied = new(model);
 
         Assert.Equal(model, copied);
+    }
+}
+
+public class IsBotTest : TestBase
+{
+    [Fact]
+    public void StringValidationWorks()
+    {
+        IsBot value = "string";
+        value.Validate();
+    }
+
+    [Fact]
+    public void DoubleValidationWorks()
+    {
+        IsBot value = 0;
+        value.Validate();
+    }
+
+    [Fact]
+    public void BoolValidationWorks()
+    {
+        IsBot value = true;
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonElementsValidationWorks()
+    {
+        IsBot value = new([]);
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonElementsValidationWorks1()
+    {
+        IsBot value = new(new Dictionary<string, JsonElement>());
+        value.Validate();
+    }
+
+    [Fact]
+    public void StringSerializationRoundtripWorks()
+    {
+        IsBot value = "string";
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<IsBot>(element, ModelBase.SerializerOptions);
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void DoubleSerializationRoundtripWorks()
+    {
+        IsBot value = 0;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<IsBot>(element, ModelBase.SerializerOptions);
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void BoolSerializationRoundtripWorks()
+    {
+        IsBot value = true;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<IsBot>(element, ModelBase.SerializerOptions);
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonElementsSerializationRoundtripWorks()
+    {
+        IsBot value = new([]);
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<IsBot>(element, ModelBase.SerializerOptions);
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonElementsSerializationRoundtripWorks1()
+    {
+        IsBot value = new(new Dictionary<string, JsonElement>());
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<IsBot>(element, ModelBase.SerializerOptions);
+
+        Assert.Equal(value, deserialized);
+    }
+}
+
+public class EventPropertyTest : TestBase
+{
+    [Fact]
+    public void StringValidationWorks()
+    {
+        EventProperty value = "string";
+        value.Validate();
+    }
+
+    [Fact]
+    public void DoubleValidationWorks()
+    {
+        EventProperty value = 0;
+        value.Validate();
+    }
+
+    [Fact]
+    public void BoolValidationWorks()
+    {
+        EventProperty value = true;
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonValuesValidationWorks()
+    {
+        EventProperty value = new([new JsonValue("string")]);
+        value.Validate();
+    }
+
+    [Fact]
+    public void UnionMember4ItemsValidationWorks()
+    {
+        EventProperty value = new(
+            new Dictionary<string, UnionMember4Item?>() { { "foo", "string" } }
+        );
+        value.Validate();
+    }
+
+    [Fact]
+    public void StringSerializationRoundtripWorks()
+    {
+        EventProperty value = "string";
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<EventProperty>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void DoubleSerializationRoundtripWorks()
+    {
+        EventProperty value = 0;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<EventProperty>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void BoolSerializationRoundtripWorks()
+    {
+        EventProperty value = true;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<EventProperty>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonValuesSerializationRoundtripWorks()
+    {
+        EventProperty value = new([new JsonValue("string")]);
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<EventProperty>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void UnionMember4ItemsSerializationRoundtripWorks()
+    {
+        EventProperty value = new(
+            new Dictionary<string, UnionMember4Item?>() { { "foo", "string" } }
+        );
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<EventProperty>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+}
+
+public class JsonValueTest : TestBase
+{
+    [Fact]
+    public void StringValidationWorks()
+    {
+        JsonValue value = "string";
+        value.Validate();
+    }
+
+    [Fact]
+    public void DoubleValidationWorks()
+    {
+        JsonValue value = 0;
+        value.Validate();
+    }
+
+    [Fact]
+    public void BoolValidationWorks()
+    {
+        JsonValue value = true;
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonElementsValidationWorks()
+    {
+        JsonValue value = new([]);
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonElementsValidationWorks1()
+    {
+        JsonValue value = new(new Dictionary<string, JsonElement>());
+        value.Validate();
+    }
+
+    [Fact]
+    public void StringSerializationRoundtripWorks()
+    {
+        JsonValue value = "string";
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<JsonValue>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void DoubleSerializationRoundtripWorks()
+    {
+        JsonValue value = 0;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<JsonValue>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void BoolSerializationRoundtripWorks()
+    {
+        JsonValue value = true;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<JsonValue>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonElementsSerializationRoundtripWorks()
+    {
+        JsonValue value = new([]);
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<JsonValue>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonElementsSerializationRoundtripWorks1()
+    {
+        JsonValue value = new(new Dictionary<string, JsonElement>());
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<JsonValue>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+}
+
+public class UnionMember4ItemTest : TestBase
+{
+    [Fact]
+    public void StringValidationWorks()
+    {
+        UnionMember4Item value = "string";
+        value.Validate();
+    }
+
+    [Fact]
+    public void DoubleValidationWorks()
+    {
+        UnionMember4Item value = 0;
+        value.Validate();
+    }
+
+    [Fact]
+    public void BoolValidationWorks()
+    {
+        UnionMember4Item value = true;
+        value.Validate();
+    }
+
+    [Fact]
+    public void UnionMember4ItemJsonValuesValidationWorks()
+    {
+        UnionMember4Item value = new([new UnionMember4ItemJsonValue("string")]);
+        value.Validate();
+    }
+
+    [Fact]
+    public void UnionMember4ItemUnionMember4ItemsValidationWorks()
+    {
+        UnionMember4Item value = new(
+            new Dictionary<string, UnionMember4ItemUnionMember4Item?>() { { "foo", "string" } }
+        );
+        value.Validate();
+    }
+
+    [Fact]
+    public void StringSerializationRoundtripWorks()
+    {
+        UnionMember4Item value = "string";
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<UnionMember4Item>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void DoubleSerializationRoundtripWorks()
+    {
+        UnionMember4Item value = 0;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<UnionMember4Item>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void BoolSerializationRoundtripWorks()
+    {
+        UnionMember4Item value = true;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<UnionMember4Item>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void UnionMember4ItemJsonValuesSerializationRoundtripWorks()
+    {
+        UnionMember4Item value = new([new UnionMember4ItemJsonValue("string")]);
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<UnionMember4Item>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void UnionMember4ItemUnionMember4ItemsSerializationRoundtripWorks()
+    {
+        UnionMember4Item value = new(
+            new Dictionary<string, UnionMember4ItemUnionMember4Item?>() { { "foo", "string" } }
+        );
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<UnionMember4Item>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+}
+
+public class UnionMember4ItemJsonValueTest : TestBase
+{
+    [Fact]
+    public void StringValidationWorks()
+    {
+        UnionMember4ItemJsonValue value = "string";
+        value.Validate();
+    }
+
+    [Fact]
+    public void DoubleValidationWorks()
+    {
+        UnionMember4ItemJsonValue value = 0;
+        value.Validate();
+    }
+
+    [Fact]
+    public void BoolValidationWorks()
+    {
+        UnionMember4ItemJsonValue value = true;
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonElementsValidationWorks()
+    {
+        UnionMember4ItemJsonValue value = new([]);
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonElementsValidationWorks1()
+    {
+        UnionMember4ItemJsonValue value = new(new Dictionary<string, JsonElement>());
+        value.Validate();
+    }
+
+    [Fact]
+    public void StringSerializationRoundtripWorks()
+    {
+        UnionMember4ItemJsonValue value = "string";
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<UnionMember4ItemJsonValue>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void DoubleSerializationRoundtripWorks()
+    {
+        UnionMember4ItemJsonValue value = 0;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<UnionMember4ItemJsonValue>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void BoolSerializationRoundtripWorks()
+    {
+        UnionMember4ItemJsonValue value = true;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<UnionMember4ItemJsonValue>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonElementsSerializationRoundtripWorks()
+    {
+        UnionMember4ItemJsonValue value = new([]);
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<UnionMember4ItemJsonValue>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonElementsSerializationRoundtripWorks1()
+    {
+        UnionMember4ItemJsonValue value = new(new Dictionary<string, JsonElement>());
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<UnionMember4ItemJsonValue>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+}
+
+public class UnionMember4ItemUnionMember4ItemTest : TestBase
+{
+    [Fact]
+    public void StringValidationWorks()
+    {
+        UnionMember4ItemUnionMember4Item value = "string";
+        value.Validate();
+    }
+
+    [Fact]
+    public void DoubleValidationWorks()
+    {
+        UnionMember4ItemUnionMember4Item value = 0;
+        value.Validate();
+    }
+
+    [Fact]
+    public void BoolValidationWorks()
+    {
+        UnionMember4ItemUnionMember4Item value = true;
+        value.Validate();
+    }
+
+    [Fact]
+    public void UnionMember4ItemUnionMember4ItemJsonValuesValidationWorks()
+    {
+        UnionMember4ItemUnionMember4Item value = new(
+            [new UnionMember4ItemUnionMember4ItemJsonValue("string")]
+        );
+        value.Validate();
+    }
+
+    [Fact]
+    public void UnionMember4ItemUnionMember4ItemUnionMember4ItemsValidationWorks()
+    {
+        UnionMember4ItemUnionMember4Item value = new(
+            new Dictionary<string, UnionMember4ItemUnionMember4ItemUnionMember4Item?>()
+            {
+                { "foo", "string" },
+            }
+        );
+        value.Validate();
+    }
+
+    [Fact]
+    public void StringSerializationRoundtripWorks()
+    {
+        UnionMember4ItemUnionMember4Item value = "string";
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<UnionMember4ItemUnionMember4Item>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void DoubleSerializationRoundtripWorks()
+    {
+        UnionMember4ItemUnionMember4Item value = 0;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<UnionMember4ItemUnionMember4Item>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void BoolSerializationRoundtripWorks()
+    {
+        UnionMember4ItemUnionMember4Item value = true;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<UnionMember4ItemUnionMember4Item>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void UnionMember4ItemUnionMember4ItemJsonValuesSerializationRoundtripWorks()
+    {
+        UnionMember4ItemUnionMember4Item value = new(
+            [new UnionMember4ItemUnionMember4ItemJsonValue("string")]
+        );
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<UnionMember4ItemUnionMember4Item>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void UnionMember4ItemUnionMember4ItemUnionMember4ItemsSerializationRoundtripWorks()
+    {
+        UnionMember4ItemUnionMember4Item value = new(
+            new Dictionary<string, UnionMember4ItemUnionMember4ItemUnionMember4Item?>()
+            {
+                { "foo", "string" },
+            }
+        );
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<UnionMember4ItemUnionMember4Item>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+}
+
+public class UnionMember4ItemUnionMember4ItemJsonValueTest : TestBase
+{
+    [Fact]
+    public void StringValidationWorks()
+    {
+        UnionMember4ItemUnionMember4ItemJsonValue value = "string";
+        value.Validate();
+    }
+
+    [Fact]
+    public void DoubleValidationWorks()
+    {
+        UnionMember4ItemUnionMember4ItemJsonValue value = 0;
+        value.Validate();
+    }
+
+    [Fact]
+    public void BoolValidationWorks()
+    {
+        UnionMember4ItemUnionMember4ItemJsonValue value = true;
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonElementsValidationWorks()
+    {
+        UnionMember4ItemUnionMember4ItemJsonValue value = new([]);
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonElementsValidationWorks1()
+    {
+        UnionMember4ItemUnionMember4ItemJsonValue value = new(
+            new Dictionary<string, JsonElement>()
+        );
+        value.Validate();
+    }
+
+    [Fact]
+    public void StringSerializationRoundtripWorks()
+    {
+        UnionMember4ItemUnionMember4ItemJsonValue value = "string";
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<UnionMember4ItemUnionMember4ItemJsonValue>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void DoubleSerializationRoundtripWorks()
+    {
+        UnionMember4ItemUnionMember4ItemJsonValue value = 0;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<UnionMember4ItemUnionMember4ItemJsonValue>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void BoolSerializationRoundtripWorks()
+    {
+        UnionMember4ItemUnionMember4ItemJsonValue value = true;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<UnionMember4ItemUnionMember4ItemJsonValue>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonElementsSerializationRoundtripWorks()
+    {
+        UnionMember4ItemUnionMember4ItemJsonValue value = new([]);
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<UnionMember4ItemUnionMember4ItemJsonValue>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonElementsSerializationRoundtripWorks1()
+    {
+        UnionMember4ItemUnionMember4ItemJsonValue value = new(
+            new Dictionary<string, JsonElement>()
+        );
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<UnionMember4ItemUnionMember4ItemJsonValue>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+}
+
+public class UnionMember4ItemUnionMember4ItemUnionMember4ItemTest : TestBase
+{
+    [Fact]
+    public void StringValidationWorks()
+    {
+        UnionMember4ItemUnionMember4ItemUnionMember4Item value = "string";
+        value.Validate();
+    }
+
+    [Fact]
+    public void DoubleValidationWorks()
+    {
+        UnionMember4ItemUnionMember4ItemUnionMember4Item value = 0;
+        value.Validate();
+    }
+
+    [Fact]
+    public void BoolValidationWorks()
+    {
+        UnionMember4ItemUnionMember4ItemUnionMember4Item value = true;
+        value.Validate();
+    }
+
+    [Fact]
+    public void UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValuesValidationWorks()
+    {
+        UnionMember4ItemUnionMember4ItemUnionMember4Item value = new(
+            [new UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue("string")]
+        );
+        value.Validate();
+    }
+
+    [Fact]
+    public void UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemsValidationWorks()
+    {
+        UnionMember4ItemUnionMember4ItemUnionMember4Item value = new(
+            new Dictionary<
+                string,
+                UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            >()
+            {
+                { "foo", "string" },
+            }
+        );
+        value.Validate();
+    }
+
+    [Fact]
+    public void StringSerializationRoundtripWorks()
+    {
+        UnionMember4ItemUnionMember4ItemUnionMember4Item value = "string";
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<UnionMember4ItemUnionMember4ItemUnionMember4Item>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void DoubleSerializationRoundtripWorks()
+    {
+        UnionMember4ItemUnionMember4ItemUnionMember4Item value = 0;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<UnionMember4ItemUnionMember4ItemUnionMember4Item>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void BoolSerializationRoundtripWorks()
+    {
+        UnionMember4ItemUnionMember4ItemUnionMember4Item value = true;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<UnionMember4ItemUnionMember4ItemUnionMember4Item>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValuesSerializationRoundtripWorks()
+    {
+        UnionMember4ItemUnionMember4ItemUnionMember4Item value = new(
+            [new UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue("string")]
+        );
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<UnionMember4ItemUnionMember4ItemUnionMember4Item>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemsSerializationRoundtripWorks()
+    {
+        UnionMember4ItemUnionMember4ItemUnionMember4Item value = new(
+            new Dictionary<
+                string,
+                UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            >()
+            {
+                { "foo", "string" },
+            }
+        );
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<UnionMember4ItemUnionMember4ItemUnionMember4Item>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+}
+
+public class UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValueTest : TestBase
+{
+    [Fact]
+    public void StringValidationWorks()
+    {
+        UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = "string";
+        value.Validate();
+    }
+
+    [Fact]
+    public void DoubleValidationWorks()
+    {
+        UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = 0;
+        value.Validate();
+    }
+
+    [Fact]
+    public void BoolValidationWorks()
+    {
+        UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = true;
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonElementsValidationWorks()
+    {
+        UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = new([]);
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonElementsValidationWorks1()
+    {
+        UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = new(
+            new Dictionary<string, JsonElement>()
+        );
+        value.Validate();
+    }
+
+    [Fact]
+    public void StringSerializationRoundtripWorks()
+    {
+        UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = "string";
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void DoubleSerializationRoundtripWorks()
+    {
+        UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = 0;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void BoolSerializationRoundtripWorks()
+    {
+        UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = true;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonElementsSerializationRoundtripWorks()
+    {
+        UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = new([]);
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonElementsSerializationRoundtripWorks1()
+    {
+        UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = new(
+            new Dictionary<string, JsonElement>()
+        );
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+}
+
+public class UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemTest : TestBase
+{
+    [Fact]
+    public void StringValidationWorks()
+    {
+        UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item value = "string";
+        value.Validate();
+    }
+
+    [Fact]
+    public void DoubleValidationWorks()
+    {
+        UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item value = 0;
+        value.Validate();
+    }
+
+    [Fact]
+    public void BoolValidationWorks()
+    {
+        UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item value = true;
+        value.Validate();
+    }
+
+    [Fact]
+    public void UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValuesValidationWorks()
+    {
+        UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item value = new(
+            [
+                new UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+                    "string"
+                ),
+            ]
+        );
+        value.Validate();
+    }
+
+    [Fact]
+    public void StringSerializationRoundtripWorks()
+    {
+        UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item value = "string";
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void DoubleSerializationRoundtripWorks()
+    {
+        UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item value = 0;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void BoolSerializationRoundtripWorks()
+    {
+        UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item value = true;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValuesSerializationRoundtripWorks()
+    {
+        UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item value = new(
+            [
+                new UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+                    "string"
+                ),
+            ]
+        );
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+}
+
+public class UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValueTest
+    : TestBase
+{
+    [Fact]
+    public void StringValidationWorks()
+    {
+        UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = "string";
+        value.Validate();
+    }
+
+    [Fact]
+    public void DoubleValidationWorks()
+    {
+        UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = 0;
+        value.Validate();
+    }
+
+    [Fact]
+    public void BoolValidationWorks()
+    {
+        UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = true;
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonElementsValidationWorks()
+    {
+        UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = new([]);
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonElementsValidationWorks1()
+    {
+        UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = new(
+            new Dictionary<string, JsonElement>()
+        );
+        value.Validate();
+    }
+
+    [Fact]
+    public void StringSerializationRoundtripWorks()
+    {
+        UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = "string";
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void DoubleSerializationRoundtripWorks()
+    {
+        UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = 0;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void BoolSerializationRoundtripWorks()
+    {
+        UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = true;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonElementsSerializationRoundtripWorks()
+    {
+        UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = new([]);
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonElementsSerializationRoundtripWorks1()
+    {
+        UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = new(
+            new Dictionary<string, JsonElement>()
+        );
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
     }
 }
 
@@ -3345,9 +4630,9 @@ public class UserPropertiesTest : TestBase
             Clickid = "clickid",
             Clid = "clid",
             CompanyName = "company_name",
-            Consent = new Dictionary<string, string?>() { { "foo", "string" } },
+            Consent = new Dictionary<string, Consent?>() { { "foo", "string" } },
             Country = "country",
-            CustomProperties = new Dictionary<string, string?>() { { "foo", "string" } },
+            CustomProperties = new Dictionary<string, CustomProperty?>() { { "foo", "string" } },
             DateOfBirth = "date_of_birth",
             Dclid = "dclid",
             Email = "email",
@@ -3361,10 +4646,12 @@ public class UserPropertiesTest : TestBase
             Gbraid = "gbraid",
             Gclid = "gclid",
             Gender = "gender",
+            Graid = "graid",
+            Grclid = "grclid",
             ImRef = "im_ref",
             IP = "ip",
             Irclickid = "irclickid",
-            IsBot = "is_bot",
+            IsBot = "string",
             JobTitle = "job_title",
             LastName = "last_name",
             LiFatID = "li_fat_id",
@@ -3372,7 +4659,7 @@ public class UserPropertiesTest : TestBase
             Ndclid = "ndclid",
             ObClickID = "ob_click_id",
             Oppref = "oppref",
-            PhoneNumber = "phone_number",
+            PhoneNumber = "string",
             Qclid = "qclid",
             RdtCid = "rdt_cid",
             Referrer = "referrer",
@@ -3394,7 +4681,7 @@ public class UserPropertiesTest : TestBase
             ViantClickID = "viant_click_id",
             ViantImpressionID = "viant_impression_id",
             Wbraid = "wbraid",
-            Zip = "zip",
+            Zip = "string",
         };
 
         string expected_EfTransactionID = "_ef_transaction_id";
@@ -3411,9 +4698,12 @@ public class UserPropertiesTest : TestBase
         string expectedClickid = "clickid";
         string expectedClid = "clid";
         string expectedCompanyName = "company_name";
-        Dictionary<string, string?> expectedConsent = new() { { "foo", "string" } };
+        Dictionary<string, Consent?> expectedConsent = new() { { "foo", "string" } };
         string expectedCountry = "country";
-        Dictionary<string, string?> expectedCustomProperties = new() { { "foo", "string" } };
+        Dictionary<string, CustomProperty?> expectedCustomProperties = new()
+        {
+            { "foo", "string" },
+        };
         string expectedDateOfBirth = "date_of_birth";
         string expectedDclid = "dclid";
         string expectedEmail = "email";
@@ -3427,10 +4717,12 @@ public class UserPropertiesTest : TestBase
         string expectedGbraid = "gbraid";
         string expectedGclid = "gclid";
         string expectedGender = "gender";
+        string expectedGraid = "graid";
+        string expectedGrclid = "grclid";
         string expectedImRef = "im_ref";
         string expectedIP = "ip";
         string expectedIrclickid = "irclickid";
-        string expectedIsBot = "is_bot";
+        UserPropertiesIsBot expectedIsBot = "string";
         string expectedJobTitle = "job_title";
         string expectedLastName = "last_name";
         string expectedLiFatID = "li_fat_id";
@@ -3438,7 +4730,7 @@ public class UserPropertiesTest : TestBase
         string expectedNdclid = "ndclid";
         string expectedObClickID = "ob_click_id";
         string expectedOppref = "oppref";
-        string expectedPhoneNumber = "phone_number";
+        PhoneNumber expectedPhoneNumber = "string";
         string expectedQclid = "qclid";
         string expectedRdtCid = "rdt_cid";
         string expectedReferrer = "referrer";
@@ -3460,7 +4752,7 @@ public class UserPropertiesTest : TestBase
         string expectedViantClickID = "viant_click_id";
         string expectedViantImpressionID = "viant_impression_id";
         string expectedWbraid = "wbraid";
-        string expectedZip = "zip";
+        Zip expectedZip = "string";
 
         Assert.Equal(expected_EfTransactionID, model._EfTransactionID);
         Assert.Equal(expectedAdID, model.AdID);
@@ -3506,6 +4798,8 @@ public class UserPropertiesTest : TestBase
         Assert.Equal(expectedGbraid, model.Gbraid);
         Assert.Equal(expectedGclid, model.Gclid);
         Assert.Equal(expectedGender, model.Gender);
+        Assert.Equal(expectedGraid, model.Graid);
+        Assert.Equal(expectedGrclid, model.Grclid);
         Assert.Equal(expectedImRef, model.ImRef);
         Assert.Equal(expectedIP, model.IP);
         Assert.Equal(expectedIrclickid, model.Irclickid);
@@ -3561,9 +4855,9 @@ public class UserPropertiesTest : TestBase
             Clickid = "clickid",
             Clid = "clid",
             CompanyName = "company_name",
-            Consent = new Dictionary<string, string?>() { { "foo", "string" } },
+            Consent = new Dictionary<string, Consent?>() { { "foo", "string" } },
             Country = "country",
-            CustomProperties = new Dictionary<string, string?>() { { "foo", "string" } },
+            CustomProperties = new Dictionary<string, CustomProperty?>() { { "foo", "string" } },
             DateOfBirth = "date_of_birth",
             Dclid = "dclid",
             Email = "email",
@@ -3577,10 +4871,12 @@ public class UserPropertiesTest : TestBase
             Gbraid = "gbraid",
             Gclid = "gclid",
             Gender = "gender",
+            Graid = "graid",
+            Grclid = "grclid",
             ImRef = "im_ref",
             IP = "ip",
             Irclickid = "irclickid",
-            IsBot = "is_bot",
+            IsBot = "string",
             JobTitle = "job_title",
             LastName = "last_name",
             LiFatID = "li_fat_id",
@@ -3588,7 +4884,7 @@ public class UserPropertiesTest : TestBase
             Ndclid = "ndclid",
             ObClickID = "ob_click_id",
             Oppref = "oppref",
-            PhoneNumber = "phone_number",
+            PhoneNumber = "string",
             Qclid = "qclid",
             RdtCid = "rdt_cid",
             Referrer = "referrer",
@@ -3610,7 +4906,7 @@ public class UserPropertiesTest : TestBase
             ViantClickID = "viant_click_id",
             ViantImpressionID = "viant_impression_id",
             Wbraid = "wbraid",
-            Zip = "zip",
+            Zip = "string",
         };
 
         string json = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
@@ -3641,9 +4937,9 @@ public class UserPropertiesTest : TestBase
             Clickid = "clickid",
             Clid = "clid",
             CompanyName = "company_name",
-            Consent = new Dictionary<string, string?>() { { "foo", "string" } },
+            Consent = new Dictionary<string, Consent?>() { { "foo", "string" } },
             Country = "country",
-            CustomProperties = new Dictionary<string, string?>() { { "foo", "string" } },
+            CustomProperties = new Dictionary<string, CustomProperty?>() { { "foo", "string" } },
             DateOfBirth = "date_of_birth",
             Dclid = "dclid",
             Email = "email",
@@ -3657,10 +4953,12 @@ public class UserPropertiesTest : TestBase
             Gbraid = "gbraid",
             Gclid = "gclid",
             Gender = "gender",
+            Graid = "graid",
+            Grclid = "grclid",
             ImRef = "im_ref",
             IP = "ip",
             Irclickid = "irclickid",
-            IsBot = "is_bot",
+            IsBot = "string",
             JobTitle = "job_title",
             LastName = "last_name",
             LiFatID = "li_fat_id",
@@ -3668,7 +4966,7 @@ public class UserPropertiesTest : TestBase
             Ndclid = "ndclid",
             ObClickID = "ob_click_id",
             Oppref = "oppref",
-            PhoneNumber = "phone_number",
+            PhoneNumber = "string",
             Qclid = "qclid",
             RdtCid = "rdt_cid",
             Referrer = "referrer",
@@ -3690,7 +4988,7 @@ public class UserPropertiesTest : TestBase
             ViantClickID = "viant_click_id",
             ViantImpressionID = "viant_impression_id",
             Wbraid = "wbraid",
-            Zip = "zip",
+            Zip = "string",
         };
 
         string element = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
@@ -3714,9 +5012,12 @@ public class UserPropertiesTest : TestBase
         string expectedClickid = "clickid";
         string expectedClid = "clid";
         string expectedCompanyName = "company_name";
-        Dictionary<string, string?> expectedConsent = new() { { "foo", "string" } };
+        Dictionary<string, Consent?> expectedConsent = new() { { "foo", "string" } };
         string expectedCountry = "country";
-        Dictionary<string, string?> expectedCustomProperties = new() { { "foo", "string" } };
+        Dictionary<string, CustomProperty?> expectedCustomProperties = new()
+        {
+            { "foo", "string" },
+        };
         string expectedDateOfBirth = "date_of_birth";
         string expectedDclid = "dclid";
         string expectedEmail = "email";
@@ -3730,10 +5031,12 @@ public class UserPropertiesTest : TestBase
         string expectedGbraid = "gbraid";
         string expectedGclid = "gclid";
         string expectedGender = "gender";
+        string expectedGraid = "graid";
+        string expectedGrclid = "grclid";
         string expectedImRef = "im_ref";
         string expectedIP = "ip";
         string expectedIrclickid = "irclickid";
-        string expectedIsBot = "is_bot";
+        UserPropertiesIsBot expectedIsBot = "string";
         string expectedJobTitle = "job_title";
         string expectedLastName = "last_name";
         string expectedLiFatID = "li_fat_id";
@@ -3741,7 +5044,7 @@ public class UserPropertiesTest : TestBase
         string expectedNdclid = "ndclid";
         string expectedObClickID = "ob_click_id";
         string expectedOppref = "oppref";
-        string expectedPhoneNumber = "phone_number";
+        PhoneNumber expectedPhoneNumber = "string";
         string expectedQclid = "qclid";
         string expectedRdtCid = "rdt_cid";
         string expectedReferrer = "referrer";
@@ -3763,7 +5066,7 @@ public class UserPropertiesTest : TestBase
         string expectedViantClickID = "viant_click_id";
         string expectedViantImpressionID = "viant_impression_id";
         string expectedWbraid = "wbraid";
-        string expectedZip = "zip";
+        Zip expectedZip = "string";
 
         Assert.Equal(expected_EfTransactionID, deserialized._EfTransactionID);
         Assert.Equal(expectedAdID, deserialized.AdID);
@@ -3809,6 +5112,8 @@ public class UserPropertiesTest : TestBase
         Assert.Equal(expectedGbraid, deserialized.Gbraid);
         Assert.Equal(expectedGclid, deserialized.Gclid);
         Assert.Equal(expectedGender, deserialized.Gender);
+        Assert.Equal(expectedGraid, deserialized.Graid);
+        Assert.Equal(expectedGrclid, deserialized.Grclid);
         Assert.Equal(expectedImRef, deserialized.ImRef);
         Assert.Equal(expectedIP, deserialized.IP);
         Assert.Equal(expectedIrclickid, deserialized.Irclickid);
@@ -3864,9 +5169,9 @@ public class UserPropertiesTest : TestBase
             Clickid = "clickid",
             Clid = "clid",
             CompanyName = "company_name",
-            Consent = new Dictionary<string, string?>() { { "foo", "string" } },
+            Consent = new Dictionary<string, Consent?>() { { "foo", "string" } },
             Country = "country",
-            CustomProperties = new Dictionary<string, string?>() { { "foo", "string" } },
+            CustomProperties = new Dictionary<string, CustomProperty?>() { { "foo", "string" } },
             DateOfBirth = "date_of_birth",
             Dclid = "dclid",
             Email = "email",
@@ -3880,10 +5185,12 @@ public class UserPropertiesTest : TestBase
             Gbraid = "gbraid",
             Gclid = "gclid",
             Gender = "gender",
+            Graid = "graid",
+            Grclid = "grclid",
             ImRef = "im_ref",
             IP = "ip",
             Irclickid = "irclickid",
-            IsBot = "is_bot",
+            IsBot = "string",
             JobTitle = "job_title",
             LastName = "last_name",
             LiFatID = "li_fat_id",
@@ -3891,7 +5198,7 @@ public class UserPropertiesTest : TestBase
             Ndclid = "ndclid",
             ObClickID = "ob_click_id",
             Oppref = "oppref",
-            PhoneNumber = "phone_number",
+            PhoneNumber = "string",
             Qclid = "qclid",
             RdtCid = "rdt_cid",
             Referrer = "referrer",
@@ -3913,7 +5220,7 @@ public class UserPropertiesTest : TestBase
             ViantClickID = "viant_click_id",
             ViantImpressionID = "viant_impression_id",
             Wbraid = "wbraid",
-            Zip = "zip",
+            Zip = "string",
         };
 
         model.Validate();
@@ -3984,6 +5291,10 @@ public class UserPropertiesTest : TestBase
         Assert.False(model.RawData.ContainsKey("gclid"));
         Assert.Null(model.Gender);
         Assert.False(model.RawData.ContainsKey("gender"));
+        Assert.Null(model.Graid);
+        Assert.False(model.RawData.ContainsKey("graid"));
+        Assert.Null(model.Grclid);
+        Assert.False(model.RawData.ContainsKey("grclid"));
         Assert.Null(model.ImRef);
         Assert.False(model.RawData.ContainsKey("im_ref"));
         Assert.Null(model.IP);
@@ -4097,6 +5408,8 @@ public class UserPropertiesTest : TestBase
             Gbraid = null,
             Gclid = null,
             Gender = null,
+            Graid = null,
+            Grclid = null,
             ImRef = null,
             IP = null,
             Irclickid = null,
@@ -4193,6 +5506,10 @@ public class UserPropertiesTest : TestBase
         Assert.True(model.RawData.ContainsKey("gclid"));
         Assert.Null(model.Gender);
         Assert.True(model.RawData.ContainsKey("gender"));
+        Assert.Null(model.Graid);
+        Assert.True(model.RawData.ContainsKey("graid"));
+        Assert.Null(model.Grclid);
+        Assert.True(model.RawData.ContainsKey("grclid"));
         Assert.Null(model.ImRef);
         Assert.True(model.RawData.ContainsKey("im_ref"));
         Assert.Null(model.IP);
@@ -4298,6 +5615,8 @@ public class UserPropertiesTest : TestBase
             Gbraid = null,
             Gclid = null,
             Gender = null,
+            Graid = null,
+            Grclid = null,
             ImRef = null,
             IP = null,
             Irclickid = null,
@@ -4356,9 +5675,9 @@ public class UserPropertiesTest : TestBase
             Clickid = "clickid",
             Clid = "clid",
             CompanyName = "company_name",
-            Consent = new Dictionary<string, string?>() { { "foo", "string" } },
+            Consent = new Dictionary<string, Consent?>() { { "foo", "string" } },
             Country = "country",
-            CustomProperties = new Dictionary<string, string?>() { { "foo", "string" } },
+            CustomProperties = new Dictionary<string, CustomProperty?>() { { "foo", "string" } },
             DateOfBirth = "date_of_birth",
             Dclid = "dclid",
             Email = "email",
@@ -4372,10 +5691,12 @@ public class UserPropertiesTest : TestBase
             Gbraid = "gbraid",
             Gclid = "gclid",
             Gender = "gender",
+            Graid = "graid",
+            Grclid = "grclid",
             ImRef = "im_ref",
             IP = "ip",
             Irclickid = "irclickid",
-            IsBot = "is_bot",
+            IsBot = "string",
             JobTitle = "job_title",
             LastName = "last_name",
             LiFatID = "li_fat_id",
@@ -4383,7 +5704,7 @@ public class UserPropertiesTest : TestBase
             Ndclid = "ndclid",
             ObClickID = "ob_click_id",
             Oppref = "oppref",
-            PhoneNumber = "phone_number",
+            PhoneNumber = "string",
             Qclid = "qclid",
             RdtCid = "rdt_cid",
             Referrer = "referrer",
@@ -4405,11 +5726,2547 @@ public class UserPropertiesTest : TestBase
             ViantClickID = "viant_click_id",
             ViantImpressionID = "viant_impression_id",
             Wbraid = "wbraid",
-            Zip = "zip",
+            Zip = "string",
         };
 
         UserProperties copied = new(model);
 
         Assert.Equal(model, copied);
+    }
+}
+
+public class ConsentTest : TestBase
+{
+    [Fact]
+    public void StringValidationWorks()
+    {
+        Consent value = "string";
+        value.Validate();
+    }
+
+    [Fact]
+    public void DoubleValidationWorks()
+    {
+        Consent value = 0;
+        value.Validate();
+    }
+
+    [Fact]
+    public void BoolValidationWorks()
+    {
+        Consent value = true;
+        value.Validate();
+    }
+
+    [Fact]
+    public void ConsentJsonValuesValidationWorks()
+    {
+        Consent value = new([new ConsentJsonValue("string")]);
+        value.Validate();
+    }
+
+    [Fact]
+    public void ConsentUnionMember4ItemsValidationWorks()
+    {
+        Consent value = new(
+            new Dictionary<string, ConsentUnionMember4Item?>() { { "foo", "string" } }
+        );
+        value.Validate();
+    }
+
+    [Fact]
+    public void StringSerializationRoundtripWorks()
+    {
+        Consent value = "string";
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<Consent>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void DoubleSerializationRoundtripWorks()
+    {
+        Consent value = 0;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<Consent>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void BoolSerializationRoundtripWorks()
+    {
+        Consent value = true;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<Consent>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void ConsentJsonValuesSerializationRoundtripWorks()
+    {
+        Consent value = new([new ConsentJsonValue("string")]);
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<Consent>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void ConsentUnionMember4ItemsSerializationRoundtripWorks()
+    {
+        Consent value = new(
+            new Dictionary<string, ConsentUnionMember4Item?>() { { "foo", "string" } }
+        );
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<Consent>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+}
+
+public class ConsentJsonValueTest : TestBase
+{
+    [Fact]
+    public void StringValidationWorks()
+    {
+        ConsentJsonValue value = "string";
+        value.Validate();
+    }
+
+    [Fact]
+    public void DoubleValidationWorks()
+    {
+        ConsentJsonValue value = 0;
+        value.Validate();
+    }
+
+    [Fact]
+    public void BoolValidationWorks()
+    {
+        ConsentJsonValue value = true;
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonElementsValidationWorks()
+    {
+        ConsentJsonValue value = new([]);
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonElementsValidationWorks1()
+    {
+        ConsentJsonValue value = new(new Dictionary<string, JsonElement>());
+        value.Validate();
+    }
+
+    [Fact]
+    public void StringSerializationRoundtripWorks()
+    {
+        ConsentJsonValue value = "string";
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<ConsentJsonValue>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void DoubleSerializationRoundtripWorks()
+    {
+        ConsentJsonValue value = 0;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<ConsentJsonValue>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void BoolSerializationRoundtripWorks()
+    {
+        ConsentJsonValue value = true;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<ConsentJsonValue>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonElementsSerializationRoundtripWorks()
+    {
+        ConsentJsonValue value = new([]);
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<ConsentJsonValue>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonElementsSerializationRoundtripWorks1()
+    {
+        ConsentJsonValue value = new(new Dictionary<string, JsonElement>());
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<ConsentJsonValue>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+}
+
+public class ConsentUnionMember4ItemTest : TestBase
+{
+    [Fact]
+    public void StringValidationWorks()
+    {
+        ConsentUnionMember4Item value = "string";
+        value.Validate();
+    }
+
+    [Fact]
+    public void DoubleValidationWorks()
+    {
+        ConsentUnionMember4Item value = 0;
+        value.Validate();
+    }
+
+    [Fact]
+    public void BoolValidationWorks()
+    {
+        ConsentUnionMember4Item value = true;
+        value.Validate();
+    }
+
+    [Fact]
+    public void ConsentUnionMember4ItemJsonValuesValidationWorks()
+    {
+        ConsentUnionMember4Item value = new([new ConsentUnionMember4ItemJsonValue("string")]);
+        value.Validate();
+    }
+
+    [Fact]
+    public void ConsentUnionMember4ItemUnionMember4ItemsValidationWorks()
+    {
+        ConsentUnionMember4Item value = new(
+            new Dictionary<string, ConsentUnionMember4ItemUnionMember4Item?>()
+            {
+                { "foo", "string" },
+            }
+        );
+        value.Validate();
+    }
+
+    [Fact]
+    public void StringSerializationRoundtripWorks()
+    {
+        ConsentUnionMember4Item value = "string";
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<ConsentUnionMember4Item>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void DoubleSerializationRoundtripWorks()
+    {
+        ConsentUnionMember4Item value = 0;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<ConsentUnionMember4Item>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void BoolSerializationRoundtripWorks()
+    {
+        ConsentUnionMember4Item value = true;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<ConsentUnionMember4Item>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void ConsentUnionMember4ItemJsonValuesSerializationRoundtripWorks()
+    {
+        ConsentUnionMember4Item value = new([new ConsentUnionMember4ItemJsonValue("string")]);
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<ConsentUnionMember4Item>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void ConsentUnionMember4ItemUnionMember4ItemsSerializationRoundtripWorks()
+    {
+        ConsentUnionMember4Item value = new(
+            new Dictionary<string, ConsentUnionMember4ItemUnionMember4Item?>()
+            {
+                { "foo", "string" },
+            }
+        );
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<ConsentUnionMember4Item>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+}
+
+public class ConsentUnionMember4ItemJsonValueTest : TestBase
+{
+    [Fact]
+    public void StringValidationWorks()
+    {
+        ConsentUnionMember4ItemJsonValue value = "string";
+        value.Validate();
+    }
+
+    [Fact]
+    public void DoubleValidationWorks()
+    {
+        ConsentUnionMember4ItemJsonValue value = 0;
+        value.Validate();
+    }
+
+    [Fact]
+    public void BoolValidationWorks()
+    {
+        ConsentUnionMember4ItemJsonValue value = true;
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonElementsValidationWorks()
+    {
+        ConsentUnionMember4ItemJsonValue value = new([]);
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonElementsValidationWorks1()
+    {
+        ConsentUnionMember4ItemJsonValue value = new(new Dictionary<string, JsonElement>());
+        value.Validate();
+    }
+
+    [Fact]
+    public void StringSerializationRoundtripWorks()
+    {
+        ConsentUnionMember4ItemJsonValue value = "string";
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<ConsentUnionMember4ItemJsonValue>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void DoubleSerializationRoundtripWorks()
+    {
+        ConsentUnionMember4ItemJsonValue value = 0;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<ConsentUnionMember4ItemJsonValue>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void BoolSerializationRoundtripWorks()
+    {
+        ConsentUnionMember4ItemJsonValue value = true;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<ConsentUnionMember4ItemJsonValue>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonElementsSerializationRoundtripWorks()
+    {
+        ConsentUnionMember4ItemJsonValue value = new([]);
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<ConsentUnionMember4ItemJsonValue>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonElementsSerializationRoundtripWorks1()
+    {
+        ConsentUnionMember4ItemJsonValue value = new(new Dictionary<string, JsonElement>());
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<ConsentUnionMember4ItemJsonValue>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+}
+
+public class ConsentUnionMember4ItemUnionMember4ItemTest : TestBase
+{
+    [Fact]
+    public void StringValidationWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4Item value = "string";
+        value.Validate();
+    }
+
+    [Fact]
+    public void DoubleValidationWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4Item value = 0;
+        value.Validate();
+    }
+
+    [Fact]
+    public void BoolValidationWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4Item value = true;
+        value.Validate();
+    }
+
+    [Fact]
+    public void ConsentUnionMember4ItemUnionMember4ItemJsonValuesValidationWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4Item value = new(
+            [new ConsentUnionMember4ItemUnionMember4ItemJsonValue("string")]
+        );
+        value.Validate();
+    }
+
+    [Fact]
+    public void ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemsValidationWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4Item value = new(
+            new Dictionary<string, ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item?>()
+            {
+                { "foo", "string" },
+            }
+        );
+        value.Validate();
+    }
+
+    [Fact]
+    public void StringSerializationRoundtripWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4Item value = "string";
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<ConsentUnionMember4ItemUnionMember4Item>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void DoubleSerializationRoundtripWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4Item value = 0;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<ConsentUnionMember4ItemUnionMember4Item>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void BoolSerializationRoundtripWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4Item value = true;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<ConsentUnionMember4ItemUnionMember4Item>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void ConsentUnionMember4ItemUnionMember4ItemJsonValuesSerializationRoundtripWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4Item value = new(
+            [new ConsentUnionMember4ItemUnionMember4ItemJsonValue("string")]
+        );
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<ConsentUnionMember4ItemUnionMember4Item>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemsSerializationRoundtripWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4Item value = new(
+            new Dictionary<string, ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item?>()
+            {
+                { "foo", "string" },
+            }
+        );
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<ConsentUnionMember4ItemUnionMember4Item>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+}
+
+public class ConsentUnionMember4ItemUnionMember4ItemJsonValueTest : TestBase
+{
+    [Fact]
+    public void StringValidationWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemJsonValue value = "string";
+        value.Validate();
+    }
+
+    [Fact]
+    public void DoubleValidationWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemJsonValue value = 0;
+        value.Validate();
+    }
+
+    [Fact]
+    public void BoolValidationWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemJsonValue value = true;
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonElementsValidationWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemJsonValue value = new([]);
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonElementsValidationWorks1()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemJsonValue value = new(
+            new Dictionary<string, JsonElement>()
+        );
+        value.Validate();
+    }
+
+    [Fact]
+    public void StringSerializationRoundtripWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemJsonValue value = "string";
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<ConsentUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void DoubleSerializationRoundtripWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemJsonValue value = 0;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<ConsentUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void BoolSerializationRoundtripWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemJsonValue value = true;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<ConsentUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonElementsSerializationRoundtripWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemJsonValue value = new([]);
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<ConsentUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonElementsSerializationRoundtripWorks1()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemJsonValue value = new(
+            new Dictionary<string, JsonElement>()
+        );
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<ConsentUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+}
+
+public class ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemTest : TestBase
+{
+    [Fact]
+    public void StringValidationWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item value = "string";
+        value.Validate();
+    }
+
+    [Fact]
+    public void DoubleValidationWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item value = 0;
+        value.Validate();
+    }
+
+    [Fact]
+    public void BoolValidationWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item value = true;
+        value.Validate();
+    }
+
+    [Fact]
+    public void ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValuesValidationWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item value = new(
+            [new ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue("string")]
+        );
+        value.Validate();
+    }
+
+    [Fact]
+    public void ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemsValidationWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item value = new(
+            new Dictionary<
+                string,
+                ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            >()
+            {
+                { "foo", "string" },
+            }
+        );
+        value.Validate();
+    }
+
+    [Fact]
+    public void StringSerializationRoundtripWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item value = "string";
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void DoubleSerializationRoundtripWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item value = 0;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void BoolSerializationRoundtripWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item value = true;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValuesSerializationRoundtripWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item value = new(
+            [new ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue("string")]
+        );
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemsSerializationRoundtripWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item value = new(
+            new Dictionary<
+                string,
+                ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            >()
+            {
+                { "foo", "string" },
+            }
+        );
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+}
+
+public class ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValueTest : TestBase
+{
+    [Fact]
+    public void StringValidationWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = "string";
+        value.Validate();
+    }
+
+    [Fact]
+    public void DoubleValidationWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = 0;
+        value.Validate();
+    }
+
+    [Fact]
+    public void BoolValidationWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = true;
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonElementsValidationWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = new([]);
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonElementsValidationWorks1()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = new(
+            new Dictionary<string, JsonElement>()
+        );
+        value.Validate();
+    }
+
+    [Fact]
+    public void StringSerializationRoundtripWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = "string";
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void DoubleSerializationRoundtripWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = 0;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void BoolSerializationRoundtripWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = true;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonElementsSerializationRoundtripWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = new([]);
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonElementsSerializationRoundtripWorks1()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = new(
+            new Dictionary<string, JsonElement>()
+        );
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+}
+
+public class ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemTest : TestBase
+{
+    [Fact]
+    public void StringValidationWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item value = "string";
+        value.Validate();
+    }
+
+    [Fact]
+    public void DoubleValidationWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item value = 0;
+        value.Validate();
+    }
+
+    [Fact]
+    public void BoolValidationWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item value = true;
+        value.Validate();
+    }
+
+    [Fact]
+    public void ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValuesValidationWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item value = new(
+            [
+                new ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+                    "string"
+                ),
+            ]
+        );
+        value.Validate();
+    }
+
+    [Fact]
+    public void StringSerializationRoundtripWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item value = "string";
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void DoubleSerializationRoundtripWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item value = 0;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void BoolSerializationRoundtripWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item value = true;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValuesSerializationRoundtripWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item value = new(
+            [
+                new ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+                    "string"
+                ),
+            ]
+        );
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+}
+
+public class ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValueTest
+    : TestBase
+{
+    [Fact]
+    public void StringValidationWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value =
+            "string";
+        value.Validate();
+    }
+
+    [Fact]
+    public void DoubleValidationWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = 0;
+        value.Validate();
+    }
+
+    [Fact]
+    public void BoolValidationWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value =
+            true;
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonElementsValidationWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value =
+            new([]);
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonElementsValidationWorks1()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value =
+            new(new Dictionary<string, JsonElement>());
+        value.Validate();
+    }
+
+    [Fact]
+    public void StringSerializationRoundtripWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value =
+            "string";
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void DoubleSerializationRoundtripWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = 0;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void BoolSerializationRoundtripWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value =
+            true;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonElementsSerializationRoundtripWorks()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value =
+            new([]);
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonElementsSerializationRoundtripWorks1()
+    {
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value =
+            new(new Dictionary<string, JsonElement>());
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+}
+
+public class CustomPropertyTest : TestBase
+{
+    [Fact]
+    public void StringValidationWorks()
+    {
+        CustomProperty value = "string";
+        value.Validate();
+    }
+
+    [Fact]
+    public void DoubleValidationWorks()
+    {
+        CustomProperty value = 0;
+        value.Validate();
+    }
+
+    [Fact]
+    public void BoolValidationWorks()
+    {
+        CustomProperty value = true;
+        value.Validate();
+    }
+
+    [Fact]
+    public void CustomPropertyJsonValuesValidationWorks()
+    {
+        CustomProperty value = new([new CustomPropertyJsonValue("string")]);
+        value.Validate();
+    }
+
+    [Fact]
+    public void CustomPropertyUnionMember4ItemsValidationWorks()
+    {
+        CustomProperty value = new(
+            new Dictionary<string, CustomPropertyUnionMember4Item?>() { { "foo", "string" } }
+        );
+        value.Validate();
+    }
+
+    [Fact]
+    public void StringSerializationRoundtripWorks()
+    {
+        CustomProperty value = "string";
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<CustomProperty>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void DoubleSerializationRoundtripWorks()
+    {
+        CustomProperty value = 0;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<CustomProperty>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void BoolSerializationRoundtripWorks()
+    {
+        CustomProperty value = true;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<CustomProperty>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void CustomPropertyJsonValuesSerializationRoundtripWorks()
+    {
+        CustomProperty value = new([new CustomPropertyJsonValue("string")]);
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<CustomProperty>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void CustomPropertyUnionMember4ItemsSerializationRoundtripWorks()
+    {
+        CustomProperty value = new(
+            new Dictionary<string, CustomPropertyUnionMember4Item?>() { { "foo", "string" } }
+        );
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<CustomProperty>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+}
+
+public class CustomPropertyJsonValueTest : TestBase
+{
+    [Fact]
+    public void StringValidationWorks()
+    {
+        CustomPropertyJsonValue value = "string";
+        value.Validate();
+    }
+
+    [Fact]
+    public void DoubleValidationWorks()
+    {
+        CustomPropertyJsonValue value = 0;
+        value.Validate();
+    }
+
+    [Fact]
+    public void BoolValidationWorks()
+    {
+        CustomPropertyJsonValue value = true;
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonElementsValidationWorks()
+    {
+        CustomPropertyJsonValue value = new([]);
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonElementsValidationWorks1()
+    {
+        CustomPropertyJsonValue value = new(new Dictionary<string, JsonElement>());
+        value.Validate();
+    }
+
+    [Fact]
+    public void StringSerializationRoundtripWorks()
+    {
+        CustomPropertyJsonValue value = "string";
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<CustomPropertyJsonValue>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void DoubleSerializationRoundtripWorks()
+    {
+        CustomPropertyJsonValue value = 0;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<CustomPropertyJsonValue>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void BoolSerializationRoundtripWorks()
+    {
+        CustomPropertyJsonValue value = true;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<CustomPropertyJsonValue>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonElementsSerializationRoundtripWorks()
+    {
+        CustomPropertyJsonValue value = new([]);
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<CustomPropertyJsonValue>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonElementsSerializationRoundtripWorks1()
+    {
+        CustomPropertyJsonValue value = new(new Dictionary<string, JsonElement>());
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<CustomPropertyJsonValue>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+}
+
+public class CustomPropertyUnionMember4ItemTest : TestBase
+{
+    [Fact]
+    public void StringValidationWorks()
+    {
+        CustomPropertyUnionMember4Item value = "string";
+        value.Validate();
+    }
+
+    [Fact]
+    public void DoubleValidationWorks()
+    {
+        CustomPropertyUnionMember4Item value = 0;
+        value.Validate();
+    }
+
+    [Fact]
+    public void BoolValidationWorks()
+    {
+        CustomPropertyUnionMember4Item value = true;
+        value.Validate();
+    }
+
+    [Fact]
+    public void CustomPropertyUnionMember4ItemJsonValuesValidationWorks()
+    {
+        CustomPropertyUnionMember4Item value = new(
+            [new CustomPropertyUnionMember4ItemJsonValue("string")]
+        );
+        value.Validate();
+    }
+
+    [Fact]
+    public void CustomPropertyUnionMember4ItemUnionMember4ItemsValidationWorks()
+    {
+        CustomPropertyUnionMember4Item value = new(
+            new Dictionary<string, CustomPropertyUnionMember4ItemUnionMember4Item?>()
+            {
+                { "foo", "string" },
+            }
+        );
+        value.Validate();
+    }
+
+    [Fact]
+    public void StringSerializationRoundtripWorks()
+    {
+        CustomPropertyUnionMember4Item value = "string";
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<CustomPropertyUnionMember4Item>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void DoubleSerializationRoundtripWorks()
+    {
+        CustomPropertyUnionMember4Item value = 0;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<CustomPropertyUnionMember4Item>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void BoolSerializationRoundtripWorks()
+    {
+        CustomPropertyUnionMember4Item value = true;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<CustomPropertyUnionMember4Item>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void CustomPropertyUnionMember4ItemJsonValuesSerializationRoundtripWorks()
+    {
+        CustomPropertyUnionMember4Item value = new(
+            [new CustomPropertyUnionMember4ItemJsonValue("string")]
+        );
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<CustomPropertyUnionMember4Item>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void CustomPropertyUnionMember4ItemUnionMember4ItemsSerializationRoundtripWorks()
+    {
+        CustomPropertyUnionMember4Item value = new(
+            new Dictionary<string, CustomPropertyUnionMember4ItemUnionMember4Item?>()
+            {
+                { "foo", "string" },
+            }
+        );
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<CustomPropertyUnionMember4Item>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+}
+
+public class CustomPropertyUnionMember4ItemJsonValueTest : TestBase
+{
+    [Fact]
+    public void StringValidationWorks()
+    {
+        CustomPropertyUnionMember4ItemJsonValue value = "string";
+        value.Validate();
+    }
+
+    [Fact]
+    public void DoubleValidationWorks()
+    {
+        CustomPropertyUnionMember4ItemJsonValue value = 0;
+        value.Validate();
+    }
+
+    [Fact]
+    public void BoolValidationWorks()
+    {
+        CustomPropertyUnionMember4ItemJsonValue value = true;
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonElementsValidationWorks()
+    {
+        CustomPropertyUnionMember4ItemJsonValue value = new([]);
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonElementsValidationWorks1()
+    {
+        CustomPropertyUnionMember4ItemJsonValue value = new(new Dictionary<string, JsonElement>());
+        value.Validate();
+    }
+
+    [Fact]
+    public void StringSerializationRoundtripWorks()
+    {
+        CustomPropertyUnionMember4ItemJsonValue value = "string";
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<CustomPropertyUnionMember4ItemJsonValue>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void DoubleSerializationRoundtripWorks()
+    {
+        CustomPropertyUnionMember4ItemJsonValue value = 0;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<CustomPropertyUnionMember4ItemJsonValue>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void BoolSerializationRoundtripWorks()
+    {
+        CustomPropertyUnionMember4ItemJsonValue value = true;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<CustomPropertyUnionMember4ItemJsonValue>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonElementsSerializationRoundtripWorks()
+    {
+        CustomPropertyUnionMember4ItemJsonValue value = new([]);
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<CustomPropertyUnionMember4ItemJsonValue>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonElementsSerializationRoundtripWorks1()
+    {
+        CustomPropertyUnionMember4ItemJsonValue value = new(new Dictionary<string, JsonElement>());
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<CustomPropertyUnionMember4ItemJsonValue>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+}
+
+public class CustomPropertyUnionMember4ItemUnionMember4ItemTest : TestBase
+{
+    [Fact]
+    public void StringValidationWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4Item value = "string";
+        value.Validate();
+    }
+
+    [Fact]
+    public void DoubleValidationWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4Item value = 0;
+        value.Validate();
+    }
+
+    [Fact]
+    public void BoolValidationWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4Item value = true;
+        value.Validate();
+    }
+
+    [Fact]
+    public void CustomPropertyUnionMember4ItemUnionMember4ItemJsonValuesValidationWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4Item value = new(
+            [new CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue("string")]
+        );
+        value.Validate();
+    }
+
+    [Fact]
+    public void CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemsValidationWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4Item value = new(
+            new Dictionary<
+                string,
+                CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            >()
+            {
+                { "foo", "string" },
+            }
+        );
+        value.Validate();
+    }
+
+    [Fact]
+    public void StringSerializationRoundtripWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4Item value = "string";
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<CustomPropertyUnionMember4ItemUnionMember4Item>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void DoubleSerializationRoundtripWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4Item value = 0;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<CustomPropertyUnionMember4ItemUnionMember4Item>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void BoolSerializationRoundtripWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4Item value = true;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<CustomPropertyUnionMember4ItemUnionMember4Item>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void CustomPropertyUnionMember4ItemUnionMember4ItemJsonValuesSerializationRoundtripWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4Item value = new(
+            [new CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue("string")]
+        );
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<CustomPropertyUnionMember4ItemUnionMember4Item>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemsSerializationRoundtripWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4Item value = new(
+            new Dictionary<
+                string,
+                CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            >()
+            {
+                { "foo", "string" },
+            }
+        );
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<CustomPropertyUnionMember4ItemUnionMember4Item>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+}
+
+public class CustomPropertyUnionMember4ItemUnionMember4ItemJsonValueTest : TestBase
+{
+    [Fact]
+    public void StringValidationWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue value = "string";
+        value.Validate();
+    }
+
+    [Fact]
+    public void DoubleValidationWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue value = 0;
+        value.Validate();
+    }
+
+    [Fact]
+    public void BoolValidationWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue value = true;
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonElementsValidationWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue value = new([]);
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonElementsValidationWorks1()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue value = new(
+            new Dictionary<string, JsonElement>()
+        );
+        value.Validate();
+    }
+
+    [Fact]
+    public void StringSerializationRoundtripWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue value = "string";
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void DoubleSerializationRoundtripWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue value = 0;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void BoolSerializationRoundtripWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue value = true;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonElementsSerializationRoundtripWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue value = new([]);
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonElementsSerializationRoundtripWorks1()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue value = new(
+            new Dictionary<string, JsonElement>()
+        );
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+}
+
+public class CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemTest : TestBase
+{
+    [Fact]
+    public void StringValidationWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item value = "string";
+        value.Validate();
+    }
+
+    [Fact]
+    public void DoubleValidationWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item value = 0;
+        value.Validate();
+    }
+
+    [Fact]
+    public void BoolValidationWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item value = true;
+        value.Validate();
+    }
+
+    [Fact]
+    public void CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValuesValidationWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item value = new(
+            [new CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue("string")]
+        );
+        value.Validate();
+    }
+
+    [Fact]
+    public void CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemsValidationWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item value = new(
+            new Dictionary<
+                string,
+                CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            >()
+            {
+                { "foo", "string" },
+            }
+        );
+        value.Validate();
+    }
+
+    [Fact]
+    public void StringSerializationRoundtripWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item value = "string";
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void DoubleSerializationRoundtripWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item value = 0;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void BoolSerializationRoundtripWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item value = true;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValuesSerializationRoundtripWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item value = new(
+            [new CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue("string")]
+        );
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemsSerializationRoundtripWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item value = new(
+            new Dictionary<
+                string,
+                CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item?
+            >()
+            {
+                { "foo", "string" },
+            }
+        );
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+}
+
+public class CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValueTest : TestBase
+{
+    [Fact]
+    public void StringValidationWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = "string";
+        value.Validate();
+    }
+
+    [Fact]
+    public void DoubleValidationWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = 0;
+        value.Validate();
+    }
+
+    [Fact]
+    public void BoolValidationWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = true;
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonElementsValidationWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = new([]);
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonElementsValidationWorks1()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = new(
+            new Dictionary<string, JsonElement>()
+        );
+        value.Validate();
+    }
+
+    [Fact]
+    public void StringSerializationRoundtripWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = "string";
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void DoubleSerializationRoundtripWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = 0;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void BoolSerializationRoundtripWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = true;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonElementsSerializationRoundtripWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = new([]);
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonElementsSerializationRoundtripWorks1()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value = new(
+            new Dictionary<string, JsonElement>()
+        );
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+}
+
+public class CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemTest
+    : TestBase
+{
+    [Fact]
+    public void StringValidationWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item value =
+            "string";
+        value.Validate();
+    }
+
+    [Fact]
+    public void DoubleValidationWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item value = 0;
+        value.Validate();
+    }
+
+    [Fact]
+    public void BoolValidationWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item value = true;
+        value.Validate();
+    }
+
+    [Fact]
+    public void CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValuesValidationWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item value = new(
+            [
+                new CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+                    "string"
+                ),
+            ]
+        );
+        value.Validate();
+    }
+
+    [Fact]
+    public void StringSerializationRoundtripWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item value =
+            "string";
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void DoubleSerializationRoundtripWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item value = 0;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void BoolSerializationRoundtripWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item value = true;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValuesSerializationRoundtripWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item value = new(
+            [
+                new CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+                    "string"
+                ),
+            ]
+        );
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+}
+
+public class CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValueTest
+    : TestBase
+{
+    [Fact]
+    public void StringValidationWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value =
+            "string";
+        value.Validate();
+    }
+
+    [Fact]
+    public void DoubleValidationWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value =
+            0;
+        value.Validate();
+    }
+
+    [Fact]
+    public void BoolValidationWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value =
+            true;
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonElementsValidationWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value =
+            new([]);
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonElementsValidationWorks1()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value =
+            new(new Dictionary<string, JsonElement>());
+        value.Validate();
+    }
+
+    [Fact]
+    public void StringSerializationRoundtripWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value =
+            "string";
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void DoubleSerializationRoundtripWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value =
+            0;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void BoolSerializationRoundtripWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value =
+            true;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonElementsSerializationRoundtripWorks()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value =
+            new([]);
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonElementsSerializationRoundtripWorks1()
+    {
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue value =
+            new(new Dictionary<string, JsonElement>());
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized =
+            JsonSerializer.Deserialize<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue>(
+                element,
+                ModelBase.SerializerOptions
+            );
+
+        Assert.Equal(value, deserialized);
+    }
+}
+
+public class UserPropertiesIsBotTest : TestBase
+{
+    [Fact]
+    public void StringValidationWorks()
+    {
+        UserPropertiesIsBot value = "string";
+        value.Validate();
+    }
+
+    [Fact]
+    public void DoubleValidationWorks()
+    {
+        UserPropertiesIsBot value = 0;
+        value.Validate();
+    }
+
+    [Fact]
+    public void BoolValidationWorks()
+    {
+        UserPropertiesIsBot value = true;
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonElementsValidationWorks()
+    {
+        UserPropertiesIsBot value = new([]);
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonElementsValidationWorks1()
+    {
+        UserPropertiesIsBot value = new(new Dictionary<string, JsonElement>());
+        value.Validate();
+    }
+
+    [Fact]
+    public void StringSerializationRoundtripWorks()
+    {
+        UserPropertiesIsBot value = "string";
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<UserPropertiesIsBot>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void DoubleSerializationRoundtripWorks()
+    {
+        UserPropertiesIsBot value = 0;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<UserPropertiesIsBot>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void BoolSerializationRoundtripWorks()
+    {
+        UserPropertiesIsBot value = true;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<UserPropertiesIsBot>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonElementsSerializationRoundtripWorks()
+    {
+        UserPropertiesIsBot value = new([]);
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<UserPropertiesIsBot>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonElementsSerializationRoundtripWorks1()
+    {
+        UserPropertiesIsBot value = new(new Dictionary<string, JsonElement>());
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<UserPropertiesIsBot>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+}
+
+public class PhoneNumberTest : TestBase
+{
+    [Fact]
+    public void StringValidationWorks()
+    {
+        PhoneNumber value = "string";
+        value.Validate();
+    }
+
+    [Fact]
+    public void DoubleValidationWorks()
+    {
+        PhoneNumber value = 0;
+        value.Validate();
+    }
+
+    [Fact]
+    public void BoolValidationWorks()
+    {
+        PhoneNumber value = true;
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonElementsValidationWorks()
+    {
+        PhoneNumber value = new([]);
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonElementsValidationWorks1()
+    {
+        PhoneNumber value = new(new Dictionary<string, JsonElement>());
+        value.Validate();
+    }
+
+    [Fact]
+    public void StringSerializationRoundtripWorks()
+    {
+        PhoneNumber value = "string";
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<PhoneNumber>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void DoubleSerializationRoundtripWorks()
+    {
+        PhoneNumber value = 0;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<PhoneNumber>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void BoolSerializationRoundtripWorks()
+    {
+        PhoneNumber value = true;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<PhoneNumber>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonElementsSerializationRoundtripWorks()
+    {
+        PhoneNumber value = new([]);
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<PhoneNumber>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonElementsSerializationRoundtripWorks1()
+    {
+        PhoneNumber value = new(new Dictionary<string, JsonElement>());
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<PhoneNumber>(
+            element,
+            ModelBase.SerializerOptions
+        );
+
+        Assert.Equal(value, deserialized);
+    }
+}
+
+public class ZipTest : TestBase
+{
+    [Fact]
+    public void StringValidationWorks()
+    {
+        Zip value = "string";
+        value.Validate();
+    }
+
+    [Fact]
+    public void DoubleValidationWorks()
+    {
+        Zip value = 0;
+        value.Validate();
+    }
+
+    [Fact]
+    public void BoolValidationWorks()
+    {
+        Zip value = true;
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonElementsValidationWorks()
+    {
+        Zip value = new([]);
+        value.Validate();
+    }
+
+    [Fact]
+    public void JsonElementsValidationWorks1()
+    {
+        Zip value = new(new Dictionary<string, JsonElement>());
+        value.Validate();
+    }
+
+    [Fact]
+    public void StringSerializationRoundtripWorks()
+    {
+        Zip value = "string";
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<Zip>(element, ModelBase.SerializerOptions);
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void DoubleSerializationRoundtripWorks()
+    {
+        Zip value = 0;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<Zip>(element, ModelBase.SerializerOptions);
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void BoolSerializationRoundtripWorks()
+    {
+        Zip value = true;
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<Zip>(element, ModelBase.SerializerOptions);
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonElementsSerializationRoundtripWorks()
+    {
+        Zip value = new([]);
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<Zip>(element, ModelBase.SerializerOptions);
+
+        Assert.Equal(value, deserialized);
+    }
+
+    [Fact]
+    public void JsonElementsSerializationRoundtripWorks1()
+    {
+        Zip value = new(new Dictionary<string, JsonElement>());
+        string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
+        var deserialized = JsonSerializer.Deserialize<Zip>(element, ModelBase.SerializerOptions);
+
+        Assert.Equal(value, deserialized);
     }
 }

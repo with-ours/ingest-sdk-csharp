@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using OursPrivacy.Models.Visitor;
 
 namespace OursPrivacy.Tests.Services;
 
@@ -11,7 +12,7 @@ public class VisitorServiceTest : TestBase
         var response = await this.client.Visitor.Upsert(
             new()
             {
-                Token = "x",
+                Token = "P",
                 UserProperties = new()
                 {
                     _EfTransactionID = "_ef_transaction_id",
@@ -28,9 +29,12 @@ public class VisitorServiceTest : TestBase
                     Clickid = "clickid",
                     Clid = "clid",
                     CompanyName = "company_name",
-                    Consent = new Dictionary<string, string?>() { { "foo", "string" } },
+                    Consent = new Dictionary<string, Consent?>() { { "foo", "string" } },
                     Country = "country",
-                    CustomProperties = new Dictionary<string, string?>() { { "foo", "string" } },
+                    CustomProperties = new Dictionary<string, CustomProperty?>()
+                    {
+                        { "foo", "string" },
+                    },
                     DateOfBirth = "date_of_birth",
                     Dclid = "dclid",
                     Email = "email",
@@ -44,10 +48,12 @@ public class VisitorServiceTest : TestBase
                     Gbraid = "gbraid",
                     Gclid = "gclid",
                     Gender = "gender",
+                    Graid = "graid",
+                    Grclid = "grclid",
                     ImRef = "im_ref",
                     IP = "ip",
                     Irclickid = "irclickid",
-                    IsBot = "is_bot",
+                    IsBot = "string",
                     JobTitle = "job_title",
                     LastName = "last_name",
                     LiFatID = "li_fat_id",
@@ -55,7 +61,7 @@ public class VisitorServiceTest : TestBase
                     Ndclid = "ndclid",
                     ObClickID = "ob_click_id",
                     Oppref = "oppref",
-                    PhoneNumber = "phone_number",
+                    PhoneNumber = "string",
                     Qclid = "qclid",
                     RdtCid = "rdt_cid",
                     Referrer = "referrer",
@@ -77,7 +83,7 @@ public class VisitorServiceTest : TestBase
                     ViantClickID = "viant_click_id",
                     ViantImpressionID = "viant_impression_id",
                     Wbraid = "wbraid",
-                    Zip = "zip",
+                    Zip = "string",
                 },
             },
             TestContext.Current.CancellationToken
