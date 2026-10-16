@@ -8,7 +8,7 @@ public class TrackServiceTest : TestBase
     public async Task Event_Works()
     {
         var response = await this.client.Track.Event(
-            new() { Token = "x", Event = "x" },
+            new() { Token = "P", Event = "P" },
             TestContext.Current.CancellationToken
         );
         response.Validate();
