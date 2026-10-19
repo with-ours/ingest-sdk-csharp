@@ -27,6 +27,7 @@
     <Deterministic>true</Deterministic>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <NuGetAuditMode>all</NuGetAuditMode>
     <ImplicitUsings>disable</ImplicitUsings>
     <!-- Disable deprecation warnings since we may reference our own deprecated symbols. -->
     <NoWarn>$(NoWarn),0618</NoWarn>

@@ -3893,9 +3893,9 @@ public class UnionMember4ItemUnionMember4ItemTest : TestBase
     [Fact]
     public void UnionMember4ItemUnionMember4ItemJsonValuesValidationWorks()
     {
-        UnionMember4ItemUnionMember4Item value = new(
-            [new UnionMember4ItemUnionMember4ItemJsonValue("string")]
-        );
+        UnionMember4ItemUnionMember4Item value = new([
+            new UnionMember4ItemUnionMember4ItemJsonValue("string"),
+        ]);
         value.Validate();
     }
 
@@ -3953,9 +3953,9 @@ public class UnionMember4ItemUnionMember4ItemTest : TestBase
     [Fact]
     public void UnionMember4ItemUnionMember4ItemJsonValuesSerializationRoundtripWorks()
     {
-        UnionMember4ItemUnionMember4Item value = new(
-            [new UnionMember4ItemUnionMember4ItemJsonValue("string")]
-        );
+        UnionMember4ItemUnionMember4Item value = new([
+            new UnionMember4ItemUnionMember4ItemJsonValue("string"),
+        ]);
         string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
         var deserialized = JsonSerializer.Deserialize<UnionMember4ItemUnionMember4Item>(
             element,
@@ -4117,9 +4117,9 @@ public class UnionMember4ItemUnionMember4ItemUnionMember4ItemTest : TestBase
     [Fact]
     public void UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValuesValidationWorks()
     {
-        UnionMember4ItemUnionMember4ItemUnionMember4Item value = new(
-            [new UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue("string")]
-        );
+        UnionMember4ItemUnionMember4ItemUnionMember4Item value = new([
+            new UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue("string"),
+        ]);
         value.Validate();
     }
 
@@ -4183,9 +4183,9 @@ public class UnionMember4ItemUnionMember4ItemUnionMember4ItemTest : TestBase
     [Fact]
     public void UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValuesSerializationRoundtripWorks()
     {
-        UnionMember4ItemUnionMember4ItemUnionMember4Item value = new(
-            [new UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue("string")]
-        );
+        UnionMember4ItemUnionMember4ItemUnionMember4Item value = new([
+            new UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue("string"),
+        ]);
         string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
         var deserialized =
             JsonSerializer.Deserialize<UnionMember4ItemUnionMember4ItemUnionMember4Item>(
@@ -4357,13 +4357,9 @@ public class UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemTes
     [Fact]
     public void UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValuesValidationWorks()
     {
-        UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item value = new(
-            [
-                new UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
-                    "string"
-                ),
-            ]
-        );
+        UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item value = new([
+            new UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue("string"),
+        ]);
         value.Validate();
     }
 
@@ -4412,13 +4408,9 @@ public class UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemTes
     [Fact]
     public void UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValuesSerializationRoundtripWorks()
     {
-        UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item value = new(
-            [
-                new UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
-                    "string"
-                ),
-            ]
-        );
+        UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item value = new([
+            new UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue("string"),
+        ]);
         string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
         var deserialized =
             JsonSerializer.Deserialize<UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item>(
@@ -6187,9 +6179,9 @@ public class ConsentUnionMember4ItemUnionMember4ItemTest : TestBase
     [Fact]
     public void ConsentUnionMember4ItemUnionMember4ItemJsonValuesValidationWorks()
     {
-        ConsentUnionMember4ItemUnionMember4Item value = new(
-            [new ConsentUnionMember4ItemUnionMember4ItemJsonValue("string")]
-        );
+        ConsentUnionMember4ItemUnionMember4Item value = new([
+            new ConsentUnionMember4ItemUnionMember4ItemJsonValue("string"),
+        ]);
         value.Validate();
     }
 
@@ -6247,9 +6239,9 @@ public class ConsentUnionMember4ItemUnionMember4ItemTest : TestBase
     [Fact]
     public void ConsentUnionMember4ItemUnionMember4ItemJsonValuesSerializationRoundtripWorks()
     {
-        ConsentUnionMember4ItemUnionMember4Item value = new(
-            [new ConsentUnionMember4ItemUnionMember4ItemJsonValue("string")]
-        );
+        ConsentUnionMember4ItemUnionMember4Item value = new([
+            new ConsentUnionMember4ItemUnionMember4ItemJsonValue("string"),
+        ]);
         string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
         var deserialized = JsonSerializer.Deserialize<ConsentUnionMember4ItemUnionMember4Item>(
             element,
@@ -6416,9 +6408,9 @@ public class ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemTest : TestB
     [Fact]
     public void ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValuesValidationWorks()
     {
-        ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item value = new(
-            [new ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue("string")]
-        );
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item value = new([
+            new ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue("string"),
+        ]);
         value.Validate();
     }
 
@@ -6482,9 +6474,9 @@ public class ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemTest : TestB
     [Fact]
     public void ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValuesSerializationRoundtripWorks()
     {
-        ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item value = new(
-            [new ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue("string")]
-        );
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item value = new([
+            new ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue("string"),
+        ]);
         string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
         var deserialized =
             JsonSerializer.Deserialize<ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item>(
@@ -6656,13 +6648,11 @@ public class ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4
     [Fact]
     public void ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValuesValidationWorks()
     {
-        ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item value = new(
-            [
-                new ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
-                    "string"
-                ),
-            ]
-        );
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item value = new([
+            new ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+                "string"
+            ),
+        ]);
         value.Validate();
     }
 
@@ -6711,13 +6701,11 @@ public class ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4
     [Fact]
     public void ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValuesSerializationRoundtripWorks()
     {
-        ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item value = new(
-            [
-                new ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
-                    "string"
-                ),
-            ]
-        );
+        ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item value = new([
+            new ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+                "string"
+            ),
+        ]);
         string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
         var deserialized =
             JsonSerializer.Deserialize<ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item>(
@@ -7082,9 +7070,9 @@ public class CustomPropertyUnionMember4ItemTest : TestBase
     [Fact]
     public void CustomPropertyUnionMember4ItemJsonValuesValidationWorks()
     {
-        CustomPropertyUnionMember4Item value = new(
-            [new CustomPropertyUnionMember4ItemJsonValue("string")]
-        );
+        CustomPropertyUnionMember4Item value = new([
+            new CustomPropertyUnionMember4ItemJsonValue("string"),
+        ]);
         value.Validate();
     }
 
@@ -7142,9 +7130,9 @@ public class CustomPropertyUnionMember4ItemTest : TestBase
     [Fact]
     public void CustomPropertyUnionMember4ItemJsonValuesSerializationRoundtripWorks()
     {
-        CustomPropertyUnionMember4Item value = new(
-            [new CustomPropertyUnionMember4ItemJsonValue("string")]
-        );
+        CustomPropertyUnionMember4Item value = new([
+            new CustomPropertyUnionMember4ItemJsonValue("string"),
+        ]);
         string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
         var deserialized = JsonSerializer.Deserialize<CustomPropertyUnionMember4Item>(
             element,
@@ -7302,9 +7290,9 @@ public class CustomPropertyUnionMember4ItemUnionMember4ItemTest : TestBase
     [Fact]
     public void CustomPropertyUnionMember4ItemUnionMember4ItemJsonValuesValidationWorks()
     {
-        CustomPropertyUnionMember4ItemUnionMember4Item value = new(
-            [new CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue("string")]
-        );
+        CustomPropertyUnionMember4ItemUnionMember4Item value = new([
+            new CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue("string"),
+        ]);
         value.Validate();
     }
 
@@ -7368,9 +7356,9 @@ public class CustomPropertyUnionMember4ItemUnionMember4ItemTest : TestBase
     [Fact]
     public void CustomPropertyUnionMember4ItemUnionMember4ItemJsonValuesSerializationRoundtripWorks()
     {
-        CustomPropertyUnionMember4ItemUnionMember4Item value = new(
-            [new CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue("string")]
-        );
+        CustomPropertyUnionMember4ItemUnionMember4Item value = new([
+            new CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue("string"),
+        ]);
         string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
         var deserialized =
             JsonSerializer.Deserialize<CustomPropertyUnionMember4ItemUnionMember4Item>(
@@ -7542,9 +7530,9 @@ public class CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemTest 
     [Fact]
     public void CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValuesValidationWorks()
     {
-        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item value = new(
-            [new CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue("string")]
-        );
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item value = new([
+            new CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue("string"),
+        ]);
         value.Validate();
     }
 
@@ -7608,9 +7596,9 @@ public class CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemTest 
     [Fact]
     public void CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValuesSerializationRoundtripWorks()
     {
-        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item value = new(
-            [new CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue("string")]
-        );
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item value = new([
+            new CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue("string"),
+        ]);
         string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
         var deserialized =
             JsonSerializer.Deserialize<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4Item>(
@@ -7784,13 +7772,11 @@ public class CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnion
     [Fact]
     public void CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValuesValidationWorks()
     {
-        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item value = new(
-            [
-                new CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
-                    "string"
-                ),
-            ]
-        );
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item value = new([
+            new CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+                "string"
+            ),
+        ]);
         value.Validate();
     }
 
@@ -7840,13 +7826,11 @@ public class CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnion
     [Fact]
     public void CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValuesSerializationRoundtripWorks()
     {
-        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item value = new(
-            [
-                new CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
-                    "string"
-                ),
-            ]
-        );
+        CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item value = new([
+            new CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue(
+                "string"
+            ),
+        ]);
         string element = JsonSerializer.Serialize(value, ModelBase.SerializerOptions);
         var deserialized =
             JsonSerializer.Deserialize<CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4Item>(
