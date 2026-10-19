@@ -62,6 +62,9 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Run tests
+      - name: Run .NET 8 tests
         run: ./scripts/test
         shell: bash
+
+      - name: Run .NET Framework tests
+        run: dotnet test --framework net472 --no-restore
