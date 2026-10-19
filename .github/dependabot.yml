@@ -1,0 +1,47 @@
+# Keep GitHub Actions and SDK dependencies up to date.
+# Match the weekly update policy used by the Node.js SDKs.
+# The root solution includes the library and test projects under src/.
+version: 2
+updates:
+- package-ecosystem: github-actions
+  directory: /
+  schedule:
+    interval: weekly
+    day: monday
+  cooldown:
+    default-days: 7
+  open-pull-requests-limit: 5
+  labels:
+  - dependencies
+  commit-message:
+    prefix: fix
+  groups:
+    actions-minor-patch:
+      patterns:
+      - '*'
+      update-types:
+      - minor
+      - patch
+- package-ecosystem: nuget
+  directory: /
+  schedule:
+    interval: weekly
+    day: monday
+  cooldown:
+    default-days: 7
+  open-pull-requests-limit: 5
+  labels:
+  - dependencies
+  commit-message:
+    prefix: fix
+  groups:
+    all-deps:
+      patterns:
+      - '*'
+      update-types:
+      - minor
+      - patch
+  ignore:
+  - dependency-name: '*'
+    update-types:
+    - version-update:semver-major
