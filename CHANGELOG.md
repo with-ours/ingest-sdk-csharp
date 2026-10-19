@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.23.1 (2026-10-19)
+
+Full Changelog: [v1.23.0...v1.23.1](https://github.com/with-ours/ingest-sdk-csharp/compare/v1.23.0...v1.23.1)
+
+### Chores
+
+* **deps:** update System.Text.Json from 9.0.9 to 9.0.20 and use the patched .NET SDK Source Link implementation; refresh formatting and test tools.
+
 ## 1.23.0 (2026-10-16)
 
 Full Changelog: [v1.22.0...v1.23.0](https://github.com/with-ours/ingest-sdk-csharp/compare/v1.22.0...v1.23.0)
