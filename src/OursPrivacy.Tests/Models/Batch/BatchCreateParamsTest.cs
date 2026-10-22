@@ -88,6 +88,7 @@ public class BatchCreateParamsTest : TestBase
                         Sr = "sr",
                         Title = "title",
                         Ttclid = "ttclid",
+                        TtdImpressionID = "ttd_impression_id",
                         Twclid = "twclid",
                         Uafvl = "uafvl",
                         UserAgent = "user_agent",
@@ -102,6 +103,7 @@ public class BatchCreateParamsTest : TestBase
                         ViantImpressionID = "viant_impression_id",
                         Wbraid = "wbraid",
                         Webview = true,
+                        Ylpcid = "ylpcid",
                     },
                     Email = "P",
                     EventProperties = new Dictionary<string, EventProperty?>()
@@ -170,6 +172,7 @@ public class BatchCreateParamsTest : TestBase
                         Sid = "sid",
                         State = "state",
                         Ttclid = "ttclid",
+                        TtdImpressionID = "ttd_impression_id",
                         Twclid = "twclid",
                         UserAgent = "user_agent",
                         UserAgentFullList = "user_agent_full_list",
@@ -182,6 +185,7 @@ public class BatchCreateParamsTest : TestBase
                         ViantClickID = "viant_click_id",
                         ViantImpressionID = "viant_impression_id",
                         Wbraid = "wbraid",
+                        Ylpcid = "ylpcid",
                         Zip = "string",
                     },
                 },
@@ -263,6 +267,7 @@ public class BatchCreateParamsTest : TestBase
                     Sr = "sr",
                     Title = "title",
                     Ttclid = "ttclid",
+                    TtdImpressionID = "ttd_impression_id",
                     Twclid = "twclid",
                     Uafvl = "uafvl",
                     UserAgent = "user_agent",
@@ -277,6 +282,7 @@ public class BatchCreateParamsTest : TestBase
                     ViantImpressionID = "viant_impression_id",
                     Wbraid = "wbraid",
                     Webview = true,
+                    Ylpcid = "ylpcid",
                 },
                 Email = "P",
                 EventProperties = new Dictionary<string, EventProperty?>() { { "foo", "string" } },
@@ -342,6 +348,7 @@ public class BatchCreateParamsTest : TestBase
                     Sid = "sid",
                     State = "state",
                     Ttclid = "ttclid",
+                    TtdImpressionID = "ttd_impression_id",
                     Twclid = "twclid",
                     UserAgent = "user_agent",
                     UserAgentFullList = "user_agent_full_list",
@@ -354,6 +361,7 @@ public class BatchCreateParamsTest : TestBase
                     ViantClickID = "viant_click_id",
                     ViantImpressionID = "viant_impression_id",
                     Wbraid = "wbraid",
+                    Ylpcid = "ylpcid",
                     Zip = "string",
                 },
             },
@@ -447,6 +455,7 @@ public class BatchCreateParamsTest : TestBase
                         Sr = "sr",
                         Title = "title",
                         Ttclid = "ttclid",
+                        TtdImpressionID = "ttd_impression_id",
                         Twclid = "twclid",
                         Uafvl = "uafvl",
                         UserAgent = "user_agent",
@@ -461,6 +470,7 @@ public class BatchCreateParamsTest : TestBase
                         ViantImpressionID = "viant_impression_id",
                         Wbraid = "wbraid",
                         Webview = true,
+                        Ylpcid = "ylpcid",
                     },
                     Email = "P",
                     EventProperties = new Dictionary<string, EventProperty?>()
@@ -529,6 +539,7 @@ public class BatchCreateParamsTest : TestBase
                         Sid = "sid",
                         State = "state",
                         Ttclid = "ttclid",
+                        TtdImpressionID = "ttd_impression_id",
                         Twclid = "twclid",
                         UserAgent = "user_agent",
                         UserAgentFullList = "user_agent_full_list",
@@ -541,6 +552,7 @@ public class BatchCreateParamsTest : TestBase
                         ViantClickID = "viant_click_id",
                         ViantImpressionID = "viant_impression_id",
                         Wbraid = "wbraid",
+                        Ylpcid = "ylpcid",
                         Zip = "string",
                     },
                 },
@@ -632,6 +644,7 @@ public class BatchCreateParamsTest : TestBase
                         Sr = "sr",
                         Title = "title",
                         Ttclid = "ttclid",
+                        TtdImpressionID = "ttd_impression_id",
                         Twclid = "twclid",
                         Uafvl = "uafvl",
                         UserAgent = "user_agent",
@@ -646,6 +659,7 @@ public class BatchCreateParamsTest : TestBase
                         ViantImpressionID = "viant_impression_id",
                         Wbraid = "wbraid",
                         Webview = true,
+                        Ylpcid = "ylpcid",
                     },
                     Email = "P",
                     EventProperties = new Dictionary<string, EventProperty?>()
@@ -714,6 +728,7 @@ public class BatchCreateParamsTest : TestBase
                         Sid = "sid",
                         State = "state",
                         Ttclid = "ttclid",
+                        TtdImpressionID = "ttd_impression_id",
                         Twclid = "twclid",
                         UserAgent = "user_agent",
                         UserAgentFullList = "user_agent_full_list",
@@ -726,6 +741,7 @@ public class BatchCreateParamsTest : TestBase
                         ViantClickID = "viant_click_id",
                         ViantImpressionID = "viant_impression_id",
                         Wbraid = "wbraid",
+                        Ylpcid = "ylpcid",
                         Zip = "string",
                     },
                 },
@@ -815,6 +831,7 @@ public class EventTest : TestBase
                 Sr = "sr",
                 Title = "title",
                 Ttclid = "ttclid",
+                TtdImpressionID = "ttd_impression_id",
                 Twclid = "twclid",
                 Uafvl = "uafvl",
                 UserAgent = "user_agent",
@@ -829,6 +846,7 @@ public class EventTest : TestBase
                 ViantImpressionID = "viant_impression_id",
                 Wbraid = "wbraid",
                 Webview = true,
+                Ylpcid = "ylpcid",
             },
             Email = "P",
             EventProperties = new Dictionary<string, EventProperty?>() { { "foo", "string" } },
@@ -894,6 +912,7 @@ public class EventTest : TestBase
                 Sid = "sid",
                 State = "state",
                 Ttclid = "ttclid",
+                TtdImpressionID = "ttd_impression_id",
                 Twclid = "twclid",
                 UserAgent = "user_agent",
                 UserAgentFullList = "user_agent_full_list",
@@ -906,6 +925,7 @@ public class EventTest : TestBase
                 ViantClickID = "viant_click_id",
                 ViantImpressionID = "viant_impression_id",
                 Wbraid = "wbraid",
+                Ylpcid = "ylpcid",
                 Zip = "string",
             },
         };
@@ -980,6 +1000,7 @@ public class EventTest : TestBase
             Sr = "sr",
             Title = "title",
             Ttclid = "ttclid",
+            TtdImpressionID = "ttd_impression_id",
             Twclid = "twclid",
             Uafvl = "uafvl",
             UserAgent = "user_agent",
@@ -994,6 +1015,7 @@ public class EventTest : TestBase
             ViantImpressionID = "viant_impression_id",
             Wbraid = "wbraid",
             Webview = true,
+            Ylpcid = "ylpcid",
         };
         string expectedEmail = "P";
         Dictionary<string, EventProperty?> expectedEventProperties = new() { { "foo", "string" } };
@@ -1056,6 +1078,7 @@ public class EventTest : TestBase
             Sid = "sid",
             State = "state",
             Ttclid = "ttclid",
+            TtdImpressionID = "ttd_impression_id",
             Twclid = "twclid",
             UserAgent = "user_agent",
             UserAgentFullList = "user_agent_full_list",
@@ -1068,6 +1091,7 @@ public class EventTest : TestBase
             ViantClickID = "viant_click_id",
             ViantImpressionID = "viant_impression_id",
             Wbraid = "wbraid",
+            Ylpcid = "ylpcid",
             Zip = "string",
         };
 
@@ -1165,6 +1189,7 @@ public class EventTest : TestBase
                 Sr = "sr",
                 Title = "title",
                 Ttclid = "ttclid",
+                TtdImpressionID = "ttd_impression_id",
                 Twclid = "twclid",
                 Uafvl = "uafvl",
                 UserAgent = "user_agent",
@@ -1179,6 +1204,7 @@ public class EventTest : TestBase
                 ViantImpressionID = "viant_impression_id",
                 Wbraid = "wbraid",
                 Webview = true,
+                Ylpcid = "ylpcid",
             },
             Email = "P",
             EventProperties = new Dictionary<string, EventProperty?>() { { "foo", "string" } },
@@ -1244,6 +1270,7 @@ public class EventTest : TestBase
                 Sid = "sid",
                 State = "state",
                 Ttclid = "ttclid",
+                TtdImpressionID = "ttd_impression_id",
                 Twclid = "twclid",
                 UserAgent = "user_agent",
                 UserAgentFullList = "user_agent_full_list",
@@ -1256,6 +1283,7 @@ public class EventTest : TestBase
                 ViantClickID = "viant_click_id",
                 ViantImpressionID = "viant_impression_id",
                 Wbraid = "wbraid",
+                Ylpcid = "ylpcid",
                 Zip = "string",
             },
         };
@@ -1341,6 +1369,7 @@ public class EventTest : TestBase
                 Sr = "sr",
                 Title = "title",
                 Ttclid = "ttclid",
+                TtdImpressionID = "ttd_impression_id",
                 Twclid = "twclid",
                 Uafvl = "uafvl",
                 UserAgent = "user_agent",
@@ -1355,6 +1384,7 @@ public class EventTest : TestBase
                 ViantImpressionID = "viant_impression_id",
                 Wbraid = "wbraid",
                 Webview = true,
+                Ylpcid = "ylpcid",
             },
             Email = "P",
             EventProperties = new Dictionary<string, EventProperty?>() { { "foo", "string" } },
@@ -1420,6 +1450,7 @@ public class EventTest : TestBase
                 Sid = "sid",
                 State = "state",
                 Ttclid = "ttclid",
+                TtdImpressionID = "ttd_impression_id",
                 Twclid = "twclid",
                 UserAgent = "user_agent",
                 UserAgentFullList = "user_agent_full_list",
@@ -1432,6 +1463,7 @@ public class EventTest : TestBase
                 ViantClickID = "viant_click_id",
                 ViantImpressionID = "viant_impression_id",
                 Wbraid = "wbraid",
+                Ylpcid = "ylpcid",
                 Zip = "string",
             },
         };
@@ -1510,6 +1542,7 @@ public class EventTest : TestBase
             Sr = "sr",
             Title = "title",
             Ttclid = "ttclid",
+            TtdImpressionID = "ttd_impression_id",
             Twclid = "twclid",
             Uafvl = "uafvl",
             UserAgent = "user_agent",
@@ -1524,6 +1557,7 @@ public class EventTest : TestBase
             ViantImpressionID = "viant_impression_id",
             Wbraid = "wbraid",
             Webview = true,
+            Ylpcid = "ylpcid",
         };
         string expectedEmail = "P";
         Dictionary<string, EventProperty?> expectedEventProperties = new() { { "foo", "string" } };
@@ -1586,6 +1620,7 @@ public class EventTest : TestBase
             Sid = "sid",
             State = "state",
             Ttclid = "ttclid",
+            TtdImpressionID = "ttd_impression_id",
             Twclid = "twclid",
             UserAgent = "user_agent",
             UserAgentFullList = "user_agent_full_list",
@@ -1598,6 +1633,7 @@ public class EventTest : TestBase
             ViantClickID = "viant_click_id",
             ViantImpressionID = "viant_impression_id",
             Wbraid = "wbraid",
+            Ylpcid = "ylpcid",
             Zip = "string",
         };
 
@@ -1695,6 +1731,7 @@ public class EventTest : TestBase
                 Sr = "sr",
                 Title = "title",
                 Ttclid = "ttclid",
+                TtdImpressionID = "ttd_impression_id",
                 Twclid = "twclid",
                 Uafvl = "uafvl",
                 UserAgent = "user_agent",
@@ -1709,6 +1746,7 @@ public class EventTest : TestBase
                 ViantImpressionID = "viant_impression_id",
                 Wbraid = "wbraid",
                 Webview = true,
+                Ylpcid = "ylpcid",
             },
             Email = "P",
             EventProperties = new Dictionary<string, EventProperty?>() { { "foo", "string" } },
@@ -1774,6 +1812,7 @@ public class EventTest : TestBase
                 Sid = "sid",
                 State = "state",
                 Ttclid = "ttclid",
+                TtdImpressionID = "ttd_impression_id",
                 Twclid = "twclid",
                 UserAgent = "user_agent",
                 UserAgentFullList = "user_agent_full_list",
@@ -1786,6 +1825,7 @@ public class EventTest : TestBase
                 ViantClickID = "viant_click_id",
                 ViantImpressionID = "viant_impression_id",
                 Wbraid = "wbraid",
+                Ylpcid = "ylpcid",
                 Zip = "string",
             },
         };
@@ -1956,6 +1996,7 @@ public class EventTest : TestBase
                 Sr = "sr",
                 Title = "title",
                 Ttclid = "ttclid",
+                TtdImpressionID = "ttd_impression_id",
                 Twclid = "twclid",
                 Uafvl = "uafvl",
                 UserAgent = "user_agent",
@@ -1970,6 +2011,7 @@ public class EventTest : TestBase
                 ViantImpressionID = "viant_impression_id",
                 Wbraid = "wbraid",
                 Webview = true,
+                Ylpcid = "ylpcid",
             },
             Email = "P",
             EventProperties = new Dictionary<string, EventProperty?>() { { "foo", "string" } },
@@ -2035,6 +2077,7 @@ public class EventTest : TestBase
                 Sid = "sid",
                 State = "state",
                 Ttclid = "ttclid",
+                TtdImpressionID = "ttd_impression_id",
                 Twclid = "twclid",
                 UserAgent = "user_agent",
                 UserAgentFullList = "user_agent_full_list",
@@ -2047,6 +2090,7 @@ public class EventTest : TestBase
                 ViantClickID = "viant_click_id",
                 ViantImpressionID = "viant_impression_id",
                 Wbraid = "wbraid",
+                Ylpcid = "ylpcid",
                 Zip = "string",
             },
         };
@@ -2130,6 +2174,7 @@ public class DefaultPropertiesTest : TestBase
             Sr = "sr",
             Title = "title",
             Ttclid = "ttclid",
+            TtdImpressionID = "ttd_impression_id",
             Twclid = "twclid",
             Uafvl = "uafvl",
             UserAgent = "user_agent",
@@ -2144,6 +2189,7 @@ public class DefaultPropertiesTest : TestBase
             ViantImpressionID = "viant_impression_id",
             Wbraid = "wbraid",
             Webview = true,
+            Ylpcid = "ylpcid",
         };
 
         string expected_EfTransactionID = "_ef_transaction_id";
@@ -2212,6 +2258,7 @@ public class DefaultPropertiesTest : TestBase
         string expectedSr = "sr";
         string expectedTitle = "title";
         string expectedTtclid = "ttclid";
+        string expectedTtdImpressionID = "ttd_impression_id";
         string expectedTwclid = "twclid";
         string expectedUafvl = "uafvl";
         string expectedUserAgent = "user_agent";
@@ -2226,6 +2273,7 @@ public class DefaultPropertiesTest : TestBase
         string expectedViantImpressionID = "viant_impression_id";
         string expectedWbraid = "wbraid";
         bool expectedWebview = true;
+        string expectedYlpcid = "ylpcid";
 
         Assert.Equal(expected_EfTransactionID, model._EfTransactionID);
         Assert.Equal(expectedActiveDuration, model.ActiveDuration);
@@ -2293,6 +2341,7 @@ public class DefaultPropertiesTest : TestBase
         Assert.Equal(expectedSr, model.Sr);
         Assert.Equal(expectedTitle, model.Title);
         Assert.Equal(expectedTtclid, model.Ttclid);
+        Assert.Equal(expectedTtdImpressionID, model.TtdImpressionID);
         Assert.Equal(expectedTwclid, model.Twclid);
         Assert.Equal(expectedUafvl, model.Uafvl);
         Assert.Equal(expectedUserAgent, model.UserAgent);
@@ -2307,6 +2356,7 @@ public class DefaultPropertiesTest : TestBase
         Assert.Equal(expectedViantImpressionID, model.ViantImpressionID);
         Assert.Equal(expectedWbraid, model.Wbraid);
         Assert.Equal(expectedWebview, model.Webview);
+        Assert.Equal(expectedYlpcid, model.Ylpcid);
     }
 
     [Fact]
@@ -2380,6 +2430,7 @@ public class DefaultPropertiesTest : TestBase
             Sr = "sr",
             Title = "title",
             Ttclid = "ttclid",
+            TtdImpressionID = "ttd_impression_id",
             Twclid = "twclid",
             Uafvl = "uafvl",
             UserAgent = "user_agent",
@@ -2394,6 +2445,7 @@ public class DefaultPropertiesTest : TestBase
             ViantImpressionID = "viant_impression_id",
             Wbraid = "wbraid",
             Webview = true,
+            Ylpcid = "ylpcid",
         };
 
         string json = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
@@ -2476,6 +2528,7 @@ public class DefaultPropertiesTest : TestBase
             Sr = "sr",
             Title = "title",
             Ttclid = "ttclid",
+            TtdImpressionID = "ttd_impression_id",
             Twclid = "twclid",
             Uafvl = "uafvl",
             UserAgent = "user_agent",
@@ -2490,6 +2543,7 @@ public class DefaultPropertiesTest : TestBase
             ViantImpressionID = "viant_impression_id",
             Wbraid = "wbraid",
             Webview = true,
+            Ylpcid = "ylpcid",
         };
 
         string element = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
@@ -2565,6 +2619,7 @@ public class DefaultPropertiesTest : TestBase
         string expectedSr = "sr";
         string expectedTitle = "title";
         string expectedTtclid = "ttclid";
+        string expectedTtdImpressionID = "ttd_impression_id";
         string expectedTwclid = "twclid";
         string expectedUafvl = "uafvl";
         string expectedUserAgent = "user_agent";
@@ -2579,6 +2634,7 @@ public class DefaultPropertiesTest : TestBase
         string expectedViantImpressionID = "viant_impression_id";
         string expectedWbraid = "wbraid";
         bool expectedWebview = true;
+        string expectedYlpcid = "ylpcid";
 
         Assert.Equal(expected_EfTransactionID, deserialized._EfTransactionID);
         Assert.Equal(expectedActiveDuration, deserialized.ActiveDuration);
@@ -2646,6 +2702,7 @@ public class DefaultPropertiesTest : TestBase
         Assert.Equal(expectedSr, deserialized.Sr);
         Assert.Equal(expectedTitle, deserialized.Title);
         Assert.Equal(expectedTtclid, deserialized.Ttclid);
+        Assert.Equal(expectedTtdImpressionID, deserialized.TtdImpressionID);
         Assert.Equal(expectedTwclid, deserialized.Twclid);
         Assert.Equal(expectedUafvl, deserialized.Uafvl);
         Assert.Equal(expectedUserAgent, deserialized.UserAgent);
@@ -2660,6 +2717,7 @@ public class DefaultPropertiesTest : TestBase
         Assert.Equal(expectedViantImpressionID, deserialized.ViantImpressionID);
         Assert.Equal(expectedWbraid, deserialized.Wbraid);
         Assert.Equal(expectedWebview, deserialized.Webview);
+        Assert.Equal(expectedYlpcid, deserialized.Ylpcid);
     }
 
     [Fact]
@@ -2733,6 +2791,7 @@ public class DefaultPropertiesTest : TestBase
             Sr = "sr",
             Title = "title",
             Ttclid = "ttclid",
+            TtdImpressionID = "ttd_impression_id",
             Twclid = "twclid",
             Uafvl = "uafvl",
             UserAgent = "user_agent",
@@ -2747,6 +2806,7 @@ public class DefaultPropertiesTest : TestBase
             ViantImpressionID = "viant_impression_id",
             Wbraid = "wbraid",
             Webview = true,
+            Ylpcid = "ylpcid",
         };
 
         model.Validate();
@@ -2889,6 +2949,8 @@ public class DefaultPropertiesTest : TestBase
         Assert.False(model.RawData.ContainsKey("title"));
         Assert.Null(model.Ttclid);
         Assert.False(model.RawData.ContainsKey("ttclid"));
+        Assert.Null(model.TtdImpressionID);
+        Assert.False(model.RawData.ContainsKey("ttd_impression_id"));
         Assert.Null(model.Twclid);
         Assert.False(model.RawData.ContainsKey("twclid"));
         Assert.Null(model.Uafvl);
@@ -2917,6 +2979,8 @@ public class DefaultPropertiesTest : TestBase
         Assert.False(model.RawData.ContainsKey("wbraid"));
         Assert.Null(model.Webview);
         Assert.False(model.RawData.ContainsKey("webview"));
+        Assert.Null(model.Ylpcid);
+        Assert.False(model.RawData.ContainsKey("ylpcid"));
     }
 
     [Fact]
@@ -2998,6 +3062,7 @@ public class DefaultPropertiesTest : TestBase
             Sr = null,
             Title = null,
             Ttclid = null,
+            TtdImpressionID = null,
             Twclid = null,
             Uafvl = null,
             UserAgent = null,
@@ -3012,6 +3077,7 @@ public class DefaultPropertiesTest : TestBase
             ViantImpressionID = null,
             Wbraid = null,
             Webview = null,
+            Ylpcid = null,
         };
 
         Assert.Null(model._EfTransactionID);
@@ -3146,6 +3212,8 @@ public class DefaultPropertiesTest : TestBase
         Assert.True(model.RawData.ContainsKey("title"));
         Assert.Null(model.Ttclid);
         Assert.True(model.RawData.ContainsKey("ttclid"));
+        Assert.Null(model.TtdImpressionID);
+        Assert.True(model.RawData.ContainsKey("ttd_impression_id"));
         Assert.Null(model.Twclid);
         Assert.True(model.RawData.ContainsKey("twclid"));
         Assert.Null(model.Uafvl);
@@ -3174,6 +3242,8 @@ public class DefaultPropertiesTest : TestBase
         Assert.True(model.RawData.ContainsKey("wbraid"));
         Assert.Null(model.Webview);
         Assert.True(model.RawData.ContainsKey("webview"));
+        Assert.Null(model.Ylpcid);
+        Assert.True(model.RawData.ContainsKey("ylpcid"));
     }
 
     [Fact]
@@ -3247,6 +3317,7 @@ public class DefaultPropertiesTest : TestBase
             Sr = null,
             Title = null,
             Ttclid = null,
+            TtdImpressionID = null,
             Twclid = null,
             Uafvl = null,
             UserAgent = null,
@@ -3261,6 +3332,7 @@ public class DefaultPropertiesTest : TestBase
             ViantImpressionID = null,
             Wbraid = null,
             Webview = null,
+            Ylpcid = null,
         };
 
         model.Validate();
@@ -3337,6 +3409,7 @@ public class DefaultPropertiesTest : TestBase
             Sr = "sr",
             Title = "title",
             Ttclid = "ttclid",
+            TtdImpressionID = "ttd_impression_id",
             Twclid = "twclid",
             Uafvl = "uafvl",
             UserAgent = "user_agent",
@@ -3351,6 +3424,7 @@ public class DefaultPropertiesTest : TestBase
             ViantImpressionID = "viant_impression_id",
             Wbraid = "wbraid",
             Webview = true,
+            Ylpcid = "ylpcid",
         };
 
         DefaultProperties copied = new(model);
@@ -4661,6 +4735,7 @@ public class UserPropertiesTest : TestBase
             Sid = "sid",
             State = "state",
             Ttclid = "ttclid",
+            TtdImpressionID = "ttd_impression_id",
             Twclid = "twclid",
             UserAgent = "user_agent",
             UserAgentFullList = "user_agent_full_list",
@@ -4673,6 +4748,7 @@ public class UserPropertiesTest : TestBase
             ViantClickID = "viant_click_id",
             ViantImpressionID = "viant_impression_id",
             Wbraid = "wbraid",
+            Ylpcid = "ylpcid",
             Zip = "string",
         };
 
@@ -4732,6 +4808,7 @@ public class UserPropertiesTest : TestBase
         string expectedSid = "sid";
         string expectedState = "state";
         string expectedTtclid = "ttclid";
+        string expectedTtdImpressionID = "ttd_impression_id";
         string expectedTwclid = "twclid";
         string expectedUserAgent = "user_agent";
         string expectedUserAgentFullList = "user_agent_full_list";
@@ -4744,6 +4821,7 @@ public class UserPropertiesTest : TestBase
         string expectedViantClickID = "viant_click_id";
         string expectedViantImpressionID = "viant_impression_id";
         string expectedWbraid = "wbraid";
+        string expectedYlpcid = "ylpcid";
         Zip expectedZip = "string";
 
         Assert.Equal(expected_EfTransactionID, model._EfTransactionID);
@@ -4813,6 +4891,7 @@ public class UserPropertiesTest : TestBase
         Assert.Equal(expectedSid, model.Sid);
         Assert.Equal(expectedState, model.State);
         Assert.Equal(expectedTtclid, model.Ttclid);
+        Assert.Equal(expectedTtdImpressionID, model.TtdImpressionID);
         Assert.Equal(expectedTwclid, model.Twclid);
         Assert.Equal(expectedUserAgent, model.UserAgent);
         Assert.Equal(expectedUserAgentFullList, model.UserAgentFullList);
@@ -4825,6 +4904,7 @@ public class UserPropertiesTest : TestBase
         Assert.Equal(expectedViantClickID, model.ViantClickID);
         Assert.Equal(expectedViantImpressionID, model.ViantImpressionID);
         Assert.Equal(expectedWbraid, model.Wbraid);
+        Assert.Equal(expectedYlpcid, model.Ylpcid);
         Assert.Equal(expectedZip, model.Zip);
     }
 
@@ -4886,6 +4966,7 @@ public class UserPropertiesTest : TestBase
             Sid = "sid",
             State = "state",
             Ttclid = "ttclid",
+            TtdImpressionID = "ttd_impression_id",
             Twclid = "twclid",
             UserAgent = "user_agent",
             UserAgentFullList = "user_agent_full_list",
@@ -4898,6 +4979,7 @@ public class UserPropertiesTest : TestBase
             ViantClickID = "viant_click_id",
             ViantImpressionID = "viant_impression_id",
             Wbraid = "wbraid",
+            Ylpcid = "ylpcid",
             Zip = "string",
         };
 
@@ -4968,6 +5050,7 @@ public class UserPropertiesTest : TestBase
             Sid = "sid",
             State = "state",
             Ttclid = "ttclid",
+            TtdImpressionID = "ttd_impression_id",
             Twclid = "twclid",
             UserAgent = "user_agent",
             UserAgentFullList = "user_agent_full_list",
@@ -4980,6 +5063,7 @@ public class UserPropertiesTest : TestBase
             ViantClickID = "viant_click_id",
             ViantImpressionID = "viant_impression_id",
             Wbraid = "wbraid",
+            Ylpcid = "ylpcid",
             Zip = "string",
         };
 
@@ -5046,6 +5130,7 @@ public class UserPropertiesTest : TestBase
         string expectedSid = "sid";
         string expectedState = "state";
         string expectedTtclid = "ttclid";
+        string expectedTtdImpressionID = "ttd_impression_id";
         string expectedTwclid = "twclid";
         string expectedUserAgent = "user_agent";
         string expectedUserAgentFullList = "user_agent_full_list";
@@ -5058,6 +5143,7 @@ public class UserPropertiesTest : TestBase
         string expectedViantClickID = "viant_click_id";
         string expectedViantImpressionID = "viant_impression_id";
         string expectedWbraid = "wbraid";
+        string expectedYlpcid = "ylpcid";
         Zip expectedZip = "string";
 
         Assert.Equal(expected_EfTransactionID, deserialized._EfTransactionID);
@@ -5127,6 +5213,7 @@ public class UserPropertiesTest : TestBase
         Assert.Equal(expectedSid, deserialized.Sid);
         Assert.Equal(expectedState, deserialized.State);
         Assert.Equal(expectedTtclid, deserialized.Ttclid);
+        Assert.Equal(expectedTtdImpressionID, deserialized.TtdImpressionID);
         Assert.Equal(expectedTwclid, deserialized.Twclid);
         Assert.Equal(expectedUserAgent, deserialized.UserAgent);
         Assert.Equal(expectedUserAgentFullList, deserialized.UserAgentFullList);
@@ -5139,6 +5226,7 @@ public class UserPropertiesTest : TestBase
         Assert.Equal(expectedViantClickID, deserialized.ViantClickID);
         Assert.Equal(expectedViantImpressionID, deserialized.ViantImpressionID);
         Assert.Equal(expectedWbraid, deserialized.Wbraid);
+        Assert.Equal(expectedYlpcid, deserialized.Ylpcid);
         Assert.Equal(expectedZip, deserialized.Zip);
     }
 
@@ -5200,6 +5288,7 @@ public class UserPropertiesTest : TestBase
             Sid = "sid",
             State = "state",
             Ttclid = "ttclid",
+            TtdImpressionID = "ttd_impression_id",
             Twclid = "twclid",
             UserAgent = "user_agent",
             UserAgentFullList = "user_agent_full_list",
@@ -5212,6 +5301,7 @@ public class UserPropertiesTest : TestBase
             ViantClickID = "viant_click_id",
             ViantImpressionID = "viant_impression_id",
             Wbraid = "wbraid",
+            Ylpcid = "ylpcid",
             Zip = "string",
         };
 
@@ -5329,6 +5419,8 @@ public class UserPropertiesTest : TestBase
         Assert.False(model.RawData.ContainsKey("state"));
         Assert.Null(model.Ttclid);
         Assert.False(model.RawData.ContainsKey("ttclid"));
+        Assert.Null(model.TtdImpressionID);
+        Assert.False(model.RawData.ContainsKey("ttd_impression_id"));
         Assert.Null(model.Twclid);
         Assert.False(model.RawData.ContainsKey("twclid"));
         Assert.Null(model.UserAgent);
@@ -5353,6 +5445,8 @@ public class UserPropertiesTest : TestBase
         Assert.False(model.RawData.ContainsKey("viant_impression_id"));
         Assert.Null(model.Wbraid);
         Assert.False(model.RawData.ContainsKey("wbraid"));
+        Assert.Null(model.Ylpcid);
+        Assert.False(model.RawData.ContainsKey("ylpcid"));
         Assert.Null(model.Zip);
         Assert.False(model.RawData.ContainsKey("zip"));
     }
@@ -5423,6 +5517,7 @@ public class UserPropertiesTest : TestBase
             Sid = null,
             State = null,
             Ttclid = null,
+            TtdImpressionID = null,
             Twclid = null,
             UserAgent = null,
             UserAgentFullList = null,
@@ -5435,6 +5530,7 @@ public class UserPropertiesTest : TestBase
             ViantClickID = null,
             ViantImpressionID = null,
             Wbraid = null,
+            Ylpcid = null,
             Zip = null,
         };
 
@@ -5544,6 +5640,8 @@ public class UserPropertiesTest : TestBase
         Assert.True(model.RawData.ContainsKey("state"));
         Assert.Null(model.Ttclid);
         Assert.True(model.RawData.ContainsKey("ttclid"));
+        Assert.Null(model.TtdImpressionID);
+        Assert.True(model.RawData.ContainsKey("ttd_impression_id"));
         Assert.Null(model.Twclid);
         Assert.True(model.RawData.ContainsKey("twclid"));
         Assert.Null(model.UserAgent);
@@ -5568,6 +5666,8 @@ public class UserPropertiesTest : TestBase
         Assert.True(model.RawData.ContainsKey("viant_impression_id"));
         Assert.Null(model.Wbraid);
         Assert.True(model.RawData.ContainsKey("wbraid"));
+        Assert.Null(model.Ylpcid);
+        Assert.True(model.RawData.ContainsKey("ylpcid"));
         Assert.Null(model.Zip);
         Assert.True(model.RawData.ContainsKey("zip"));
     }
@@ -5630,6 +5730,7 @@ public class UserPropertiesTest : TestBase
             Sid = null,
             State = null,
             Ttclid = null,
+            TtdImpressionID = null,
             Twclid = null,
             UserAgent = null,
             UserAgentFullList = null,
@@ -5642,6 +5743,7 @@ public class UserPropertiesTest : TestBase
             ViantClickID = null,
             ViantImpressionID = null,
             Wbraid = null,
+            Ylpcid = null,
             Zip = null,
         };
 
@@ -5706,6 +5808,7 @@ public class UserPropertiesTest : TestBase
             Sid = "sid",
             State = "state",
             Ttclid = "ttclid",
+            TtdImpressionID = "ttd_impression_id",
             Twclid = "twclid",
             UserAgent = "user_agent",
             UserAgentFullList = "user_agent_full_list",
@@ -5718,6 +5821,7 @@ public class UserPropertiesTest : TestBase
             ViantClickID = "viant_click_id",
             ViantImpressionID = "viant_impression_id",
             Wbraid = "wbraid",
+            Ylpcid = "ylpcid",
             Zip = "string",
         };
 

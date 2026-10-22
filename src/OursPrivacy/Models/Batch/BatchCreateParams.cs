@@ -1322,6 +1322,21 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
+    /// The Trade Desk impression ID, captured from a configured ttd_impression_id
+    /// URL parameter using the %%TTD_IMPRESSIONID%% creative macro. Sent as imp
+    /// on conversions. Leading and trailing whitespace is removed before validation.
+    /// </summary>
+    public string? TtdImpressionID
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("ttd_impression_id");
+        }
+        init { this._rawData.Set("ttd_impression_id", value); }
+    }
+
+    /// <summary>
     /// The Twitter Click ID. Ex: twclid123 Leading and trailing whitespace is removed
     /// before validation.
     /// </summary>
@@ -1519,6 +1534,19 @@ public sealed record class DefaultProperties : JsonModel
         init { this._rawData.Set("webview", value); }
     }
 
+    /// <summary>
+    /// The Yelp Click ID from the landing URL, sent unchanged and unhashed.
+    /// </summary>
+    public string? Ylpcid
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("ylpcid");
+        }
+        init { this._rawData.Set("ylpcid", value); }
+    }
+
     /// <inheritdoc/>
     public override void Validate()
     {
@@ -1588,6 +1616,7 @@ public sealed record class DefaultProperties : JsonModel
         _ = this.Sr;
         _ = this.Title;
         _ = this.Ttclid;
+        _ = this.TtdImpressionID;
         _ = this.Twclid;
         _ = this.Uafvl;
         _ = this.UserAgent;
@@ -1602,6 +1631,7 @@ public sealed record class DefaultProperties : JsonModel
         _ = this.ViantImpressionID;
         _ = this.Wbraid;
         _ = this.Webview;
+        _ = this.Ylpcid;
     }
 
     public DefaultProperties() { }
@@ -7128,6 +7158,19 @@ public sealed record class UserProperties : JsonModel
         init { this._rawData.Set("ttclid", value); }
     }
 
+    /// <summary>
+    /// Leading and trailing whitespace is removed before validation.
+    /// </summary>
+    public string? TtdImpressionID
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("ttd_impression_id");
+        }
+        init { this._rawData.Set("ttd_impression_id", value); }
+    }
+
     public string? Twclid
     {
         get
@@ -7278,6 +7321,16 @@ public sealed record class UserProperties : JsonModel
         init { this._rawData.Set("wbraid", value); }
     }
 
+    public string? Ylpcid
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("ylpcid");
+        }
+        init { this._rawData.Set("ylpcid", value); }
+    }
+
     /// <summary>
     /// Any JSON value: string, number, boolean, array, object, or null.
     /// </summary>
@@ -7359,6 +7412,7 @@ public sealed record class UserProperties : JsonModel
         _ = this.Sid;
         _ = this.State;
         _ = this.Ttclid;
+        _ = this.TtdImpressionID;
         _ = this.Twclid;
         _ = this.UserAgent;
         _ = this.UserAgentFullList;
@@ -7371,6 +7425,7 @@ public sealed record class UserProperties : JsonModel
         _ = this.ViantClickID;
         _ = this.ViantImpressionID;
         _ = this.Wbraid;
+        _ = this.Ylpcid;
         this.Zip?.Validate();
     }
 
