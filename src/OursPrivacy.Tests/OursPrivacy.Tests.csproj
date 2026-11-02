@@ -21,4 +21,8 @@
     <ProjectReference Include="..\OursPrivacy\OursPrivacy.csproj" />
     <Using Include="Xunit" />
   </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
+    <!-- Previously referenced transitively via Microsoft.Testing.Platform; xunit.v3.mtp-off does not. -->
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
 </Project>
