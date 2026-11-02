@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.26.0 (2026-11-02)
+
+Full Changelog: [v1.25.0...v1.26.0](https://github.com/with-ours/ingest-sdk-csharp/compare/v1.25.0...v1.26.0)
+
+### Features
+
+* **runtime:** add the net10.0 target and move tooling to .NET 10
 ## 1.25.0 (2026-10-29)
 
 Full Changelog: [v1.24.0...v1.25.0](https://github.com/with-ours/ingest-sdk-csharp/compare/v1.24.0...v1.25.0)
