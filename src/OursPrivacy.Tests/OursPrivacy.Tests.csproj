@@ -4,9 +4,9 @@
     <IsPackable>false</IsPackable>
     <OutputType>Exe</OutputType>
 
-    <!-- Run tests on net8.0, which will use the SDK's net8.0 DLL, and on net472, which will use the
+    <!-- Run tests on net10.0, which will use the SDK's net10.0 DLL, and on net472, which will use the
     SDK's netstandard2.0 DLL. -->
-    <TargetFrameworks>net8.0;net472</TargetFrameworks>
+    <TargetFrameworks>net10.0;net472</TargetFrameworks>
 
     <!-- Disable skipped tests warnings. -->
     <NoWarn>$(NoWarn),xUnit1004</NoWarn>
