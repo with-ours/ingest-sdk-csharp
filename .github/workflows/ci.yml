@@ -62,6 +62,21 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
+      # Regeneration adds scripts/mock and un-skips the resource tests. Both test
+      # steps below, net10.0 and net472, inherit TEST_API_BASE_URL and run those
+      # tests against this one mock. Without scripts/mock this step does nothing
+      # and the resource tests stay skipped.
+      - name: Start mock server
+        run: |
+          if [ -f ./scripts/mock ]; then
+            ./scripts/mock --daemon
+            echo "TEST_API_BASE_URL=http://127.0.0.1:$STAINLESS_MOCK_PORT" >> "$GITHUB_ENV"
+          fi
+        shell: bash
+        timeout-minutes: 5
+        env:
+          STAINLESS_MOCK_PORT: '4010'
+
       - name: Run .NET 10 tests
         run: ./scripts/test
         shell: bash
