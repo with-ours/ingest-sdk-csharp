@@ -22,6 +22,7 @@ public class TrackEventParamsTest : TestBase
                 AdID = "ad_id",
                 AdmitadUid = "admitad_uid",
                 AdsetID = "adset_id",
+                AffiliatlyV3 = "affiliatly_v3",
                 Alart = "alart",
                 Aleid = "aleid",
                 Axwrt = "axwrt",
@@ -113,6 +114,7 @@ public class TrackEventParamsTest : TestBase
                 AdID = "ad_id",
                 AdmitadUid = "admitad_uid",
                 AdsetID = "adset_id",
+                AffiliatlyV3 = "affiliatly_v3",
                 Alart = "alart",
                 Aleid = "aleid",
                 Axwrt = "axwrt",
@@ -192,6 +194,7 @@ public class TrackEventParamsTest : TestBase
             AdID = "ad_id",
             AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
+            AffiliatlyV3 = "affiliatly_v3",
             Alart = "alart",
             Aleid = "aleid",
             Axwrt = "axwrt",
@@ -283,6 +286,7 @@ public class TrackEventParamsTest : TestBase
             AdID = "ad_id",
             AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
+            AffiliatlyV3 = "affiliatly_v3",
             Alart = "alart",
             Aleid = "aleid",
             Axwrt = "axwrt",
@@ -457,6 +461,7 @@ public class TrackEventParamsTest : TestBase
                 AdID = "ad_id",
                 AdmitadUid = "admitad_uid",
                 AdsetID = "adset_id",
+                AffiliatlyV3 = "affiliatly_v3",
                 Alart = "alart",
                 Aleid = "aleid",
                 Axwrt = "axwrt",
@@ -548,6 +553,7 @@ public class TrackEventParamsTest : TestBase
                 AdID = "ad_id",
                 AdmitadUid = "admitad_uid",
                 AdsetID = "adset_id",
+                AffiliatlyV3 = "affiliatly_v3",
                 Alart = "alart",
                 Aleid = "aleid",
                 Axwrt = "axwrt",
@@ -636,6 +642,7 @@ public class DefaultPropertiesTest : TestBase
             AdID = "ad_id",
             AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
+            AffiliatlyV3 = "affiliatly_v3",
             Alart = "alart",
             Aleid = "aleid",
             Axwrt = "axwrt",
@@ -720,6 +727,7 @@ public class DefaultPropertiesTest : TestBase
         string expectedAdID = "ad_id";
         string expectedAdmitadUid = "admitad_uid";
         string expectedAdsetID = "adset_id";
+        string expectedAffiliatlyV3 = "affiliatly_v3";
         string expectedAlart = "alart";
         string expectedAleid = "aleid";
         string expectedAxwrt = "axwrt";
@@ -803,6 +811,7 @@ public class DefaultPropertiesTest : TestBase
         Assert.Equal(expectedAdID, model.AdID);
         Assert.Equal(expectedAdmitadUid, model.AdmitadUid);
         Assert.Equal(expectedAdsetID, model.AdsetID);
+        Assert.Equal(expectedAffiliatlyV3, model.AffiliatlyV3);
         Assert.Equal(expectedAlart, model.Alart);
         Assert.Equal(expectedAleid, model.Aleid);
         Assert.Equal(expectedAxwrt, model.Axwrt);
@@ -892,6 +901,7 @@ public class DefaultPropertiesTest : TestBase
             AdID = "ad_id",
             AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
+            AffiliatlyV3 = "affiliatly_v3",
             Alart = "alart",
             Aleid = "aleid",
             Axwrt = "axwrt",
@@ -990,6 +1000,7 @@ public class DefaultPropertiesTest : TestBase
             AdID = "ad_id",
             AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
+            AffiliatlyV3 = "affiliatly_v3",
             Alart = "alart",
             Aleid = "aleid",
             Axwrt = "axwrt",
@@ -1081,6 +1092,7 @@ public class DefaultPropertiesTest : TestBase
         string expectedAdID = "ad_id";
         string expectedAdmitadUid = "admitad_uid";
         string expectedAdsetID = "adset_id";
+        string expectedAffiliatlyV3 = "affiliatly_v3";
         string expectedAlart = "alart";
         string expectedAleid = "aleid";
         string expectedAxwrt = "axwrt";
@@ -1164,6 +1176,7 @@ public class DefaultPropertiesTest : TestBase
         Assert.Equal(expectedAdID, deserialized.AdID);
         Assert.Equal(expectedAdmitadUid, deserialized.AdmitadUid);
         Assert.Equal(expectedAdsetID, deserialized.AdsetID);
+        Assert.Equal(expectedAffiliatlyV3, deserialized.AffiliatlyV3);
         Assert.Equal(expectedAlart, deserialized.Alart);
         Assert.Equal(expectedAleid, deserialized.Aleid);
         Assert.Equal(expectedAxwrt, deserialized.Axwrt);
@@ -1253,6 +1266,7 @@ public class DefaultPropertiesTest : TestBase
             AdID = "ad_id",
             AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
+            AffiliatlyV3 = "affiliatly_v3",
             Alart = "alart",
             Aleid = "aleid",
             Axwrt = "axwrt",
@@ -1350,6 +1364,8 @@ public class DefaultPropertiesTest : TestBase
         Assert.False(model.RawData.ContainsKey("admitad_uid"));
         Assert.Null(model.AdsetID);
         Assert.False(model.RawData.ContainsKey("adset_id"));
+        Assert.Null(model.AffiliatlyV3);
+        Assert.False(model.RawData.ContainsKey("affiliatly_v3"));
         Assert.Null(model.Alart);
         Assert.False(model.RawData.ContainsKey("alart"));
         Assert.Null(model.Aleid);
@@ -1524,6 +1540,7 @@ public class DefaultPropertiesTest : TestBase
             AdID = null,
             AdmitadUid = null,
             AdsetID = null,
+            AffiliatlyV3 = null,
             Alart = null,
             Aleid = null,
             Axwrt = null,
@@ -1613,6 +1630,8 @@ public class DefaultPropertiesTest : TestBase
         Assert.True(model.RawData.ContainsKey("admitad_uid"));
         Assert.Null(model.AdsetID);
         Assert.True(model.RawData.ContainsKey("adset_id"));
+        Assert.Null(model.AffiliatlyV3);
+        Assert.True(model.RawData.ContainsKey("affiliatly_v3"));
         Assert.Null(model.Alart);
         Assert.True(model.RawData.ContainsKey("alart"));
         Assert.Null(model.Aleid);
@@ -1779,6 +1798,7 @@ public class DefaultPropertiesTest : TestBase
             AdID = null,
             AdmitadUid = null,
             AdsetID = null,
+            AffiliatlyV3 = null,
             Alart = null,
             Aleid = null,
             Axwrt = null,
@@ -1871,6 +1891,7 @@ public class DefaultPropertiesTest : TestBase
             AdID = "ad_id",
             AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
+            AffiliatlyV3 = "affiliatly_v3",
             Alart = "alart",
             Aleid = "aleid",
             Axwrt = "axwrt",
@@ -3209,6 +3230,7 @@ public class UserPropertiesTest : TestBase
             AdID = "ad_id",
             AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
+            AffiliatlyV3 = "affiliatly_v3",
             Alart = "alart",
             Aleid = "aleid",
             Axwrt = "axwrt",
@@ -3279,6 +3301,7 @@ public class UserPropertiesTest : TestBase
         string expectedAdID = "ad_id";
         string expectedAdmitadUid = "admitad_uid";
         string expectedAdsetID = "adset_id";
+        string expectedAffiliatlyV3 = "affiliatly_v3";
         string expectedAlart = "alart";
         string expectedAleid = "aleid";
         string expectedAxwrt = "axwrt";
@@ -3351,6 +3374,7 @@ public class UserPropertiesTest : TestBase
         Assert.Equal(expectedAdID, model.AdID);
         Assert.Equal(expectedAdmitadUid, model.AdmitadUid);
         Assert.Equal(expectedAdsetID, model.AdsetID);
+        Assert.Equal(expectedAffiliatlyV3, model.AffiliatlyV3);
         Assert.Equal(expectedAlart, model.Alart);
         Assert.Equal(expectedAleid, model.Aleid);
         Assert.Equal(expectedAxwrt, model.Axwrt);
@@ -3440,6 +3464,7 @@ public class UserPropertiesTest : TestBase
             AdID = "ad_id",
             AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
+            AffiliatlyV3 = "affiliatly_v3",
             Alart = "alart",
             Aleid = "aleid",
             Axwrt = "axwrt",
@@ -3524,6 +3549,7 @@ public class UserPropertiesTest : TestBase
             AdID = "ad_id",
             AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
+            AffiliatlyV3 = "affiliatly_v3",
             Alart = "alart",
             Aleid = "aleid",
             Axwrt = "axwrt",
@@ -3601,6 +3627,7 @@ public class UserPropertiesTest : TestBase
         string expectedAdID = "ad_id";
         string expectedAdmitadUid = "admitad_uid";
         string expectedAdsetID = "adset_id";
+        string expectedAffiliatlyV3 = "affiliatly_v3";
         string expectedAlart = "alart";
         string expectedAleid = "aleid";
         string expectedAxwrt = "axwrt";
@@ -3673,6 +3700,7 @@ public class UserPropertiesTest : TestBase
         Assert.Equal(expectedAdID, deserialized.AdID);
         Assert.Equal(expectedAdmitadUid, deserialized.AdmitadUid);
         Assert.Equal(expectedAdsetID, deserialized.AdsetID);
+        Assert.Equal(expectedAffiliatlyV3, deserialized.AffiliatlyV3);
         Assert.Equal(expectedAlart, deserialized.Alart);
         Assert.Equal(expectedAleid, deserialized.Aleid);
         Assert.Equal(expectedAxwrt, deserialized.Axwrt);
@@ -3762,6 +3790,7 @@ public class UserPropertiesTest : TestBase
             AdID = "ad_id",
             AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
+            AffiliatlyV3 = "affiliatly_v3",
             Alart = "alart",
             Aleid = "aleid",
             Axwrt = "axwrt",
@@ -3844,6 +3873,8 @@ public class UserPropertiesTest : TestBase
         Assert.False(model.RawData.ContainsKey("admitad_uid"));
         Assert.Null(model.AdsetID);
         Assert.False(model.RawData.ContainsKey("adset_id"));
+        Assert.Null(model.AffiliatlyV3);
+        Assert.False(model.RawData.ContainsKey("affiliatly_v3"));
         Assert.Null(model.Alart);
         Assert.False(model.RawData.ContainsKey("alart"));
         Assert.Null(model.Aleid);
@@ -3991,6 +4022,7 @@ public class UserPropertiesTest : TestBase
             AdID = null,
             AdmitadUid = null,
             AdsetID = null,
+            AffiliatlyV3 = null,
             Alart = null,
             Aleid = null,
             Axwrt = null,
@@ -4065,6 +4097,8 @@ public class UserPropertiesTest : TestBase
         Assert.True(model.RawData.ContainsKey("admitad_uid"));
         Assert.Null(model.AdsetID);
         Assert.True(model.RawData.ContainsKey("adset_id"));
+        Assert.Null(model.AffiliatlyV3);
+        Assert.True(model.RawData.ContainsKey("affiliatly_v3"));
         Assert.Null(model.Alart);
         Assert.True(model.RawData.ContainsKey("alart"));
         Assert.Null(model.Aleid);
@@ -4204,6 +4238,7 @@ public class UserPropertiesTest : TestBase
             AdID = null,
             AdmitadUid = null,
             AdsetID = null,
+            AffiliatlyV3 = null,
             Alart = null,
             Aleid = null,
             Axwrt = null,
@@ -4282,6 +4317,7 @@ public class UserPropertiesTest : TestBase
             AdID = "ad_id",
             AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
+            AffiliatlyV3 = "affiliatly_v3",
             Alart = "alart",
             Aleid = "aleid",
             Axwrt = "axwrt",

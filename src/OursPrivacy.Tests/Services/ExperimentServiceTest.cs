@@ -4,7 +4,7 @@ namespace OursPrivacy.Tests.Services;
 
 public class ExperimentServiceTest : TestBase
 {
-    [Fact(Skip = "Mock server tests are disabled")]
+    [Fact]
     public async Task Assignment_Works()
     {
         var response = await this.client.Experiments.Assignment(
@@ -15,7 +15,7 @@ public class ExperimentServiceTest : TestBase
         response.Validate();
     }
 
-    [Fact(Skip = "Mock server tests are disabled")]
+    [Fact]
     public async Task Personalization_Works()
     {
         var response = await this.client.Experiments.Personalization(

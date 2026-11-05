@@ -147,18 +147,20 @@ public record class ExperimentAssignmentParams : ParamsBase
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(
-                new Dictionary<string, JsonElement>()
-                {
-                    ["ExperimentKey"] = JsonSerializer.SerializeToElement(this.ExperimentKey),
-                    ["HeaderData"] = FriendlyJsonPrinter.PrintValue(
-                        JsonSerializer.SerializeToElement(this._rawHeaderData.Freeze())
-                    ),
-                    ["QueryData"] = FriendlyJsonPrinter.PrintValue(
-                        JsonSerializer.SerializeToElement(this._rawQueryData.Freeze())
-                    ),
-                    ["BodyData"] = FriendlyJsonPrinter.PrintValue(this._rawBodyData.Freeze()),
-                }
+            FriendlyJsonPrinter.Redact(
+                FriendlyJsonPrinter.PrintValue(
+                    new Dictionary<string, JsonElement>()
+                    {
+                        ["ExperimentKey"] = JsonSerializer.SerializeToElement(this.ExperimentKey),
+                        ["HeaderData"] = FriendlyJsonPrinter.PrintValue(
+                            JsonSerializer.SerializeToElement(this._rawHeaderData.Freeze())
+                        ),
+                        ["QueryData"] = FriendlyJsonPrinter.PrintValue(
+                            JsonSerializer.SerializeToElement(this._rawQueryData.Freeze())
+                        ),
+                        ["BodyData"] = FriendlyJsonPrinter.PrintValue(this._rawBodyData.Freeze()),
+                    }
+                )
             ),
             ModelBase.ToStringSerializerOptions
         );
@@ -179,7 +181,7 @@ public record class ExperimentAssignmentParams : ParamsBase
     {
         return new UriBuilder(
             options.BaseUrl.ToString().TrimEnd('/')
-                + string.Format("/experiments/assignments/{0}", this.ExperimentKey)
+                + ParamsBase.EncodePath("/experiments/assignments/{0}", this.ExperimentKey)
         )
         {
             Query = this.QueryString(options),

@@ -115,17 +115,19 @@ public record class BatchCreateParams : ParamsBase
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(
-                new Dictionary<string, JsonElement>()
-                {
-                    ["HeaderData"] = FriendlyJsonPrinter.PrintValue(
-                        JsonSerializer.SerializeToElement(this._rawHeaderData.Freeze())
-                    ),
-                    ["QueryData"] = FriendlyJsonPrinter.PrintValue(
-                        JsonSerializer.SerializeToElement(this._rawQueryData.Freeze())
-                    ),
-                    ["BodyData"] = FriendlyJsonPrinter.PrintValue(this._rawBodyData.Freeze()),
-                }
+            FriendlyJsonPrinter.Redact(
+                FriendlyJsonPrinter.PrintValue(
+                    new Dictionary<string, JsonElement>()
+                    {
+                        ["HeaderData"] = FriendlyJsonPrinter.PrintValue(
+                            JsonSerializer.SerializeToElement(this._rawHeaderData.Freeze())
+                        ),
+                        ["QueryData"] = FriendlyJsonPrinter.PrintValue(
+                            JsonSerializer.SerializeToElement(this._rawQueryData.Freeze())
+                        ),
+                        ["BodyData"] = FriendlyJsonPrinter.PrintValue(this._rawBodyData.Freeze()),
+                    }
+                )
             ),
             ModelBase.ToStringSerializerOptions
         );
@@ -295,8 +297,9 @@ public sealed record class Event : JsonModel
     }
 
     /// <summary>
-    /// The time at which the event occurred in milliseconds since UTC epoch. The
-    /// time must be in the past and within the last 7 days.
+    /// The time at which the event occurred in milliseconds since UTC epoch. Times
+    /// older than one year are recorded as exactly one year ago, and future times
+    /// as now.
     /// </summary>
     public double? Time
     {
@@ -469,6 +472,21 @@ public sealed record class DefaultProperties : JsonModel
             return this._rawData.GetNullableClass<string>("adset_id");
         }
         init { this._rawData.Set("adset_id", value); }
+    }
+
+    /// <summary>
+    /// The raw Affiliatly tracking cookie value (affiliatly_v3), set by the Affiliatly
+    /// script when a visitor lands from an affiliate link. Web-only. Ex: id_hash=abc&amp;id_user=123&amp;aff_uid=45
+    /// Leading and trailing whitespace is removed before validation.
+    /// </summary>
+    public string? AffiliatlyV3
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("affiliatly_v3");
+        }
+        init { this._rawData.Set("affiliatly_v3", value); }
     }
 
     /// <summary>
@@ -1557,6 +1575,7 @@ public sealed record class DefaultProperties : JsonModel
         _ = this.AdID;
         _ = this.AdmitadUid;
         _ = this.AdsetID;
+        _ = this.AffiliatlyV3;
         _ = this.Alart;
         _ = this.Aleid;
         _ = this.Axwrt;
@@ -1978,7 +1997,7 @@ public record class IsBot : ModelBase
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(this.Json),
+            FriendlyJsonPrinter.Redact(FriendlyJsonPrinter.PrintValue(this.Json)),
             ModelBase.ToStringSerializerOptions
         );
 
@@ -2400,7 +2419,7 @@ public record class EventProperty : ModelBase
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(this.Json),
+            FriendlyJsonPrinter.Redact(FriendlyJsonPrinter.PrintValue(this.Json)),
             ModelBase.ToStringSerializerOptions
         );
 
@@ -2815,7 +2834,7 @@ public record class JsonValue : ModelBase
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(this.Json),
+            FriendlyJsonPrinter.Redact(FriendlyJsonPrinter.PrintValue(this.Json)),
             ModelBase.ToStringSerializerOptions
         );
 
@@ -3254,7 +3273,7 @@ public record class UnionMember4Item : ModelBase
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(this.Json),
+            FriendlyJsonPrinter.Redact(FriendlyJsonPrinter.PrintValue(this.Json)),
             ModelBase.ToStringSerializerOptions
         );
 
@@ -3675,7 +3694,7 @@ public record class UnionMember4ItemJsonValue : ModelBase
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(this.Json),
+            FriendlyJsonPrinter.Redact(FriendlyJsonPrinter.PrintValue(this.Json)),
             ModelBase.ToStringSerializerOptions
         );
 
@@ -4129,7 +4148,7 @@ public record class UnionMember4ItemUnionMember4Item : ModelBase
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(this.Json),
+            FriendlyJsonPrinter.Redact(FriendlyJsonPrinter.PrintValue(this.Json)),
             ModelBase.ToStringSerializerOptions
         );
 
@@ -4557,7 +4576,7 @@ public record class UnionMember4ItemUnionMember4ItemJsonValue : ModelBase
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(this.Json),
+            FriendlyJsonPrinter.Redact(FriendlyJsonPrinter.PrintValue(this.Json)),
             ModelBase.ToStringSerializerOptions
         );
 
@@ -5048,7 +5067,7 @@ public record class UnionMember4ItemUnionMember4ItemUnionMember4Item : ModelBase
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(this.Json),
+            FriendlyJsonPrinter.Redact(FriendlyJsonPrinter.PrintValue(this.Json)),
             ModelBase.ToStringSerializerOptions
         );
 
@@ -5494,7 +5513,7 @@ public record class UnionMember4ItemUnionMember4ItemUnionMember4ItemJsonValue : 
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(this.Json),
+            FriendlyJsonPrinter.Redact(FriendlyJsonPrinter.PrintValue(this.Json)),
             ModelBase.ToStringSerializerOptions
         );
 
@@ -5909,7 +5928,7 @@ public record class UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(this.Json),
+            FriendlyJsonPrinter.Redact(FriendlyJsonPrinter.PrintValue(this.Json)),
             ModelBase.ToStringSerializerOptions
         );
 
@@ -6337,7 +6356,7 @@ public record class UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(this.Json),
+            FriendlyJsonPrinter.Redact(FriendlyJsonPrinter.PrintValue(this.Json)),
             ModelBase.ToStringSerializerOptions
         );
 
@@ -6564,6 +6583,16 @@ public sealed record class UserProperties : JsonModel
             return this._rawData.GetNullableClass<string>("adset_id");
         }
         init { this._rawData.Set("adset_id", value); }
+    }
+
+    public string? AffiliatlyV3
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("affiliatly_v3");
+        }
+        init { this._rawData.Set("affiliatly_v3", value); }
     }
 
     public string? Alart
@@ -7353,6 +7382,7 @@ public sealed record class UserProperties : JsonModel
         _ = this.AdID;
         _ = this.AdmitadUid;
         _ = this.AdsetID;
+        _ = this.AffiliatlyV3;
         _ = this.Alart;
         _ = this.Aleid;
         _ = this.Axwrt;
@@ -7794,7 +7824,7 @@ public record class Consent : ModelBase
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(this.Json),
+            FriendlyJsonPrinter.Redact(FriendlyJsonPrinter.PrintValue(this.Json)),
             ModelBase.ToStringSerializerOptions
         );
 
@@ -8210,7 +8240,7 @@ public record class ConsentJsonValue : ModelBase
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(this.Json),
+            FriendlyJsonPrinter.Redact(FriendlyJsonPrinter.PrintValue(this.Json)),
             ModelBase.ToStringSerializerOptions
         );
 
@@ -8651,7 +8681,7 @@ public record class ConsentUnionMember4Item : ModelBase
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(this.Json),
+            FriendlyJsonPrinter.Redact(FriendlyJsonPrinter.PrintValue(this.Json)),
             ModelBase.ToStringSerializerOptions
         );
 
@@ -9075,7 +9105,7 @@ public record class ConsentUnionMember4ItemJsonValue : ModelBase
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(this.Json),
+            FriendlyJsonPrinter.Redact(FriendlyJsonPrinter.PrintValue(this.Json)),
             ModelBase.ToStringSerializerOptions
         );
 
@@ -9545,7 +9575,7 @@ public record class ConsentUnionMember4ItemUnionMember4Item : ModelBase
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(this.Json),
+            FriendlyJsonPrinter.Redact(FriendlyJsonPrinter.PrintValue(this.Json)),
             ModelBase.ToStringSerializerOptions
         );
 
@@ -9984,7 +10014,7 @@ public record class ConsentUnionMember4ItemUnionMember4ItemJsonValue : ModelBase
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(this.Json),
+            FriendlyJsonPrinter.Redact(FriendlyJsonPrinter.PrintValue(this.Json)),
             ModelBase.ToStringSerializerOptions
         );
 
@@ -10490,7 +10520,7 @@ public record class ConsentUnionMember4ItemUnionMember4ItemUnionMember4Item : Mo
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(this.Json),
+            FriendlyJsonPrinter.Redact(FriendlyJsonPrinter.PrintValue(this.Json)),
             ModelBase.ToStringSerializerOptions
         );
 
@@ -10938,7 +10968,7 @@ public record class ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemJsonV
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(this.Json),
+            FriendlyJsonPrinter.Redact(FriendlyJsonPrinter.PrintValue(this.Json)),
             ModelBase.ToStringSerializerOptions
         );
 
@@ -11362,7 +11392,7 @@ public record class ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnion
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(this.Json),
+            FriendlyJsonPrinter.Redact(FriendlyJsonPrinter.PrintValue(this.Json)),
             ModelBase.ToStringSerializerOptions
         );
 
@@ -11790,7 +11820,7 @@ public record class ConsentUnionMember4ItemUnionMember4ItemUnionMember4ItemUnion
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(this.Json),
+            FriendlyJsonPrinter.Redact(FriendlyJsonPrinter.PrintValue(this.Json)),
             ModelBase.ToStringSerializerOptions
         );
 
@@ -12229,7 +12259,7 @@ public record class CustomProperty : ModelBase
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(this.Json),
+            FriendlyJsonPrinter.Redact(FriendlyJsonPrinter.PrintValue(this.Json)),
             ModelBase.ToStringSerializerOptions
         );
 
@@ -12650,7 +12680,7 @@ public record class CustomPropertyJsonValue : ModelBase
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(this.Json),
+            FriendlyJsonPrinter.Redact(FriendlyJsonPrinter.PrintValue(this.Json)),
             ModelBase.ToStringSerializerOptions
         );
 
@@ -13098,7 +13128,7 @@ public record class CustomPropertyUnionMember4Item : ModelBase
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(this.Json),
+            FriendlyJsonPrinter.Redact(FriendlyJsonPrinter.PrintValue(this.Json)),
             ModelBase.ToStringSerializerOptions
         );
 
@@ -13526,7 +13556,7 @@ public record class CustomPropertyUnionMember4ItemJsonValue : ModelBase
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(this.Json),
+            FriendlyJsonPrinter.Redact(FriendlyJsonPrinter.PrintValue(this.Json)),
             ModelBase.ToStringSerializerOptions
         );
 
@@ -14009,7 +14039,7 @@ public record class CustomPropertyUnionMember4ItemUnionMember4Item : ModelBase
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(this.Json),
+            FriendlyJsonPrinter.Redact(FriendlyJsonPrinter.PrintValue(this.Json)),
             ModelBase.ToStringSerializerOptions
         );
 
@@ -14452,7 +14482,7 @@ public record class CustomPropertyUnionMember4ItemUnionMember4ItemJsonValue : Mo
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(this.Json),
+            FriendlyJsonPrinter.Redact(FriendlyJsonPrinter.PrintValue(this.Json)),
             ModelBase.ToStringSerializerOptions
         );
 
@@ -14964,7 +14994,7 @@ public record class CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4It
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(this.Json),
+            FriendlyJsonPrinter.Redact(FriendlyJsonPrinter.PrintValue(this.Json)),
             ModelBase.ToStringSerializerOptions
         );
 
@@ -15418,7 +15448,7 @@ public record class CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4It
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(this.Json),
+            FriendlyJsonPrinter.Redact(FriendlyJsonPrinter.PrintValue(this.Json)),
             ModelBase.ToStringSerializerOptions
         );
 
@@ -15844,7 +15874,7 @@ public record class CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4It
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(this.Json),
+            FriendlyJsonPrinter.Redact(FriendlyJsonPrinter.PrintValue(this.Json)),
             ModelBase.ToStringSerializerOptions
         );
 
@@ -16272,7 +16302,7 @@ public record class CustomPropertyUnionMember4ItemUnionMember4ItemUnionMember4It
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(this.Json),
+            FriendlyJsonPrinter.Redact(FriendlyJsonPrinter.PrintValue(this.Json)),
             ModelBase.ToStringSerializerOptions
         );
 
@@ -16683,7 +16713,7 @@ public record class UserPropertiesIsBot : ModelBase
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(this.Json),
+            FriendlyJsonPrinter.Redact(FriendlyJsonPrinter.PrintValue(this.Json)),
             ModelBase.ToStringSerializerOptions
         );
 
@@ -17090,7 +17120,7 @@ public record class PhoneNumber : ModelBase
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(this.Json),
+            FriendlyJsonPrinter.Redact(FriendlyJsonPrinter.PrintValue(this.Json)),
             ModelBase.ToStringSerializerOptions
         );
 
@@ -17491,7 +17521,7 @@ public record class Zip : ModelBase
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(this.Json),
+            FriendlyJsonPrinter.Redact(FriendlyJsonPrinter.PrintValue(this.Json)),
             ModelBase.ToStringSerializerOptions
         );
 

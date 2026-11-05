@@ -6,7 +6,7 @@ namespace OursPrivacy.Tests.Services;
 
 public class BatchServiceTest : TestBase
 {
-    [Fact(Skip = "Mock server tests are disabled")]
+    [Fact]
     public async Task Create_Works()
     {
         var batch = await this.client.Batch.Create(
@@ -26,6 +26,7 @@ public class BatchServiceTest : TestBase
                             AdID = "ad_id",
                             AdmitadUid = "admitad_uid",
                             AdsetID = "adset_id",
+                            AffiliatlyV3 = "affiliatly_v3",
                             Alart = "alart",
                             Aleid = "aleid",
                             Axwrt = "axwrt",
@@ -119,6 +120,7 @@ public class BatchServiceTest : TestBase
                             AdID = "ad_id",
                             AdmitadUid = "admitad_uid",
                             AdsetID = "adset_id",
+                            AffiliatlyV3 = "affiliatly_v3",
                             Alart = "alart",
                             Aleid = "aleid",
                             Axwrt = "axwrt",
