@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
@@ -202,6 +203,29 @@ public abstract record class ParamsBase
     internal virtual HttpContent? BodyContent()
     {
         return null;
+    }
+
+    private protected static string EncodePath(string format, params object?[] values)
+    {
+        var encoded = new object[values.Length];
+        for (var i = 0; i < values.Length; i++)
+        {
+            var text = values[i] is IFormattable formattable
+                ? formattable.ToString(null, CultureInfo.InvariantCulture)
+                : values[i]?.ToString();
+            encoded[i] = Uri.EscapeDataString(text ?? "");
+        }
+
+        var path = string.Format(CultureInfo.InvariantCulture, format, encoded);
+        foreach (var segment in path.Split('/'))
+        {
+            if (segment == "." || segment == "..")
+            {
+                throw new ArgumentException($"Path parameter can't be the dot segment '{segment}'");
+            }
+        }
+
+        return path;
     }
 
     internal static void AddDefaultHeaders(HttpRequestMessage request, ClientOptions options)
