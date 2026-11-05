@@ -353,7 +353,7 @@ public record class Property : ModelBase
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(this.Json),
+            FriendlyJsonPrinter.Redact(FriendlyJsonPrinter.PrintValue(this.Json)),
             ModelBase.ToStringSerializerOptions
         );
 

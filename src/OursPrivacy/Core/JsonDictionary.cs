@@ -167,7 +167,7 @@ sealed class JsonDictionary
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(this._rawData),
+            FriendlyJsonPrinter.Redact(FriendlyJsonPrinter.PrintValue(this._rawData)),
             ModelBase.ToStringSerializerOptions
         );
 
