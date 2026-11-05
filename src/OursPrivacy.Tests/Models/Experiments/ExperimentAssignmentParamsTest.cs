@@ -90,6 +90,48 @@ public class ExperimentAssignmentParamsTest : TestBase
     }
 
     [Fact]
+    public void UrlKeepsPathParamInOneSegment_Works()
+    {
+        ExperimentAssignmentParams parameters = new()
+        {
+            ExperimentKey = "../../track?x=1",
+            Token = "token",
+            VisitorID = "x",
+        };
+
+        var url = parameters.Url(new() { });
+
+        Assert.True(
+            TestBase.UrisEqual(
+                new Uri(
+                    "https://api.oursprivacy.com/api/v1/experiments/assignments/..%2F..%2Ftrack%3Fx%3D1"
+                ),
+                url
+            )
+        );
+    }
+
+    [Fact]
+    public void UrlRejectsDotSegmentPathParam_Works()
+    {
+        ExperimentAssignmentParams dot = new()
+        {
+            ExperimentKey = ".",
+            Token = "token",
+            VisitorID = "x",
+        };
+        ExperimentAssignmentParams dotDot = new()
+        {
+            ExperimentKey = "..",
+            Token = "token",
+            VisitorID = "x",
+        };
+
+        Assert.Throws<ArgumentException>(() => dot.Url(new() { }));
+        Assert.Throws<ArgumentException>(() => dotDot.Url(new() { }));
+    }
+
+    [Fact]
     public void CopyConstructor_Works()
     {
         var parameters = new ExperimentAssignmentParams

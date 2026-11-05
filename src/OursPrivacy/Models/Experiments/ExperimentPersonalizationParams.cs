@@ -103,17 +103,19 @@ public record class ExperimentPersonalizationParams : ParamsBase
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(
-                new Dictionary<string, JsonElement>()
-                {
-                    ["HeaderData"] = FriendlyJsonPrinter.PrintValue(
-                        JsonSerializer.SerializeToElement(this._rawHeaderData.Freeze())
-                    ),
-                    ["QueryData"] = FriendlyJsonPrinter.PrintValue(
-                        JsonSerializer.SerializeToElement(this._rawQueryData.Freeze())
-                    ),
-                    ["BodyData"] = FriendlyJsonPrinter.PrintValue(this._rawBodyData.Freeze()),
-                }
+            FriendlyJsonPrinter.Redact(
+                FriendlyJsonPrinter.PrintValue(
+                    new Dictionary<string, JsonElement>()
+                    {
+                        ["HeaderData"] = FriendlyJsonPrinter.PrintValue(
+                            JsonSerializer.SerializeToElement(this._rawHeaderData.Freeze())
+                        ),
+                        ["QueryData"] = FriendlyJsonPrinter.PrintValue(
+                            JsonSerializer.SerializeToElement(this._rawQueryData.Freeze())
+                        ),
+                        ["BodyData"] = FriendlyJsonPrinter.PrintValue(this._rawBodyData.Freeze()),
+                    }
+                )
             ),
             ModelBase.ToStringSerializerOptions
         );

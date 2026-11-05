@@ -6,6 +6,10 @@ It is generated with [Stainless](https://www.stainless.com/).
 
 The REST API documentation can be found on [docs.oursprivacy.com](https://docs.oursprivacy.com).
 
+`token` is the Source token from your Ours Privacy dashboard. Events must be allow-listed: an event that isn't on your [Event Allowlist](https://docs.oursprivacy.com/docs/allow-listing-events) isn't forwarded to your destinations.
+
+See the [SDK guide](https://docs.oursprivacy.com/docs/csharp) and the runnable code in [`examples`](examples).
+
 ## Installation
 
 Install the package from [NuGet](https://www.nuget.org/packages/OursPrivacy):
@@ -20,10 +24,11 @@ This library requires .NET Standard 2.0 or later.
 
 ## Usage
 
-See the [`examples`](examples) directory for complete and runnable examples.
+See [`examples/TrackEvent`](examples/TrackEvent) for a complete, runnable example.
 
 ```csharp
 using System;
+using System.Collections.Generic;
 using OursPrivacy;
 using OursPrivacy.Models.Track;
 
@@ -31,14 +36,123 @@ OursPrivacyClient client = new();
 
 TrackEventParams parameters = new()
 {
-    Token = "REPLACE_ME",
-    Event = "REPLACE_ME",
+    Token = "YOUR_SOURCE_TOKEN",
+    Event = "signup_completed",
+    DistinctID = "evt_01J9ZK3Q7X",
+    EventProperties = new Dictionary<string, EventProperty?>()
+    {
+        { "plan", "pro" }, { "value", 49 }, { "currency", "USD" }
+    },
+    ExternalID = "crm_contact_1042",
+    IdentityContext = new()
+    {
+        IP = "203.0.113.10",
+        UserAgent = "Mozilla/5.0",
+    },
 };
 
 var response = await client.Track.Event(parameters);
 
 Console.WriteLine(response);
 ```
+
+### Identify a visitor
+
+Set properties on a visitor, creating the visitor if there's no match.
+
+```csharp
+using System;
+using OursPrivacy;
+using OursPrivacy.Models.Visitor;
+
+OursPrivacyClient client = new();
+
+VisitorUpsertParams parameters = new()
+{
+    Token = "YOUR_SOURCE_TOKEN",
+    UserProperties = new()
+    {
+        FirstName = "Sample",
+        LastName = "User",
+    },
+    Email = "user@example.com",
+};
+
+var response = await client.Visitor.Upsert(parameters);
+
+Console.WriteLine(response);
+```
+
+### Send a batch of events
+
+Send many events in one request, each with its own required `distinctId`.
+
+```csharp
+using System;
+using OursPrivacy;
+using OursPrivacy.Models.Batch;
+
+OursPrivacyClient client = new();
+
+BatchCreateParams parameters = new()
+{
+    Token = "YOUR_SOURCE_TOKEN",
+    Events =
+    [
+        new()
+        {
+            EventValue = "signup_completed",
+            DistinctID = "evt_01J9ZK3Q7X",
+            ExternalID = "crm_contact_1042",
+        },
+        new()
+        {
+            EventValue = "plan_upgraded",
+            DistinctID = "evt_01J9ZK3Q8Y",
+            ExternalID = "crm_contact_1042",
+        },
+    ],
+};
+
+var batch = await client.Batch.Create(parameters);
+
+Console.WriteLine(batch);
+```
+
+A partial success returns HTTP 207 with a result for each row. Retry only the rows whose `code` is `queue_failed`, with the same `distinctId`. You can backfill events up to one year old; older `time` values are clamped.
+
+### Get an experiment assignment
+
+Look up a visitor's variant, using the experiment's `exp_*` token rather than the Source token.
+
+```csharp
+using System;
+using OursPrivacy;
+using OursPrivacy.Models.Experiments;
+
+OursPrivacyClient client = new();
+
+ExperimentAssignmentParams parameters = new()
+{
+    ExperimentKey = "checkout_redesign",
+    Token = "exp_YOUR_EXPERIMENT_TOKEN",
+    VisitorID = "visitor_1042",
+};
+
+var response = await client.Experiments.Assignment(parameters);
+
+Console.WriteLine(response);
+```
+
+### Further reading
+
+The docs cover each endpoint in full.
+
+- [Track](https://docs.oursprivacy.com/docs/reference/track)
+- [Identify](https://docs.oursprivacy.com/docs/reference/identify)
+- [Batch](https://docs.oursprivacy.com/docs/reference/batch)
+- [Rate limits](https://docs.oursprivacy.com/docs/reference/rate-limits)
+- [Server-side experimentation](https://docs.oursprivacy.com/docs/experimentation/server-side)
 
 ## Client configuration
 
