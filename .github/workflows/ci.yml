@@ -62,10 +62,7 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
-      # Regeneration adds scripts/mock and un-skips the resource tests. Both test
-      # steps below, net10.0 and net472, inherit TEST_API_BASE_URL and run those
-      # tests against this one mock. Without scripts/mock this step does nothing
-      # and the resource tests stay skipped.
+      # Both test steps below use this mock server when the repository includes one.
       - name: Start mock server
         run: |
           if [ -f ./scripts/mock ]; then
