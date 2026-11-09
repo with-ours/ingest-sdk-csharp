@@ -222,10 +222,10 @@ public sealed record class Event : JsonModel
     }
 
     /// <summary>
-    /// The email address of a user. When userId is absent and externalId does not
-    /// resolve a visitor, we search your account for a visitor with this email. If
-    /// no match is found, we try userProperties.phone_number before creating a new
-    /// visitor. Leading and trailing whitespace is removed before validation.
+    /// The email address of a user. When visitorId is absent and externalId does
+    /// not resolve a visitor, we search your account for a visitor with this email.
+    /// If no match is found, we try userProperties.phone_number before creating a
+    /// new visitor. Leading and trailing whitespace is removed before validation.
     /// </summary>
     public string? Email
     {
@@ -264,10 +264,10 @@ public sealed record class Event : JsonModel
     }
 
     /// <summary>
-    /// Your system's unique identifier for this user. When userId is absent, we
+    /// Your system's unique identifier for this user. When visitorId is absent, we
     /// search your account for an existing visitor with this externalId. If no match
     /// is found, we try email and then userProperties.phone_number before creating
-    /// a new visitor. If you also have the userId from cookies or local storage,
+    /// a new visitor. If you also have the visitorId from cookies or local storage,
     /// send both — it removes the lookup round-trip. Non-string input is converted
     /// to text before validation; clients should send a string. Leading and trailing
     /// whitespace is removed before validation.
@@ -314,10 +314,12 @@ public sealed record class Event : JsonModel
     /// <summary>
     /// The Ours Visitor ID stored in local storage and cookies on your web properties.
     /// When present, this is used directly — no lookup by externalId, email, or phone
-    /// is performed. If you have both a userId and an externalId, send both so the
-    /// event is attached to the right visitor without any lookup overhead. Leading
-    /// and trailing whitespace is removed before validation.
+    /// is performed. If you have both a visitorId and an externalId, send both so
+    /// the event is attached to the right visitor without any lookup overhead. visitorId
+    /// takes precedence over the deprecated userId alias. Leading and trailing whitespace
+    /// is removed before validation.
     /// </summary>
+    [Obsolete("deprecated")]
     public string? UserID
     {
         get
@@ -342,6 +344,24 @@ public sealed record class Event : JsonModel
         init { this._rawData.Set("userProperties", value); }
     }
 
+    /// <summary>
+    /// The Ours Visitor ID stored in local storage and cookies on your web properties.
+    /// When present, this is used directly — no lookup by externalId, email, or phone
+    /// is performed. If you have both a visitorId and an externalId, send both so
+    /// the event is attached to the right visitor without any lookup overhead. visitorId
+    /// takes precedence over the deprecated userId alias. Leading and trailing whitespace
+    /// is removed before validation.
+    /// </summary>
+    public string? VisitorID
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("visitorId");
+        }
+        init { this._rawData.Set("visitorId", value); }
+    }
+
     /// <inheritdoc/>
     public override void Validate()
     {
@@ -361,6 +381,7 @@ public sealed record class Event : JsonModel
         _ = this.Time;
         _ = this.UserID;
         this.UserProperties?.Validate();
+        _ = this.VisitorID;
     }
 
     public Event() { }

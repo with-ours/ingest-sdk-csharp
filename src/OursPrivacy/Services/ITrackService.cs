@@ -27,16 +27,16 @@ public interface ITrackService
     ITrackService WithOptions(Func<ClientOptions, ClientOptions> modifier);
 
     /// <summary>
-    /// Track events from your server. Include userId, externalId, email, or
+    /// Track events from your server. Include visitorId, externalId, email, or
     /// userProperties.phone_number to associate the event with an existing visitor.
-    /// Identity resolution runs in priority order: userId (direct, no lookup) →
+    /// Identity resolution runs in priority order: visitorId (direct, no lookup) →
     /// externalId → email → userProperties.phone_number. Each lookup runs only if
     /// earlier identifiers did not resolve a visitor. Phone matching ignores common
     /// formatting and an international + or 00 prefix, but does not infer a country
-    /// code. If you know both userId and externalId, send both. For top-level visitor
-    /// properties: null clears the existing value, while undefined, omitted fields, and
-    /// empty strings are ignored. For entries inside custom_properties: null,
-    /// undefined, and empty strings are all ignored (custom_properties use merge
+    /// code. If you know both visitorId and externalId, send both. For top-level
+    /// visitor properties: null clears the existing value, while undefined, omitted
+    /// fields, and empty strings are ignored. For entries inside custom_properties:
+    /// null, undefined, and empty strings are all ignored (custom_properties use merge
     /// semantics). See https://docs.oursprivacy.com/docs/data-types for details and
     /// common pitfalls.
     /// </summary>

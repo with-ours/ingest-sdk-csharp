@@ -190,6 +190,7 @@ public class BatchCreateParamsTest : TestBase
                         Ylpcid = "ylpcid",
                         Zip = "string",
                     },
+                    VisitorID = "P",
                 },
             ],
         };
@@ -368,6 +369,7 @@ public class BatchCreateParamsTest : TestBase
                     Ylpcid = "ylpcid",
                     Zip = "string",
                 },
+                VisitorID = "P",
             },
         ];
 
@@ -561,6 +563,7 @@ public class BatchCreateParamsTest : TestBase
                         Ylpcid = "ylpcid",
                         Zip = "string",
                     },
+                    VisitorID = "P",
                 },
             ],
         };
@@ -752,6 +755,7 @@ public class BatchCreateParamsTest : TestBase
                         Ylpcid = "ylpcid",
                         Zip = "string",
                     },
+                    VisitorID = "P",
                 },
             ],
         };
@@ -938,6 +942,7 @@ public class EventTest : TestBase
                 Ylpcid = "ylpcid",
                 Zip = "string",
             },
+            VisitorID = "P",
         };
 
         string expectedDistinctID = "P";
@@ -1106,6 +1111,7 @@ public class EventTest : TestBase
             Ylpcid = "ylpcid",
             Zip = "string",
         };
+        string expectedVisitorID = "P";
 
         Assert.Equal(expectedDistinctID, model.DistinctID);
         Assert.Equal(expectedEventValue, model.EventValue);
@@ -1124,6 +1130,7 @@ public class EventTest : TestBase
         Assert.Equal(expectedTime, model.Time);
         Assert.Equal(expectedUserID, model.UserID);
         Assert.Equal(expectedUserProperties, model.UserProperties);
+        Assert.Equal(expectedVisitorID, model.VisitorID);
     }
 
     [Fact]
@@ -1300,6 +1307,7 @@ public class EventTest : TestBase
                 Ylpcid = "ylpcid",
                 Zip = "string",
             },
+            VisitorID = "P",
         };
 
         string json = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
@@ -1482,6 +1490,7 @@ public class EventTest : TestBase
                 Ylpcid = "ylpcid",
                 Zip = "string",
             },
+            VisitorID = "P",
         };
 
         string element = JsonSerializer.Serialize(model, ModelBase.SerializerOptions);
@@ -1654,6 +1663,7 @@ public class EventTest : TestBase
             Ylpcid = "ylpcid",
             Zip = "string",
         };
+        string expectedVisitorID = "P";
 
         Assert.Equal(expectedDistinctID, deserialized.DistinctID);
         Assert.Equal(expectedEventValue, deserialized.EventValue);
@@ -1672,6 +1682,7 @@ public class EventTest : TestBase
         Assert.Equal(expectedTime, deserialized.Time);
         Assert.Equal(expectedUserID, deserialized.UserID);
         Assert.Equal(expectedUserProperties, deserialized.UserProperties);
+        Assert.Equal(expectedVisitorID, deserialized.VisitorID);
     }
 
     [Fact]
@@ -1848,6 +1859,7 @@ public class EventTest : TestBase
                 Ylpcid = "ylpcid",
                 Zip = "string",
             },
+            VisitorID = "P",
         };
 
         model.Validate();
@@ -1874,6 +1886,8 @@ public class EventTest : TestBase
         Assert.False(model.RawData.ContainsKey("userId"));
         Assert.Null(model.UserProperties);
         Assert.False(model.RawData.ContainsKey("userProperties"));
+        Assert.Null(model.VisitorID);
+        Assert.False(model.RawData.ContainsKey("visitorId"));
     }
 
     [Fact]
@@ -1900,6 +1914,7 @@ public class EventTest : TestBase
             Time = null,
             UserID = null,
             UserProperties = null,
+            VisitorID = null,
         };
 
         Assert.Null(model.DefaultProperties);
@@ -1918,6 +1933,8 @@ public class EventTest : TestBase
         Assert.True(model.RawData.ContainsKey("userId"));
         Assert.Null(model.UserProperties);
         Assert.True(model.RawData.ContainsKey("userProperties"));
+        Assert.Null(model.VisitorID);
+        Assert.True(model.RawData.ContainsKey("visitorId"));
     }
 
     [Fact]
@@ -1936,6 +1953,7 @@ public class EventTest : TestBase
             Time = null,
             UserID = null,
             UserProperties = null,
+            VisitorID = null,
         };
 
         model.Validate();
@@ -2115,6 +2133,7 @@ public class EventTest : TestBase
                 Ylpcid = "ylpcid",
                 Zip = "string",
             },
+            VisitorID = "P",
         };
 
         Event copied = new(model);
