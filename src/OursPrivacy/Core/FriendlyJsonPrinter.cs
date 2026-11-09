@@ -8,6 +8,62 @@ static class FriendlyJsonPrinter
 {
     public static JsonElement PrintValue(JsonElement value) => value;
 
+    // Field and header names in lower case, without underscores or hyphens.
+    static readonly HashSet<string> SensitiveNames = new()
+    {
+        "accesstoken",
+        "apikey",
+        "authorization",
+        "clientsecret",
+        "cookie",
+        "password",
+        "refreshtoken",
+        "setcookie",
+        "token",
+        "xapikey",
+    };
+
+    /// <summary>Returns a copy of <paramref name="json"/> with sensitive values replaced, at any depth.</summary>
+    public static JsonElement Redact(JsonElement json)
+    {
+        switch (json.ValueKind)
+        {
+            case JsonValueKind.Object:
+                var fields = new Dictionary<string, JsonElement>();
+                foreach (var field in json.EnumerateObject())
+                {
+                    fields[field.Name] = SensitiveNames.Contains(
+                        field.Name.ToLowerInvariant().Replace("_", "").Replace("-", "")
+                    )
+                        ? JsonSerializer.SerializeToElement("***")
+                        : Redact(field.Value);
+                }
+                return JsonSerializer.SerializeToElement(fields);
+            case JsonValueKind.Array:
+                var items = new List<JsonElement>();
+                foreach (var item in json.EnumerateArray())
+                {
+                    items.Add(Redact(item));
+                }
+                return JsonSerializer.SerializeToElement(items);
+            default:
+                return json;
+        }
+    }
+
+    /// <summary>Redacts <paramref name="text"/> if it is JSON. Anything else is returned as it is.</summary>
+    public static string RedactText(string text)
+    {
+        try
+        {
+            return JsonSerializer.Serialize(Redact(JsonSerializer.Deserialize<JsonElement>(text)));
+        }
+        catch (JsonException)
+        {
+            return text;
+        }
+    }
+
     public static JsonElement PrintValue(IReadOnlyDictionary<string, JsonElement> value) =>
         JsonSerializer.SerializeToElement(value);
 

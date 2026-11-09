@@ -36,7 +36,7 @@ public readonly struct MultipartJsonElement
 
     public override string ToString() =>
         JsonSerializer.Serialize(
-            FriendlyJsonPrinter.PrintValue(this),
+            FriendlyJsonPrinter.Redact(FriendlyJsonPrinter.PrintValue(this)),
             ModelBase.ToStringSerializerOptions
         );
 

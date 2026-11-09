@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using System.Net.Http;
+using OursPrivacy.Core;
 
 namespace OursPrivacy.Exceptions;
 
@@ -30,6 +31,13 @@ public class OursPrivacyApiException : OursPrivacyException
 
     public override string Message
     {
-        get { return string.Format("Status Code: {0}\n{1}", StatusCode, ResponseBody); }
+        get
+        {
+            return string.Format(
+                "Status Code: {0}\n{1}",
+                StatusCode,
+                FriendlyJsonPrinter.RedactText(ResponseBody)
+            );
+        }
     }
 }

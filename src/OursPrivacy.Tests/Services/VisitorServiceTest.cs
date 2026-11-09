@@ -6,7 +6,7 @@ namespace OursPrivacy.Tests.Services;
 
 public class VisitorServiceTest : TestBase
 {
-    [Fact(Skip = "Mock server tests are disabled")]
+    [Fact]
     public async Task Upsert_Works()
     {
         var response = await this.client.Visitor.Upsert(
@@ -19,6 +19,7 @@ public class VisitorServiceTest : TestBase
                     AdID = "ad_id",
                     AdmitadUid = "admitad_uid",
                     AdsetID = "adset_id",
+                    AffiliatlyV3 = "affiliatly_v3",
                     Alart = "alart",
                     Aleid = "aleid",
                     Axwrt = "axwrt",

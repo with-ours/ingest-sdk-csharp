@@ -4,7 +4,7 @@ namespace OursPrivacy.Tests.Services;
 
 public class TrackServiceTest : TestBase
 {
-    [Fact(Skip = "Mock server tests are disabled")]
+    [Fact]
     public async Task Event_Works()
     {
         var response = await this.client.Track.Event(
