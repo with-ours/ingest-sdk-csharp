@@ -189,6 +189,7 @@ public class BatchServiceTest : TestBase
                             Ylpcid = "ylpcid",
                             Zip = "string",
                         },
+                        VisitorID = "P",
                     },
                 ],
             },

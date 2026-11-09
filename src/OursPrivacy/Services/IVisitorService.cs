@@ -29,7 +29,7 @@ public interface IVisitorService
     /// <summary>
     /// Set or update properties on an existing visitor, or create a new visitor if no
     /// match is found. This fires a $identify event, making the call visible in the
-    /// event stream. Identity resolution runs in priority order: userId (direct, no
+    /// event stream. Identity resolution runs in priority order: visitorId (direct, no
     /// lookup) → externalId → email → userProperties.phone_number. Each lookup runs
     /// only if earlier identifiers did not resolve a visitor. Phone matching ignores
     /// common formatting and an international + or 00 prefix, but does not infer a
