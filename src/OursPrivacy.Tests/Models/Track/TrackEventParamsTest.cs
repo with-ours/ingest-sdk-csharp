@@ -183,6 +183,7 @@ public class TrackEventParamsTest : TestBase
                 Ylpcid = "ylpcid",
                 Zip = "string",
             },
+            VisitorID = "P",
         };
 
         string expectedToken = "P";
@@ -352,6 +353,7 @@ public class TrackEventParamsTest : TestBase
             Ylpcid = "ylpcid",
             Zip = "string",
         };
+        string expectedVisitorID = "P";
 
         Assert.Equal(expectedToken, parameters.Token);
         Assert.Equal(expectedEvent, parameters.Event);
@@ -371,6 +373,7 @@ public class TrackEventParamsTest : TestBase
         Assert.Equal(expectedTime, parameters.Time);
         Assert.Equal(expectedUserID, parameters.UserID);
         Assert.Equal(expectedUserProperties, parameters.UserProperties);
+        Assert.Equal(expectedVisitorID, parameters.VisitorID);
     }
 
     [Fact]
@@ -396,6 +399,8 @@ public class TrackEventParamsTest : TestBase
         Assert.False(parameters.RawBodyData.ContainsKey("userId"));
         Assert.Null(parameters.UserProperties);
         Assert.False(parameters.RawBodyData.ContainsKey("userProperties"));
+        Assert.Null(parameters.VisitorID);
+        Assert.False(parameters.RawBodyData.ContainsKey("visitorId"));
     }
 
     [Fact]
@@ -415,6 +420,7 @@ public class TrackEventParamsTest : TestBase
             Time = null,
             UserID = null,
             UserProperties = null,
+            VisitorID = null,
         };
 
         Assert.Null(parameters.DefaultProperties);
@@ -435,6 +441,8 @@ public class TrackEventParamsTest : TestBase
         Assert.True(parameters.RawBodyData.ContainsKey("userId"));
         Assert.Null(parameters.UserProperties);
         Assert.True(parameters.RawBodyData.ContainsKey("userProperties"));
+        Assert.Null(parameters.VisitorID);
+        Assert.True(parameters.RawBodyData.ContainsKey("visitorId"));
     }
 
     [Fact]
@@ -622,6 +630,7 @@ public class TrackEventParamsTest : TestBase
                 Ylpcid = "ylpcid",
                 Zip = "string",
             },
+            VisitorID = "P",
         };
 
         TrackEventParams copied = new(parameters);
