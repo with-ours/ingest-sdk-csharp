@@ -179,6 +179,7 @@ public class VisitorUpsertParamsTest : TestBase
             ExternalID = "P",
             IdentityContext = new() { IP = "ip", UserAgent = "userAgent" },
             UserID = "P",
+            VisitorID = "P",
         };
 
         string expectedToken = "P";
@@ -344,6 +345,7 @@ public class VisitorUpsertParamsTest : TestBase
         string expectedExternalID = "P";
         IdentityContext expectedIdentityContext = new() { IP = "ip", UserAgent = "userAgent" };
         string expectedUserID = "P";
+        string expectedVisitorID = "P";
 
         Assert.Equal(expectedToken, parameters.Token);
         Assert.Equal(expectedUserProperties, parameters.UserProperties);
@@ -352,6 +354,7 @@ public class VisitorUpsertParamsTest : TestBase
         Assert.Equal(expectedExternalID, parameters.ExternalID);
         Assert.Equal(expectedIdentityContext, parameters.IdentityContext);
         Assert.Equal(expectedUserID, parameters.UserID);
+        Assert.Equal(expectedVisitorID, parameters.VisitorID);
     }
 
     [Fact]
@@ -447,6 +450,8 @@ public class VisitorUpsertParamsTest : TestBase
         Assert.False(parameters.RawBodyData.ContainsKey("identityContext"));
         Assert.Null(parameters.UserID);
         Assert.False(parameters.RawBodyData.ContainsKey("userId"));
+        Assert.Null(parameters.VisitorID);
+        Assert.False(parameters.RawBodyData.ContainsKey("visitorId"));
     }
 
     [Fact]
@@ -536,6 +541,7 @@ public class VisitorUpsertParamsTest : TestBase
             ExternalID = null,
             IdentityContext = null,
             UserID = null,
+            VisitorID = null,
         };
 
         Assert.Null(parameters.DefaultProperties);
@@ -548,6 +554,8 @@ public class VisitorUpsertParamsTest : TestBase
         Assert.True(parameters.RawBodyData.ContainsKey("identityContext"));
         Assert.Null(parameters.UserID);
         Assert.True(parameters.RawBodyData.ContainsKey("userId"));
+        Assert.Null(parameters.VisitorID);
+        Assert.True(parameters.RawBodyData.ContainsKey("visitorId"));
     }
 
     [Fact]
@@ -811,6 +819,7 @@ public class VisitorUpsertParamsTest : TestBase
             ExternalID = "P",
             IdentityContext = new() { IP = "ip", UserAgent = "userAgent" },
             UserID = "P",
+            VisitorID = "P",
         };
 
         VisitorUpsertParams copied = new(parameters);
