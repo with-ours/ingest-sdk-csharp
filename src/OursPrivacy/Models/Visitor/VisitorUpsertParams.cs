@@ -15,7 +15,7 @@ namespace OursPrivacy.Models.Visitor;
 /// <summary>
 /// Set or update properties on an existing visitor, or create a new visitor if no
 /// match is found. This fires a $identify event, making the call visible in the event
-/// stream. Identity resolution runs in priority order: userId (direct, no lookup)
+/// stream. Identity resolution runs in priority order: visitorId (direct, no lookup)
 /// → externalId → email → userProperties.phone_number. Each lookup runs only if
 /// earlier identifiers did not resolve a visitor. Phone matching ignores common formatting
 /// and an international + or 00 prefix, but does not infer a country code. When a
@@ -81,10 +81,10 @@ public record class VisitorUpsertParams : ParamsBase
     }
 
     /// <summary>
-    /// The email address of a user. When userId is absent and externalId does not
-    /// resolve a visitor, we search your account for a visitor with this email. If
-    /// no match is found, we try userProperties.phone_number before creating a new
-    /// visitor. Leading and trailing whitespace is removed before validation.
+    /// The email address of a user. When visitorId is absent and externalId does
+    /// not resolve a visitor, we search your account for a visitor with this email.
+    /// If no match is found, we try userProperties.phone_number before creating a
+    /// new visitor. Leading and trailing whitespace is removed before validation.
     /// </summary>
     public string? Email
     {
@@ -97,10 +97,10 @@ public record class VisitorUpsertParams : ParamsBase
     }
 
     /// <summary>
-    /// Your system's unique identifier for this user. When userId is absent, we
+    /// Your system's unique identifier for this user. When visitorId is absent, we
     /// search your account for an existing visitor with this externalId. If no match
     /// is found, we try email and then userProperties.phone_number before creating
-    /// a new visitor. If you also have the userId from cookies or local storage,
+    /// a new visitor. If you also have the visitorId from cookies or local storage,
     /// send both — it removes the lookup round-trip. Non-string input is converted
     /// to text before validation; clients should send a string. Leading and trailing
     /// whitespace is removed before validation.
@@ -132,10 +132,12 @@ public record class VisitorUpsertParams : ParamsBase
     /// <summary>
     /// The Ours Visitor ID stored in local storage and cookies on your web properties.
     /// When present, this is used directly — no lookup by externalId, email, or phone
-    /// is performed. If you have both a userId and an externalId, send both so the
-    /// event is attached to the right visitor without any lookup overhead. Leading
-    /// and trailing whitespace is removed before validation.
+    /// is performed. If you have both a visitorId and an externalId, send both so
+    /// the event is attached to the right visitor without any lookup overhead. visitorId
+    /// takes precedence over the deprecated userId alias. Leading and trailing whitespace
+    /// is removed before validation.
     /// </summary>
+    [Obsolete("deprecated")]
     public string? UserID
     {
         get
@@ -144,6 +146,24 @@ public record class VisitorUpsertParams : ParamsBase
             return this._rawBodyData.GetNullableClass<string>("userId");
         }
         init { this._rawBodyData.Set("userId", value); }
+    }
+
+    /// <summary>
+    /// The Ours Visitor ID stored in local storage and cookies on your web properties.
+    /// When present, this is used directly — no lookup by externalId, email, or phone
+    /// is performed. If you have both a visitorId and an externalId, send both so
+    /// the event is attached to the right visitor without any lookup overhead. visitorId
+    /// takes precedence over the deprecated userId alias. Leading and trailing whitespace
+    /// is removed before validation.
+    /// </summary>
+    public string? VisitorID
+    {
+        get
+        {
+            this._rawBodyData.Freeze();
+            return this._rawBodyData.GetNullableClass<string>("visitorId");
+        }
+        init { this._rawBodyData.Set("visitorId", value); }
     }
 
     public VisitorUpsertParams() { }
