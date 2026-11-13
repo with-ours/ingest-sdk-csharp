@@ -283,9 +283,9 @@ public sealed record class Event : JsonModel
     }
 
     /// <summary>
-    /// End-user network context for server-side calls. Required for probabilistic
-    /// identity resolution when the caller is a backend server rather than an end-user browser.
+    /// Deprecated and ignored. Accepted so existing clients keep working.
     /// </summary>
+    [Obsolete("deprecated")]
     public IdentityContext? IdentityContext
     {
         get
@@ -6494,9 +6494,9 @@ sealed class UnionMember4ItemUnionMember4ItemUnionMember4ItemUnionMember4ItemJso
 }
 
 /// <summary>
-/// End-user network context for server-side calls. Required for probabilistic identity
-/// resolution when the caller is a backend server rather than an end-user browser.
+/// Deprecated and ignored. Accepted so existing clients keep working.
 /// </summary>
+[Obsolete("deprecated")]
 [JsonConverter(typeof(JsonModelConverter<IdentityContext, IdentityContextFromRaw>))]
 public sealed record class IdentityContext : JsonModel
 {
