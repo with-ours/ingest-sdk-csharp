@@ -311,6 +311,19 @@ public sealed record class UserProperties : JsonModel
     /// <summary>
     /// Leading and trailing whitespace is removed before validation.
     /// </summary>
+    public string? Adct
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("adct");
+        }
+        init { this._rawData.Set("adct", value); }
+    }
+
+    /// <summary>
+    /// Leading and trailing whitespace is removed before validation.
+    /// </summary>
     public string? AdmitadUid
     {
         get
@@ -1126,6 +1139,7 @@ public sealed record class UserProperties : JsonModel
     {
         _ = this._EfTransactionID;
         _ = this.AdID;
+        _ = this.Adct;
         _ = this.AdmitadUid;
         _ = this.AdsetID;
         _ = this.AffiliatlyV3;
@@ -11336,6 +11350,20 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
+    /// The AdRoll Click ID (adct) from the landing URL. Ex: adct123 Leading and trailing
+    /// whitespace is removed before validation.
+    /// </summary>
+    public string? Adct
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("adct");
+        }
+        init { this._rawData.Set("adct", value); }
+    }
+
+    /// <summary>
     /// The Admitad (Mitgo) affiliate Click ID. Ex: admitad_uid_abc123 Leading and
     /// trailing whitespace is removed before validation.
     /// </summary>
@@ -12462,6 +12490,7 @@ public sealed record class DefaultProperties : JsonModel
         _ = this._EfTransactionID;
         _ = this.ActiveDuration;
         _ = this.AdID;
+        _ = this.Adct;
         _ = this.AdmitadUid;
         _ = this.AdsetID;
         _ = this.AffiliatlyV3;

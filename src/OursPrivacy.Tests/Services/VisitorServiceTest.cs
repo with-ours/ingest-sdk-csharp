@@ -17,6 +17,7 @@ public class VisitorServiceTest : TestBase
                 {
                     _EfTransactionID = "_ef_transaction_id",
                     AdID = "ad_id",
+                    Adct = "adct",
                     AdmitadUid = "admitad_uid",
                     AdsetID = "adset_id",
                     AffiliatlyV3 = "affiliatly_v3",
