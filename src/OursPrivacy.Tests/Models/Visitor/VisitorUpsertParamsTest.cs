@@ -18,6 +18,7 @@ public class VisitorUpsertParamsTest : TestBase
             {
                 _EfTransactionID = "_ef_transaction_id",
                 AdID = "ad_id",
+                Adct = "adct",
                 AdmitadUid = "admitad_uid",
                 AdsetID = "adset_id",
                 AffiliatlyV3 = "affiliatly_v3",
@@ -94,6 +95,7 @@ public class VisitorUpsertParamsTest : TestBase
                 _EfTransactionID = "_ef_transaction_id",
                 ActiveDuration = 0,
                 AdID = "ad_id",
+                Adct = "adct",
                 AdmitadUid = "admitad_uid",
                 AdsetID = "adset_id",
                 AffiliatlyV3 = "affiliatly_v3",
@@ -187,6 +189,7 @@ public class VisitorUpsertParamsTest : TestBase
         {
             _EfTransactionID = "_ef_transaction_id",
             AdID = "ad_id",
+            Adct = "adct",
             AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
             AffiliatlyV3 = "affiliatly_v3",
@@ -260,6 +263,7 @@ public class VisitorUpsertParamsTest : TestBase
             _EfTransactionID = "_ef_transaction_id",
             ActiveDuration = 0,
             AdID = "ad_id",
+            Adct = "adct",
             AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
             AffiliatlyV3 = "affiliatly_v3",
@@ -367,6 +371,7 @@ public class VisitorUpsertParamsTest : TestBase
             {
                 _EfTransactionID = "_ef_transaction_id",
                 AdID = "ad_id",
+                Adct = "adct",
                 AdmitadUid = "admitad_uid",
                 AdsetID = "adset_id",
                 AffiliatlyV3 = "affiliatly_v3",
@@ -464,6 +469,7 @@ public class VisitorUpsertParamsTest : TestBase
             {
                 _EfTransactionID = "_ef_transaction_id",
                 AdID = "ad_id",
+                Adct = "adct",
                 AdmitadUid = "admitad_uid",
                 AdsetID = "adset_id",
                 AffiliatlyV3 = "affiliatly_v3",
@@ -568,6 +574,7 @@ public class VisitorUpsertParamsTest : TestBase
             {
                 _EfTransactionID = "_ef_transaction_id",
                 AdID = "ad_id",
+                Adct = "adct",
                 AdmitadUid = "admitad_uid",
                 AdsetID = "adset_id",
                 AffiliatlyV3 = "affiliatly_v3",
@@ -658,6 +665,7 @@ public class VisitorUpsertParamsTest : TestBase
             {
                 _EfTransactionID = "_ef_transaction_id",
                 AdID = "ad_id",
+                Adct = "adct",
                 AdmitadUid = "admitad_uid",
                 AdsetID = "adset_id",
                 AffiliatlyV3 = "affiliatly_v3",
@@ -734,6 +742,7 @@ public class VisitorUpsertParamsTest : TestBase
                 _EfTransactionID = "_ef_transaction_id",
                 ActiveDuration = 0,
                 AdID = "ad_id",
+                Adct = "adct",
                 AdmitadUid = "admitad_uid",
                 AdsetID = "adset_id",
                 AffiliatlyV3 = "affiliatly_v3",
@@ -837,6 +846,7 @@ public class UserPropertiesTest : TestBase
         {
             _EfTransactionID = "_ef_transaction_id",
             AdID = "ad_id",
+            Adct = "adct",
             AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
             AffiliatlyV3 = "affiliatly_v3",
@@ -908,6 +918,7 @@ public class UserPropertiesTest : TestBase
 
         string expected_EfTransactionID = "_ef_transaction_id";
         string expectedAdID = "ad_id";
+        string expectedAdct = "adct";
         string expectedAdmitadUid = "admitad_uid";
         string expectedAdsetID = "adset_id";
         string expectedAffiliatlyV3 = "affiliatly_v3";
@@ -981,6 +992,7 @@ public class UserPropertiesTest : TestBase
 
         Assert.Equal(expected_EfTransactionID, model._EfTransactionID);
         Assert.Equal(expectedAdID, model.AdID);
+        Assert.Equal(expectedAdct, model.Adct);
         Assert.Equal(expectedAdmitadUid, model.AdmitadUid);
         Assert.Equal(expectedAdsetID, model.AdsetID);
         Assert.Equal(expectedAffiliatlyV3, model.AffiliatlyV3);
@@ -1071,6 +1083,7 @@ public class UserPropertiesTest : TestBase
         {
             _EfTransactionID = "_ef_transaction_id",
             AdID = "ad_id",
+            Adct = "adct",
             AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
             AffiliatlyV3 = "affiliatly_v3",
@@ -1156,6 +1169,7 @@ public class UserPropertiesTest : TestBase
         {
             _EfTransactionID = "_ef_transaction_id",
             AdID = "ad_id",
+            Adct = "adct",
             AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
             AffiliatlyV3 = "affiliatly_v3",
@@ -1234,6 +1248,7 @@ public class UserPropertiesTest : TestBase
 
         string expected_EfTransactionID = "_ef_transaction_id";
         string expectedAdID = "ad_id";
+        string expectedAdct = "adct";
         string expectedAdmitadUid = "admitad_uid";
         string expectedAdsetID = "adset_id";
         string expectedAffiliatlyV3 = "affiliatly_v3";
@@ -1307,6 +1322,7 @@ public class UserPropertiesTest : TestBase
 
         Assert.Equal(expected_EfTransactionID, deserialized._EfTransactionID);
         Assert.Equal(expectedAdID, deserialized.AdID);
+        Assert.Equal(expectedAdct, deserialized.Adct);
         Assert.Equal(expectedAdmitadUid, deserialized.AdmitadUid);
         Assert.Equal(expectedAdsetID, deserialized.AdsetID);
         Assert.Equal(expectedAffiliatlyV3, deserialized.AffiliatlyV3);
@@ -1397,6 +1413,7 @@ public class UserPropertiesTest : TestBase
         {
             _EfTransactionID = "_ef_transaction_id",
             AdID = "ad_id",
+            Adct = "adct",
             AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
             AffiliatlyV3 = "affiliatly_v3",
@@ -1478,6 +1495,8 @@ public class UserPropertiesTest : TestBase
         Assert.False(model.RawData.ContainsKey("_ef_transaction_id"));
         Assert.Null(model.AdID);
         Assert.False(model.RawData.ContainsKey("ad_id"));
+        Assert.Null(model.Adct);
+        Assert.False(model.RawData.ContainsKey("adct"));
         Assert.Null(model.AdmitadUid);
         Assert.False(model.RawData.ContainsKey("admitad_uid"));
         Assert.Null(model.AdsetID);
@@ -1629,6 +1648,7 @@ public class UserPropertiesTest : TestBase
         {
             _EfTransactionID = null,
             AdID = null,
+            Adct = null,
             AdmitadUid = null,
             AdsetID = null,
             AffiliatlyV3 = null,
@@ -1702,6 +1722,8 @@ public class UserPropertiesTest : TestBase
         Assert.True(model.RawData.ContainsKey("_ef_transaction_id"));
         Assert.Null(model.AdID);
         Assert.True(model.RawData.ContainsKey("ad_id"));
+        Assert.Null(model.Adct);
+        Assert.True(model.RawData.ContainsKey("adct"));
         Assert.Null(model.AdmitadUid);
         Assert.True(model.RawData.ContainsKey("admitad_uid"));
         Assert.Null(model.AdsetID);
@@ -1845,6 +1867,7 @@ public class UserPropertiesTest : TestBase
         {
             _EfTransactionID = null,
             AdID = null,
+            Adct = null,
             AdmitadUid = null,
             AdsetID = null,
             AffiliatlyV3 = null,
@@ -1924,6 +1947,7 @@ public class UserPropertiesTest : TestBase
         {
             _EfTransactionID = "_ef_transaction_id",
             AdID = "ad_id",
+            Adct = "adct",
             AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
             AffiliatlyV3 = "affiliatly_v3",
@@ -4511,6 +4535,7 @@ public class DefaultPropertiesTest : TestBase
             _EfTransactionID = "_ef_transaction_id",
             ActiveDuration = 0,
             AdID = "ad_id",
+            Adct = "adct",
             AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
             AffiliatlyV3 = "affiliatly_v3",
@@ -4596,6 +4621,7 @@ public class DefaultPropertiesTest : TestBase
         string expected_EfTransactionID = "_ef_transaction_id";
         double expectedActiveDuration = 0;
         string expectedAdID = "ad_id";
+        string expectedAdct = "adct";
         string expectedAdmitadUid = "admitad_uid";
         string expectedAdsetID = "adset_id";
         string expectedAffiliatlyV3 = "affiliatly_v3";
@@ -4680,6 +4706,7 @@ public class DefaultPropertiesTest : TestBase
         Assert.Equal(expected_EfTransactionID, model._EfTransactionID);
         Assert.Equal(expectedActiveDuration, model.ActiveDuration);
         Assert.Equal(expectedAdID, model.AdID);
+        Assert.Equal(expectedAdct, model.Adct);
         Assert.Equal(expectedAdmitadUid, model.AdmitadUid);
         Assert.Equal(expectedAdsetID, model.AdsetID);
         Assert.Equal(expectedAffiliatlyV3, model.AffiliatlyV3);
@@ -4770,6 +4797,7 @@ public class DefaultPropertiesTest : TestBase
             _EfTransactionID = "_ef_transaction_id",
             ActiveDuration = 0,
             AdID = "ad_id",
+            Adct = "adct",
             AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
             AffiliatlyV3 = "affiliatly_v3",
@@ -4869,6 +4897,7 @@ public class DefaultPropertiesTest : TestBase
             _EfTransactionID = "_ef_transaction_id",
             ActiveDuration = 0,
             AdID = "ad_id",
+            Adct = "adct",
             AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
             AffiliatlyV3 = "affiliatly_v3",
@@ -4961,6 +4990,7 @@ public class DefaultPropertiesTest : TestBase
         string expected_EfTransactionID = "_ef_transaction_id";
         double expectedActiveDuration = 0;
         string expectedAdID = "ad_id";
+        string expectedAdct = "adct";
         string expectedAdmitadUid = "admitad_uid";
         string expectedAdsetID = "adset_id";
         string expectedAffiliatlyV3 = "affiliatly_v3";
@@ -5045,6 +5075,7 @@ public class DefaultPropertiesTest : TestBase
         Assert.Equal(expected_EfTransactionID, deserialized._EfTransactionID);
         Assert.Equal(expectedActiveDuration, deserialized.ActiveDuration);
         Assert.Equal(expectedAdID, deserialized.AdID);
+        Assert.Equal(expectedAdct, deserialized.Adct);
         Assert.Equal(expectedAdmitadUid, deserialized.AdmitadUid);
         Assert.Equal(expectedAdsetID, deserialized.AdsetID);
         Assert.Equal(expectedAffiliatlyV3, deserialized.AffiliatlyV3);
@@ -5135,6 +5166,7 @@ public class DefaultPropertiesTest : TestBase
             _EfTransactionID = "_ef_transaction_id",
             ActiveDuration = 0,
             AdID = "ad_id",
+            Adct = "adct",
             AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
             AffiliatlyV3 = "affiliatly_v3",
@@ -5231,6 +5263,8 @@ public class DefaultPropertiesTest : TestBase
         Assert.False(model.RawData.ContainsKey("activeDuration"));
         Assert.Null(model.AdID);
         Assert.False(model.RawData.ContainsKey("ad_id"));
+        Assert.Null(model.Adct);
+        Assert.False(model.RawData.ContainsKey("adct"));
         Assert.Null(model.AdmitadUid);
         Assert.False(model.RawData.ContainsKey("admitad_uid"));
         Assert.Null(model.AdsetID);
@@ -5409,6 +5443,7 @@ public class DefaultPropertiesTest : TestBase
             _EfTransactionID = null,
             ActiveDuration = null,
             AdID = null,
+            Adct = null,
             AdmitadUid = null,
             AdsetID = null,
             AffiliatlyV3 = null,
@@ -5497,6 +5532,8 @@ public class DefaultPropertiesTest : TestBase
         Assert.True(model.RawData.ContainsKey("activeDuration"));
         Assert.Null(model.AdID);
         Assert.True(model.RawData.ContainsKey("ad_id"));
+        Assert.Null(model.Adct);
+        Assert.True(model.RawData.ContainsKey("adct"));
         Assert.Null(model.AdmitadUid);
         Assert.True(model.RawData.ContainsKey("admitad_uid"));
         Assert.Null(model.AdsetID);
@@ -5667,6 +5704,7 @@ public class DefaultPropertiesTest : TestBase
             _EfTransactionID = null,
             ActiveDuration = null,
             AdID = null,
+            Adct = null,
             AdmitadUid = null,
             AdsetID = null,
             AffiliatlyV3 = null,
@@ -5760,6 +5798,7 @@ public class DefaultPropertiesTest : TestBase
             _EfTransactionID = "_ef_transaction_id",
             ActiveDuration = 0,
             AdID = "ad_id",
+            Adct = "adct",
             AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
             AffiliatlyV3 = "affiliatly_v3",
