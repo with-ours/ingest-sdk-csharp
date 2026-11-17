@@ -25,6 +25,11 @@ public class BatchCreateParamsTest : TestBase
                         _EfTransactionID = "_ef_transaction_id",
                         ActiveDuration = 0,
                         AdID = "ad_id",
+                        AdTouchAdID = "ad_touch_ad_id",
+                        AdTouchAdsetID = "ad_touch_adset_id",
+                        AdTouchCampaignID = "ad_touch_campaign_id",
+                        AdTouchPlatform = "ad_touch_platform",
+                        AdTouchSource = "ad_touch_source",
                         Adct = "adct",
                         AdmitadUid = "admitad_uid",
                         AdsetID = "adset_id",
@@ -55,6 +60,7 @@ public class BatchCreateParamsTest : TestBase
                         Fbclid = "fbclid",
                         Fbp = "fbp",
                         Fv = true,
+                        GadCampaignid = "gad_campaignid",
                         GadSource = "gad_source",
                         Gbraid = "gbraid",
                         Gclid = "gclid",
@@ -74,6 +80,7 @@ public class BatchCreateParamsTest : TestBase
                         Oppref = "oppref",
                         OsName = "os_name",
                         OsVersion = "os_version",
+                        OursAd = "ours_ad",
                         PageHash = 0,
                         Pathname = "pathname",
                         Qclid = "qclid",
@@ -96,6 +103,7 @@ public class BatchCreateParamsTest : TestBase
                         UserAgent = "user_agent",
                         UtmCampaign = "utm_campaign",
                         UtmContent = "utm_content",
+                        UtmID = "utm_id",
                         UtmMedium = "utm_medium",
                         UtmName = "utm_name",
                         UtmSource = "utm_source",
@@ -209,6 +217,11 @@ public class BatchCreateParamsTest : TestBase
                     _EfTransactionID = "_ef_transaction_id",
                     ActiveDuration = 0,
                     AdID = "ad_id",
+                    AdTouchAdID = "ad_touch_ad_id",
+                    AdTouchAdsetID = "ad_touch_adset_id",
+                    AdTouchCampaignID = "ad_touch_campaign_id",
+                    AdTouchPlatform = "ad_touch_platform",
+                    AdTouchSource = "ad_touch_source",
                     Adct = "adct",
                     AdmitadUid = "admitad_uid",
                     AdsetID = "adset_id",
@@ -239,6 +252,7 @@ public class BatchCreateParamsTest : TestBase
                     Fbclid = "fbclid",
                     Fbp = "fbp",
                     Fv = true,
+                    GadCampaignid = "gad_campaignid",
                     GadSource = "gad_source",
                     Gbraid = "gbraid",
                     Gclid = "gclid",
@@ -258,6 +272,7 @@ public class BatchCreateParamsTest : TestBase
                     Oppref = "oppref",
                     OsName = "os_name",
                     OsVersion = "os_version",
+                    OursAd = "ours_ad",
                     PageHash = 0,
                     Pathname = "pathname",
                     Qclid = "qclid",
@@ -280,6 +295,7 @@ public class BatchCreateParamsTest : TestBase
                     UserAgent = "user_agent",
                     UtmCampaign = "utm_campaign",
                     UtmContent = "utm_content",
+                    UtmID = "utm_id",
                     UtmMedium = "utm_medium",
                     UtmName = "utm_name",
                     UtmSource = "utm_source",
@@ -402,6 +418,11 @@ public class BatchCreateParamsTest : TestBase
                         _EfTransactionID = "_ef_transaction_id",
                         ActiveDuration = 0,
                         AdID = "ad_id",
+                        AdTouchAdID = "ad_touch_ad_id",
+                        AdTouchAdsetID = "ad_touch_adset_id",
+                        AdTouchCampaignID = "ad_touch_campaign_id",
+                        AdTouchPlatform = "ad_touch_platform",
+                        AdTouchSource = "ad_touch_source",
                         Adct = "adct",
                         AdmitadUid = "admitad_uid",
                         AdsetID = "adset_id",
@@ -432,6 +453,7 @@ public class BatchCreateParamsTest : TestBase
                         Fbclid = "fbclid",
                         Fbp = "fbp",
                         Fv = true,
+                        GadCampaignid = "gad_campaignid",
                         GadSource = "gad_source",
                         Gbraid = "gbraid",
                         Gclid = "gclid",
@@ -451,6 +473,7 @@ public class BatchCreateParamsTest : TestBase
                         Oppref = "oppref",
                         OsName = "os_name",
                         OsVersion = "os_version",
+                        OursAd = "ours_ad",
                         PageHash = 0,
                         Pathname = "pathname",
                         Qclid = "qclid",
@@ -473,6 +496,7 @@ public class BatchCreateParamsTest : TestBase
                         UserAgent = "user_agent",
                         UtmCampaign = "utm_campaign",
                         UtmContent = "utm_content",
+                        UtmID = "utm_id",
                         UtmMedium = "utm_medium",
                         UtmName = "utm_name",
                         UtmSource = "utm_source",
@@ -596,6 +620,11 @@ public class BatchCreateParamsTest : TestBase
                         _EfTransactionID = "_ef_transaction_id",
                         ActiveDuration = 0,
                         AdID = "ad_id",
+                        AdTouchAdID = "ad_touch_ad_id",
+                        AdTouchAdsetID = "ad_touch_adset_id",
+                        AdTouchCampaignID = "ad_touch_campaign_id",
+                        AdTouchPlatform = "ad_touch_platform",
+                        AdTouchSource = "ad_touch_source",
                         Adct = "adct",
                         AdmitadUid = "admitad_uid",
                         AdsetID = "adset_id",
@@ -626,6 +655,7 @@ public class BatchCreateParamsTest : TestBase
                         Fbclid = "fbclid",
                         Fbp = "fbp",
                         Fv = true,
+                        GadCampaignid = "gad_campaignid",
                         GadSource = "gad_source",
                         Gbraid = "gbraid",
                         Gclid = "gclid",
@@ -645,6 +675,7 @@ public class BatchCreateParamsTest : TestBase
                         Oppref = "oppref",
                         OsName = "os_name",
                         OsVersion = "os_version",
+                        OursAd = "ours_ad",
                         PageHash = 0,
                         Pathname = "pathname",
                         Qclid = "qclid",
@@ -667,6 +698,7 @@ public class BatchCreateParamsTest : TestBase
                         UserAgent = "user_agent",
                         UtmCampaign = "utm_campaign",
                         UtmContent = "utm_content",
+                        UtmID = "utm_id",
                         UtmMedium = "utm_medium",
                         UtmName = "utm_name",
                         UtmSource = "utm_source",
@@ -788,6 +820,11 @@ public class EventTest : TestBase
                 _EfTransactionID = "_ef_transaction_id",
                 ActiveDuration = 0,
                 AdID = "ad_id",
+                AdTouchAdID = "ad_touch_ad_id",
+                AdTouchAdsetID = "ad_touch_adset_id",
+                AdTouchCampaignID = "ad_touch_campaign_id",
+                AdTouchPlatform = "ad_touch_platform",
+                AdTouchSource = "ad_touch_source",
                 Adct = "adct",
                 AdmitadUid = "admitad_uid",
                 AdsetID = "adset_id",
@@ -818,6 +855,7 @@ public class EventTest : TestBase
                 Fbclid = "fbclid",
                 Fbp = "fbp",
                 Fv = true,
+                GadCampaignid = "gad_campaignid",
                 GadSource = "gad_source",
                 Gbraid = "gbraid",
                 Gclid = "gclid",
@@ -837,6 +875,7 @@ public class EventTest : TestBase
                 Oppref = "oppref",
                 OsName = "os_name",
                 OsVersion = "os_version",
+                OursAd = "ours_ad",
                 PageHash = 0,
                 Pathname = "pathname",
                 Qclid = "qclid",
@@ -859,6 +898,7 @@ public class EventTest : TestBase
                 UserAgent = "user_agent",
                 UtmCampaign = "utm_campaign",
                 UtmContent = "utm_content",
+                UtmID = "utm_id",
                 UtmMedium = "utm_medium",
                 UtmName = "utm_name",
                 UtmSource = "utm_source",
@@ -962,6 +1002,11 @@ public class EventTest : TestBase
             _EfTransactionID = "_ef_transaction_id",
             ActiveDuration = 0,
             AdID = "ad_id",
+            AdTouchAdID = "ad_touch_ad_id",
+            AdTouchAdsetID = "ad_touch_adset_id",
+            AdTouchCampaignID = "ad_touch_campaign_id",
+            AdTouchPlatform = "ad_touch_platform",
+            AdTouchSource = "ad_touch_source",
             Adct = "adct",
             AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
@@ -992,6 +1037,7 @@ public class EventTest : TestBase
             Fbclid = "fbclid",
             Fbp = "fbp",
             Fv = true,
+            GadCampaignid = "gad_campaignid",
             GadSource = "gad_source",
             Gbraid = "gbraid",
             Gclid = "gclid",
@@ -1011,6 +1057,7 @@ public class EventTest : TestBase
             Oppref = "oppref",
             OsName = "os_name",
             OsVersion = "os_version",
+            OursAd = "ours_ad",
             PageHash = 0,
             Pathname = "pathname",
             Qclid = "qclid",
@@ -1033,6 +1080,7 @@ public class EventTest : TestBase
             UserAgent = "user_agent",
             UtmCampaign = "utm_campaign",
             UtmContent = "utm_content",
+            UtmID = "utm_id",
             UtmMedium = "utm_medium",
             UtmName = "utm_name",
             UtmSource = "utm_source",
@@ -1157,6 +1205,11 @@ public class EventTest : TestBase
                 _EfTransactionID = "_ef_transaction_id",
                 ActiveDuration = 0,
                 AdID = "ad_id",
+                AdTouchAdID = "ad_touch_ad_id",
+                AdTouchAdsetID = "ad_touch_adset_id",
+                AdTouchCampaignID = "ad_touch_campaign_id",
+                AdTouchPlatform = "ad_touch_platform",
+                AdTouchSource = "ad_touch_source",
                 Adct = "adct",
                 AdmitadUid = "admitad_uid",
                 AdsetID = "adset_id",
@@ -1187,6 +1240,7 @@ public class EventTest : TestBase
                 Fbclid = "fbclid",
                 Fbp = "fbp",
                 Fv = true,
+                GadCampaignid = "gad_campaignid",
                 GadSource = "gad_source",
                 Gbraid = "gbraid",
                 Gclid = "gclid",
@@ -1206,6 +1260,7 @@ public class EventTest : TestBase
                 Oppref = "oppref",
                 OsName = "os_name",
                 OsVersion = "os_version",
+                OursAd = "ours_ad",
                 PageHash = 0,
                 Pathname = "pathname",
                 Qclid = "qclid",
@@ -1228,6 +1283,7 @@ public class EventTest : TestBase
                 UserAgent = "user_agent",
                 UtmCampaign = "utm_campaign",
                 UtmContent = "utm_content",
+                UtmID = "utm_id",
                 UtmMedium = "utm_medium",
                 UtmName = "utm_name",
                 UtmSource = "utm_source",
@@ -1342,6 +1398,11 @@ public class EventTest : TestBase
                 _EfTransactionID = "_ef_transaction_id",
                 ActiveDuration = 0,
                 AdID = "ad_id",
+                AdTouchAdID = "ad_touch_ad_id",
+                AdTouchAdsetID = "ad_touch_adset_id",
+                AdTouchCampaignID = "ad_touch_campaign_id",
+                AdTouchPlatform = "ad_touch_platform",
+                AdTouchSource = "ad_touch_source",
                 Adct = "adct",
                 AdmitadUid = "admitad_uid",
                 AdsetID = "adset_id",
@@ -1372,6 +1433,7 @@ public class EventTest : TestBase
                 Fbclid = "fbclid",
                 Fbp = "fbp",
                 Fv = true,
+                GadCampaignid = "gad_campaignid",
                 GadSource = "gad_source",
                 Gbraid = "gbraid",
                 Gclid = "gclid",
@@ -1391,6 +1453,7 @@ public class EventTest : TestBase
                 Oppref = "oppref",
                 OsName = "os_name",
                 OsVersion = "os_version",
+                OursAd = "ours_ad",
                 PageHash = 0,
                 Pathname = "pathname",
                 Qclid = "qclid",
@@ -1413,6 +1476,7 @@ public class EventTest : TestBase
                 UserAgent = "user_agent",
                 UtmCampaign = "utm_campaign",
                 UtmContent = "utm_content",
+                UtmID = "utm_id",
                 UtmMedium = "utm_medium",
                 UtmName = "utm_name",
                 UtmSource = "utm_source",
@@ -1520,6 +1584,11 @@ public class EventTest : TestBase
             _EfTransactionID = "_ef_transaction_id",
             ActiveDuration = 0,
             AdID = "ad_id",
+            AdTouchAdID = "ad_touch_ad_id",
+            AdTouchAdsetID = "ad_touch_adset_id",
+            AdTouchCampaignID = "ad_touch_campaign_id",
+            AdTouchPlatform = "ad_touch_platform",
+            AdTouchSource = "ad_touch_source",
             Adct = "adct",
             AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
@@ -1550,6 +1619,7 @@ public class EventTest : TestBase
             Fbclid = "fbclid",
             Fbp = "fbp",
             Fv = true,
+            GadCampaignid = "gad_campaignid",
             GadSource = "gad_source",
             Gbraid = "gbraid",
             Gclid = "gclid",
@@ -1569,6 +1639,7 @@ public class EventTest : TestBase
             Oppref = "oppref",
             OsName = "os_name",
             OsVersion = "os_version",
+            OursAd = "ours_ad",
             PageHash = 0,
             Pathname = "pathname",
             Qclid = "qclid",
@@ -1591,6 +1662,7 @@ public class EventTest : TestBase
             UserAgent = "user_agent",
             UtmCampaign = "utm_campaign",
             UtmContent = "utm_content",
+            UtmID = "utm_id",
             UtmMedium = "utm_medium",
             UtmName = "utm_name",
             UtmSource = "utm_source",
@@ -1715,6 +1787,11 @@ public class EventTest : TestBase
                 _EfTransactionID = "_ef_transaction_id",
                 ActiveDuration = 0,
                 AdID = "ad_id",
+                AdTouchAdID = "ad_touch_ad_id",
+                AdTouchAdsetID = "ad_touch_adset_id",
+                AdTouchCampaignID = "ad_touch_campaign_id",
+                AdTouchPlatform = "ad_touch_platform",
+                AdTouchSource = "ad_touch_source",
                 Adct = "adct",
                 AdmitadUid = "admitad_uid",
                 AdsetID = "adset_id",
@@ -1745,6 +1822,7 @@ public class EventTest : TestBase
                 Fbclid = "fbclid",
                 Fbp = "fbp",
                 Fv = true,
+                GadCampaignid = "gad_campaignid",
                 GadSource = "gad_source",
                 Gbraid = "gbraid",
                 Gclid = "gclid",
@@ -1764,6 +1842,7 @@ public class EventTest : TestBase
                 Oppref = "oppref",
                 OsName = "os_name",
                 OsVersion = "os_version",
+                OursAd = "ours_ad",
                 PageHash = 0,
                 Pathname = "pathname",
                 Qclid = "qclid",
@@ -1786,6 +1865,7 @@ public class EventTest : TestBase
                 UserAgent = "user_agent",
                 UtmCampaign = "utm_campaign",
                 UtmContent = "utm_content",
+                UtmID = "utm_id",
                 UtmMedium = "utm_medium",
                 UtmName = "utm_name",
                 UtmSource = "utm_source",
@@ -1991,6 +2071,11 @@ public class EventTest : TestBase
                 _EfTransactionID = "_ef_transaction_id",
                 ActiveDuration = 0,
                 AdID = "ad_id",
+                AdTouchAdID = "ad_touch_ad_id",
+                AdTouchAdsetID = "ad_touch_adset_id",
+                AdTouchCampaignID = "ad_touch_campaign_id",
+                AdTouchPlatform = "ad_touch_platform",
+                AdTouchSource = "ad_touch_source",
                 Adct = "adct",
                 AdmitadUid = "admitad_uid",
                 AdsetID = "adset_id",
@@ -2021,6 +2106,7 @@ public class EventTest : TestBase
                 Fbclid = "fbclid",
                 Fbp = "fbp",
                 Fv = true,
+                GadCampaignid = "gad_campaignid",
                 GadSource = "gad_source",
                 Gbraid = "gbraid",
                 Gclid = "gclid",
@@ -2040,6 +2126,7 @@ public class EventTest : TestBase
                 Oppref = "oppref",
                 OsName = "os_name",
                 OsVersion = "os_version",
+                OursAd = "ours_ad",
                 PageHash = 0,
                 Pathname = "pathname",
                 Qclid = "qclid",
@@ -2062,6 +2149,7 @@ public class EventTest : TestBase
                 UserAgent = "user_agent",
                 UtmCampaign = "utm_campaign",
                 UtmContent = "utm_content",
+                UtmID = "utm_id",
                 UtmMedium = "utm_medium",
                 UtmName = "utm_name",
                 UtmSource = "utm_source",
@@ -2174,6 +2262,11 @@ public class DefaultPropertiesTest : TestBase
             _EfTransactionID = "_ef_transaction_id",
             ActiveDuration = 0,
             AdID = "ad_id",
+            AdTouchAdID = "ad_touch_ad_id",
+            AdTouchAdsetID = "ad_touch_adset_id",
+            AdTouchCampaignID = "ad_touch_campaign_id",
+            AdTouchPlatform = "ad_touch_platform",
+            AdTouchSource = "ad_touch_source",
             Adct = "adct",
             AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
@@ -2204,6 +2297,7 @@ public class DefaultPropertiesTest : TestBase
             Fbclid = "fbclid",
             Fbp = "fbp",
             Fv = true,
+            GadCampaignid = "gad_campaignid",
             GadSource = "gad_source",
             Gbraid = "gbraid",
             Gclid = "gclid",
@@ -2223,6 +2317,7 @@ public class DefaultPropertiesTest : TestBase
             Oppref = "oppref",
             OsName = "os_name",
             OsVersion = "os_version",
+            OursAd = "ours_ad",
             PageHash = 0,
             Pathname = "pathname",
             Qclid = "qclid",
@@ -2245,6 +2340,7 @@ public class DefaultPropertiesTest : TestBase
             UserAgent = "user_agent",
             UtmCampaign = "utm_campaign",
             UtmContent = "utm_content",
+            UtmID = "utm_id",
             UtmMedium = "utm_medium",
             UtmName = "utm_name",
             UtmSource = "utm_source",
@@ -2260,6 +2356,11 @@ public class DefaultPropertiesTest : TestBase
         string expected_EfTransactionID = "_ef_transaction_id";
         double expectedActiveDuration = 0;
         string expectedAdID = "ad_id";
+        string expectedAdTouchAdID = "ad_touch_ad_id";
+        string expectedAdTouchAdsetID = "ad_touch_adset_id";
+        string expectedAdTouchCampaignID = "ad_touch_campaign_id";
+        string expectedAdTouchPlatform = "ad_touch_platform";
+        string expectedAdTouchSource = "ad_touch_source";
         string expectedAdct = "adct";
         string expectedAdmitadUid = "admitad_uid";
         string expectedAdsetID = "adset_id";
@@ -2290,6 +2391,7 @@ public class DefaultPropertiesTest : TestBase
         string expectedFbclid = "fbclid";
         string expectedFbp = "fbp";
         bool expectedFv = true;
+        string expectedGadCampaignid = "gad_campaignid";
         string expectedGadSource = "gad_source";
         string expectedGbraid = "gbraid";
         string expectedGclid = "gclid";
@@ -2309,6 +2411,7 @@ public class DefaultPropertiesTest : TestBase
         string expectedOppref = "oppref";
         string expectedOsName = "os_name";
         string expectedOsVersion = "os_version";
+        string expectedOursAd = "ours_ad";
         double expectedPageHash = 0;
         string expectedPathname = "pathname";
         string expectedQclid = "qclid";
@@ -2331,6 +2434,7 @@ public class DefaultPropertiesTest : TestBase
         string expectedUserAgent = "user_agent";
         string expectedUtmCampaign = "utm_campaign";
         string expectedUtmContent = "utm_content";
+        string expectedUtmID = "utm_id";
         string expectedUtmMedium = "utm_medium";
         string expectedUtmName = "utm_name";
         string expectedUtmSource = "utm_source";
@@ -2345,6 +2449,11 @@ public class DefaultPropertiesTest : TestBase
         Assert.Equal(expected_EfTransactionID, model._EfTransactionID);
         Assert.Equal(expectedActiveDuration, model.ActiveDuration);
         Assert.Equal(expectedAdID, model.AdID);
+        Assert.Equal(expectedAdTouchAdID, model.AdTouchAdID);
+        Assert.Equal(expectedAdTouchAdsetID, model.AdTouchAdsetID);
+        Assert.Equal(expectedAdTouchCampaignID, model.AdTouchCampaignID);
+        Assert.Equal(expectedAdTouchPlatform, model.AdTouchPlatform);
+        Assert.Equal(expectedAdTouchSource, model.AdTouchSource);
         Assert.Equal(expectedAdct, model.Adct);
         Assert.Equal(expectedAdmitadUid, model.AdmitadUid);
         Assert.Equal(expectedAdsetID, model.AdsetID);
@@ -2375,6 +2484,7 @@ public class DefaultPropertiesTest : TestBase
         Assert.Equal(expectedFbclid, model.Fbclid);
         Assert.Equal(expectedFbp, model.Fbp);
         Assert.Equal(expectedFv, model.Fv);
+        Assert.Equal(expectedGadCampaignid, model.GadCampaignid);
         Assert.Equal(expectedGadSource, model.GadSource);
         Assert.Equal(expectedGbraid, model.Gbraid);
         Assert.Equal(expectedGclid, model.Gclid);
@@ -2394,6 +2504,7 @@ public class DefaultPropertiesTest : TestBase
         Assert.Equal(expectedOppref, model.Oppref);
         Assert.Equal(expectedOsName, model.OsName);
         Assert.Equal(expectedOsVersion, model.OsVersion);
+        Assert.Equal(expectedOursAd, model.OursAd);
         Assert.Equal(expectedPageHash, model.PageHash);
         Assert.Equal(expectedPathname, model.Pathname);
         Assert.Equal(expectedQclid, model.Qclid);
@@ -2416,6 +2527,7 @@ public class DefaultPropertiesTest : TestBase
         Assert.Equal(expectedUserAgent, model.UserAgent);
         Assert.Equal(expectedUtmCampaign, model.UtmCampaign);
         Assert.Equal(expectedUtmContent, model.UtmContent);
+        Assert.Equal(expectedUtmID, model.UtmID);
         Assert.Equal(expectedUtmMedium, model.UtmMedium);
         Assert.Equal(expectedUtmName, model.UtmName);
         Assert.Equal(expectedUtmSource, model.UtmSource);
@@ -2436,6 +2548,11 @@ public class DefaultPropertiesTest : TestBase
             _EfTransactionID = "_ef_transaction_id",
             ActiveDuration = 0,
             AdID = "ad_id",
+            AdTouchAdID = "ad_touch_ad_id",
+            AdTouchAdsetID = "ad_touch_adset_id",
+            AdTouchCampaignID = "ad_touch_campaign_id",
+            AdTouchPlatform = "ad_touch_platform",
+            AdTouchSource = "ad_touch_source",
             Adct = "adct",
             AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
@@ -2466,6 +2583,7 @@ public class DefaultPropertiesTest : TestBase
             Fbclid = "fbclid",
             Fbp = "fbp",
             Fv = true,
+            GadCampaignid = "gad_campaignid",
             GadSource = "gad_source",
             Gbraid = "gbraid",
             Gclid = "gclid",
@@ -2485,6 +2603,7 @@ public class DefaultPropertiesTest : TestBase
             Oppref = "oppref",
             OsName = "os_name",
             OsVersion = "os_version",
+            OursAd = "ours_ad",
             PageHash = 0,
             Pathname = "pathname",
             Qclid = "qclid",
@@ -2507,6 +2626,7 @@ public class DefaultPropertiesTest : TestBase
             UserAgent = "user_agent",
             UtmCampaign = "utm_campaign",
             UtmContent = "utm_content",
+            UtmID = "utm_id",
             UtmMedium = "utm_medium",
             UtmName = "utm_name",
             UtmSource = "utm_source",
@@ -2536,6 +2656,11 @@ public class DefaultPropertiesTest : TestBase
             _EfTransactionID = "_ef_transaction_id",
             ActiveDuration = 0,
             AdID = "ad_id",
+            AdTouchAdID = "ad_touch_ad_id",
+            AdTouchAdsetID = "ad_touch_adset_id",
+            AdTouchCampaignID = "ad_touch_campaign_id",
+            AdTouchPlatform = "ad_touch_platform",
+            AdTouchSource = "ad_touch_source",
             Adct = "adct",
             AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
@@ -2566,6 +2691,7 @@ public class DefaultPropertiesTest : TestBase
             Fbclid = "fbclid",
             Fbp = "fbp",
             Fv = true,
+            GadCampaignid = "gad_campaignid",
             GadSource = "gad_source",
             Gbraid = "gbraid",
             Gclid = "gclid",
@@ -2585,6 +2711,7 @@ public class DefaultPropertiesTest : TestBase
             Oppref = "oppref",
             OsName = "os_name",
             OsVersion = "os_version",
+            OursAd = "ours_ad",
             PageHash = 0,
             Pathname = "pathname",
             Qclid = "qclid",
@@ -2607,6 +2734,7 @@ public class DefaultPropertiesTest : TestBase
             UserAgent = "user_agent",
             UtmCampaign = "utm_campaign",
             UtmContent = "utm_content",
+            UtmID = "utm_id",
             UtmMedium = "utm_medium",
             UtmName = "utm_name",
             UtmSource = "utm_source",
@@ -2629,6 +2757,11 @@ public class DefaultPropertiesTest : TestBase
         string expected_EfTransactionID = "_ef_transaction_id";
         double expectedActiveDuration = 0;
         string expectedAdID = "ad_id";
+        string expectedAdTouchAdID = "ad_touch_ad_id";
+        string expectedAdTouchAdsetID = "ad_touch_adset_id";
+        string expectedAdTouchCampaignID = "ad_touch_campaign_id";
+        string expectedAdTouchPlatform = "ad_touch_platform";
+        string expectedAdTouchSource = "ad_touch_source";
         string expectedAdct = "adct";
         string expectedAdmitadUid = "admitad_uid";
         string expectedAdsetID = "adset_id";
@@ -2659,6 +2792,7 @@ public class DefaultPropertiesTest : TestBase
         string expectedFbclid = "fbclid";
         string expectedFbp = "fbp";
         bool expectedFv = true;
+        string expectedGadCampaignid = "gad_campaignid";
         string expectedGadSource = "gad_source";
         string expectedGbraid = "gbraid";
         string expectedGclid = "gclid";
@@ -2678,6 +2812,7 @@ public class DefaultPropertiesTest : TestBase
         string expectedOppref = "oppref";
         string expectedOsName = "os_name";
         string expectedOsVersion = "os_version";
+        string expectedOursAd = "ours_ad";
         double expectedPageHash = 0;
         string expectedPathname = "pathname";
         string expectedQclid = "qclid";
@@ -2700,6 +2835,7 @@ public class DefaultPropertiesTest : TestBase
         string expectedUserAgent = "user_agent";
         string expectedUtmCampaign = "utm_campaign";
         string expectedUtmContent = "utm_content";
+        string expectedUtmID = "utm_id";
         string expectedUtmMedium = "utm_medium";
         string expectedUtmName = "utm_name";
         string expectedUtmSource = "utm_source";
@@ -2714,6 +2850,11 @@ public class DefaultPropertiesTest : TestBase
         Assert.Equal(expected_EfTransactionID, deserialized._EfTransactionID);
         Assert.Equal(expectedActiveDuration, deserialized.ActiveDuration);
         Assert.Equal(expectedAdID, deserialized.AdID);
+        Assert.Equal(expectedAdTouchAdID, deserialized.AdTouchAdID);
+        Assert.Equal(expectedAdTouchAdsetID, deserialized.AdTouchAdsetID);
+        Assert.Equal(expectedAdTouchCampaignID, deserialized.AdTouchCampaignID);
+        Assert.Equal(expectedAdTouchPlatform, deserialized.AdTouchPlatform);
+        Assert.Equal(expectedAdTouchSource, deserialized.AdTouchSource);
         Assert.Equal(expectedAdct, deserialized.Adct);
         Assert.Equal(expectedAdmitadUid, deserialized.AdmitadUid);
         Assert.Equal(expectedAdsetID, deserialized.AdsetID);
@@ -2744,6 +2885,7 @@ public class DefaultPropertiesTest : TestBase
         Assert.Equal(expectedFbclid, deserialized.Fbclid);
         Assert.Equal(expectedFbp, deserialized.Fbp);
         Assert.Equal(expectedFv, deserialized.Fv);
+        Assert.Equal(expectedGadCampaignid, deserialized.GadCampaignid);
         Assert.Equal(expectedGadSource, deserialized.GadSource);
         Assert.Equal(expectedGbraid, deserialized.Gbraid);
         Assert.Equal(expectedGclid, deserialized.Gclid);
@@ -2763,6 +2905,7 @@ public class DefaultPropertiesTest : TestBase
         Assert.Equal(expectedOppref, deserialized.Oppref);
         Assert.Equal(expectedOsName, deserialized.OsName);
         Assert.Equal(expectedOsVersion, deserialized.OsVersion);
+        Assert.Equal(expectedOursAd, deserialized.OursAd);
         Assert.Equal(expectedPageHash, deserialized.PageHash);
         Assert.Equal(expectedPathname, deserialized.Pathname);
         Assert.Equal(expectedQclid, deserialized.Qclid);
@@ -2785,6 +2928,7 @@ public class DefaultPropertiesTest : TestBase
         Assert.Equal(expectedUserAgent, deserialized.UserAgent);
         Assert.Equal(expectedUtmCampaign, deserialized.UtmCampaign);
         Assert.Equal(expectedUtmContent, deserialized.UtmContent);
+        Assert.Equal(expectedUtmID, deserialized.UtmID);
         Assert.Equal(expectedUtmMedium, deserialized.UtmMedium);
         Assert.Equal(expectedUtmName, deserialized.UtmName);
         Assert.Equal(expectedUtmSource, deserialized.UtmSource);
@@ -2805,6 +2949,11 @@ public class DefaultPropertiesTest : TestBase
             _EfTransactionID = "_ef_transaction_id",
             ActiveDuration = 0,
             AdID = "ad_id",
+            AdTouchAdID = "ad_touch_ad_id",
+            AdTouchAdsetID = "ad_touch_adset_id",
+            AdTouchCampaignID = "ad_touch_campaign_id",
+            AdTouchPlatform = "ad_touch_platform",
+            AdTouchSource = "ad_touch_source",
             Adct = "adct",
             AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
@@ -2835,6 +2984,7 @@ public class DefaultPropertiesTest : TestBase
             Fbclid = "fbclid",
             Fbp = "fbp",
             Fv = true,
+            GadCampaignid = "gad_campaignid",
             GadSource = "gad_source",
             Gbraid = "gbraid",
             Gclid = "gclid",
@@ -2854,6 +3004,7 @@ public class DefaultPropertiesTest : TestBase
             Oppref = "oppref",
             OsName = "os_name",
             OsVersion = "os_version",
+            OursAd = "ours_ad",
             PageHash = 0,
             Pathname = "pathname",
             Qclid = "qclid",
@@ -2876,6 +3027,7 @@ public class DefaultPropertiesTest : TestBase
             UserAgent = "user_agent",
             UtmCampaign = "utm_campaign",
             UtmContent = "utm_content",
+            UtmID = "utm_id",
             UtmMedium = "utm_medium",
             UtmName = "utm_name",
             UtmSource = "utm_source",
@@ -2902,6 +3054,16 @@ public class DefaultPropertiesTest : TestBase
         Assert.False(model.RawData.ContainsKey("activeDuration"));
         Assert.Null(model.AdID);
         Assert.False(model.RawData.ContainsKey("ad_id"));
+        Assert.Null(model.AdTouchAdID);
+        Assert.False(model.RawData.ContainsKey("ad_touch_ad_id"));
+        Assert.Null(model.AdTouchAdsetID);
+        Assert.False(model.RawData.ContainsKey("ad_touch_adset_id"));
+        Assert.Null(model.AdTouchCampaignID);
+        Assert.False(model.RawData.ContainsKey("ad_touch_campaign_id"));
+        Assert.Null(model.AdTouchPlatform);
+        Assert.False(model.RawData.ContainsKey("ad_touch_platform"));
+        Assert.Null(model.AdTouchSource);
+        Assert.False(model.RawData.ContainsKey("ad_touch_source"));
         Assert.Null(model.Adct);
         Assert.False(model.RawData.ContainsKey("adct"));
         Assert.Null(model.AdmitadUid);
@@ -2962,6 +3124,8 @@ public class DefaultPropertiesTest : TestBase
         Assert.False(model.RawData.ContainsKey("fbp"));
         Assert.Null(model.Fv);
         Assert.False(model.RawData.ContainsKey("fv"));
+        Assert.Null(model.GadCampaignid);
+        Assert.False(model.RawData.ContainsKey("gad_campaignid"));
         Assert.Null(model.GadSource);
         Assert.False(model.RawData.ContainsKey("gad_source"));
         Assert.Null(model.Gbraid);
@@ -3000,6 +3164,8 @@ public class DefaultPropertiesTest : TestBase
         Assert.False(model.RawData.ContainsKey("os_name"));
         Assert.Null(model.OsVersion);
         Assert.False(model.RawData.ContainsKey("os_version"));
+        Assert.Null(model.OursAd);
+        Assert.False(model.RawData.ContainsKey("ours_ad"));
         Assert.Null(model.PageHash);
         Assert.False(model.RawData.ContainsKey("page_hash"));
         Assert.Null(model.Pathname);
@@ -3044,6 +3210,8 @@ public class DefaultPropertiesTest : TestBase
         Assert.False(model.RawData.ContainsKey("utm_campaign"));
         Assert.Null(model.UtmContent);
         Assert.False(model.RawData.ContainsKey("utm_content"));
+        Assert.Null(model.UtmID);
+        Assert.False(model.RawData.ContainsKey("utm_id"));
         Assert.Null(model.UtmMedium);
         Assert.False(model.RawData.ContainsKey("utm_medium"));
         Assert.Null(model.UtmName);
@@ -3082,6 +3250,11 @@ public class DefaultPropertiesTest : TestBase
             _EfTransactionID = null,
             ActiveDuration = null,
             AdID = null,
+            AdTouchAdID = null,
+            AdTouchAdsetID = null,
+            AdTouchCampaignID = null,
+            AdTouchPlatform = null,
+            AdTouchSource = null,
             Adct = null,
             AdmitadUid = null,
             AdsetID = null,
@@ -3112,6 +3285,7 @@ public class DefaultPropertiesTest : TestBase
             Fbclid = null,
             Fbp = null,
             Fv = null,
+            GadCampaignid = null,
             GadSource = null,
             Gbraid = null,
             Gclid = null,
@@ -3131,6 +3305,7 @@ public class DefaultPropertiesTest : TestBase
             Oppref = null,
             OsName = null,
             OsVersion = null,
+            OursAd = null,
             PageHash = null,
             Pathname = null,
             Qclid = null,
@@ -3153,6 +3328,7 @@ public class DefaultPropertiesTest : TestBase
             UserAgent = null,
             UtmCampaign = null,
             UtmContent = null,
+            UtmID = null,
             UtmMedium = null,
             UtmName = null,
             UtmSource = null,
@@ -3171,6 +3347,16 @@ public class DefaultPropertiesTest : TestBase
         Assert.True(model.RawData.ContainsKey("activeDuration"));
         Assert.Null(model.AdID);
         Assert.True(model.RawData.ContainsKey("ad_id"));
+        Assert.Null(model.AdTouchAdID);
+        Assert.True(model.RawData.ContainsKey("ad_touch_ad_id"));
+        Assert.Null(model.AdTouchAdsetID);
+        Assert.True(model.RawData.ContainsKey("ad_touch_adset_id"));
+        Assert.Null(model.AdTouchCampaignID);
+        Assert.True(model.RawData.ContainsKey("ad_touch_campaign_id"));
+        Assert.Null(model.AdTouchPlatform);
+        Assert.True(model.RawData.ContainsKey("ad_touch_platform"));
+        Assert.Null(model.AdTouchSource);
+        Assert.True(model.RawData.ContainsKey("ad_touch_source"));
         Assert.Null(model.Adct);
         Assert.True(model.RawData.ContainsKey("adct"));
         Assert.Null(model.AdmitadUid);
@@ -3231,6 +3417,8 @@ public class DefaultPropertiesTest : TestBase
         Assert.True(model.RawData.ContainsKey("fbp"));
         Assert.Null(model.Fv);
         Assert.True(model.RawData.ContainsKey("fv"));
+        Assert.Null(model.GadCampaignid);
+        Assert.True(model.RawData.ContainsKey("gad_campaignid"));
         Assert.Null(model.GadSource);
         Assert.True(model.RawData.ContainsKey("gad_source"));
         Assert.Null(model.Gbraid);
@@ -3269,6 +3457,8 @@ public class DefaultPropertiesTest : TestBase
         Assert.True(model.RawData.ContainsKey("os_name"));
         Assert.Null(model.OsVersion);
         Assert.True(model.RawData.ContainsKey("os_version"));
+        Assert.Null(model.OursAd);
+        Assert.True(model.RawData.ContainsKey("ours_ad"));
         Assert.Null(model.PageHash);
         Assert.True(model.RawData.ContainsKey("page_hash"));
         Assert.Null(model.Pathname);
@@ -3313,6 +3503,8 @@ public class DefaultPropertiesTest : TestBase
         Assert.True(model.RawData.ContainsKey("utm_campaign"));
         Assert.Null(model.UtmContent);
         Assert.True(model.RawData.ContainsKey("utm_content"));
+        Assert.Null(model.UtmID);
+        Assert.True(model.RawData.ContainsKey("utm_id"));
         Assert.Null(model.UtmMedium);
         Assert.True(model.RawData.ContainsKey("utm_medium"));
         Assert.Null(model.UtmName);
@@ -3343,6 +3535,11 @@ public class DefaultPropertiesTest : TestBase
             _EfTransactionID = null,
             ActiveDuration = null,
             AdID = null,
+            AdTouchAdID = null,
+            AdTouchAdsetID = null,
+            AdTouchCampaignID = null,
+            AdTouchPlatform = null,
+            AdTouchSource = null,
             Adct = null,
             AdmitadUid = null,
             AdsetID = null,
@@ -3373,6 +3570,7 @@ public class DefaultPropertiesTest : TestBase
             Fbclid = null,
             Fbp = null,
             Fv = null,
+            GadCampaignid = null,
             GadSource = null,
             Gbraid = null,
             Gclid = null,
@@ -3392,6 +3590,7 @@ public class DefaultPropertiesTest : TestBase
             Oppref = null,
             OsName = null,
             OsVersion = null,
+            OursAd = null,
             PageHash = null,
             Pathname = null,
             Qclid = null,
@@ -3414,6 +3613,7 @@ public class DefaultPropertiesTest : TestBase
             UserAgent = null,
             UtmCampaign = null,
             UtmContent = null,
+            UtmID = null,
             UtmMedium = null,
             UtmName = null,
             UtmSource = null,
@@ -3437,6 +3637,11 @@ public class DefaultPropertiesTest : TestBase
             _EfTransactionID = "_ef_transaction_id",
             ActiveDuration = 0,
             AdID = "ad_id",
+            AdTouchAdID = "ad_touch_ad_id",
+            AdTouchAdsetID = "ad_touch_adset_id",
+            AdTouchCampaignID = "ad_touch_campaign_id",
+            AdTouchPlatform = "ad_touch_platform",
+            AdTouchSource = "ad_touch_source",
             Adct = "adct",
             AdmitadUid = "admitad_uid",
             AdsetID = "adset_id",
@@ -3467,6 +3672,7 @@ public class DefaultPropertiesTest : TestBase
             Fbclid = "fbclid",
             Fbp = "fbp",
             Fv = true,
+            GadCampaignid = "gad_campaignid",
             GadSource = "gad_source",
             Gbraid = "gbraid",
             Gclid = "gclid",
@@ -3486,6 +3692,7 @@ public class DefaultPropertiesTest : TestBase
             Oppref = "oppref",
             OsName = "os_name",
             OsVersion = "os_version",
+            OursAd = "ours_ad",
             PageHash = 0,
             Pathname = "pathname",
             Qclid = "qclid",
@@ -3508,6 +3715,7 @@ public class DefaultPropertiesTest : TestBase
             UserAgent = "user_agent",
             UtmCampaign = "utm_campaign",
             UtmContent = "utm_content",
+            UtmID = "utm_id",
             UtmMedium = "utm_medium",
             UtmName = "utm_name",
             UtmSource = "utm_source",
