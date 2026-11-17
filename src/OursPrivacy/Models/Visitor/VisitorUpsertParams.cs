@@ -11350,6 +11350,78 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
+    /// The platform ad id resolved by the Ours server for this event. Ex: 120212
+    /// Leading and trailing whitespace is removed before validation.
+    /// </summary>
+    public string? AdTouchAdID
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("ad_touch_ad_id");
+        }
+        init { this._rawData.Set("ad_touch_ad_id", value); }
+    }
+
+    /// <summary>
+    /// The platform ad set or ad group id resolved by the Ours server for this event.
+    /// Ex: 120211 Leading and trailing whitespace is removed before validation.
+    /// </summary>
+    public string? AdTouchAdsetID
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("ad_touch_adset_id");
+        }
+        init { this._rawData.Set("ad_touch_adset_id", value); }
+    }
+
+    /// <summary>
+    /// The platform campaign id resolved by the Ours server for this event. Ex: 120210
+    /// Leading and trailing whitespace is removed before validation.
+    /// </summary>
+    public string? AdTouchCampaignID
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("ad_touch_campaign_id");
+        }
+        init { this._rawData.Set("ad_touch_campaign_id", value); }
+    }
+
+    /// <summary>
+    /// The ad platform resolved by the Ours server from the ad tag, ad ids, and click
+    /// ids on this event. Ex: meta, google Leading and trailing whitespace is removed
+    /// before validation.
+    /// </summary>
+    public string? AdTouchPlatform
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("ad_touch_platform");
+        }
+        init { this._rawData.Set("ad_touch_platform", value); }
+    }
+
+    /// <summary>
+    /// Which signal the Ours server used to resolve the ad touch: ours_ad, url_ids,
+    /// gad_campaignid, utm_id, or click_id. Leading and trailing whitespace is removed
+    /// before validation.
+    /// </summary>
+    public string? AdTouchSource
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("ad_touch_source");
+        }
+        init { this._rawData.Set("ad_touch_source", value); }
+    }
+
+    /// <summary>
     /// The AdRoll Click ID (adct) from the landing URL. Ex: adct123 Leading and trailing
     /// whitespace is removed before validation.
     /// </summary>
@@ -11772,6 +11844,20 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
+    /// The Google Ads campaign id that Google auto-tagging appends to ad clicks.
+    /// Ex: 21780011223 Leading and trailing whitespace is removed before validation.
+    /// </summary>
+    public string? GadCampaignid
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("gad_campaignid");
+        }
+        init { this._rawData.Set("gad_campaignid", value); }
+    }
+
+    /// <summary>
     /// The Google Ad Source. Ex: google Leading and trailing whitespace is removed
     /// before validation.
     /// </summary>
@@ -12037,6 +12123,20 @@ public sealed record class DefaultProperties : JsonModel
             return this._rawData.GetNullableClass<string>("os_version");
         }
         init { this._rawData.Set("os_version", value); }
+    }
+
+    /// <summary>
+    /// The Ours ad tag from the ours_ad query parameter, as platform.campaign.adset.ad.
+    /// Ex: meta.120210.120211.120212 Leading and trailing whitespace is removed before validation.
+    /// </summary>
+    public string? OursAd
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("ours_ad");
+        }
+        init { this._rawData.Set("ours_ad", value); }
     }
 
     /// <summary>
@@ -12344,6 +12444,20 @@ public sealed record class DefaultProperties : JsonModel
     }
 
     /// <summary>
+    /// The UTM ID. The web SDK automatically captures this from the query params.
+    /// Leading and trailing whitespace is removed before validation.
+    /// </summary>
+    public string? UtmID
+    {
+        get
+        {
+            this._rawData.Freeze();
+            return this._rawData.GetNullableClass<string>("utm_id");
+        }
+        init { this._rawData.Set("utm_id", value); }
+    }
+
+    /// <summary>
     /// The UTM Medium. The web SDK automatically captures this from the query params.
     /// Leading and trailing whitespace is removed before validation.
     /// </summary>
@@ -12490,6 +12604,11 @@ public sealed record class DefaultProperties : JsonModel
         _ = this._EfTransactionID;
         _ = this.ActiveDuration;
         _ = this.AdID;
+        _ = this.AdTouchAdID;
+        _ = this.AdTouchAdsetID;
+        _ = this.AdTouchCampaignID;
+        _ = this.AdTouchPlatform;
+        _ = this.AdTouchSource;
         _ = this.Adct;
         _ = this.AdmitadUid;
         _ = this.AdsetID;
@@ -12520,6 +12639,7 @@ public sealed record class DefaultProperties : JsonModel
         _ = this.Fbclid;
         _ = this.Fbp;
         _ = this.Fv;
+        _ = this.GadCampaignid;
         _ = this.GadSource;
         _ = this.Gbraid;
         _ = this.Gclid;
@@ -12539,6 +12659,7 @@ public sealed record class DefaultProperties : JsonModel
         _ = this.Oppref;
         _ = this.OsName;
         _ = this.OsVersion;
+        _ = this.OursAd;
         _ = this.PageHash;
         _ = this.Pathname;
         _ = this.Qclid;
@@ -12561,6 +12682,7 @@ public sealed record class DefaultProperties : JsonModel
         _ = this.UserAgent;
         _ = this.UtmCampaign;
         _ = this.UtmContent;
+        _ = this.UtmID;
         _ = this.UtmMedium;
         _ = this.UtmName;
         _ = this.UtmSource;
